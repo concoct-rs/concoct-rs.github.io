@@ -185,6 +185,48 @@
 <a href="#185" id="185">185</a>
 <a href="#186" id="186">186</a>
 <a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{
     composer::{BuildKind, NodeKind},
     Composer,
@@ -197,14 +239,53 @@
     rc::Rc,
 };
 
-<span class="attr">#[track_caller]
+<span class="doccomment">/// A value that can change over time.
+/// 
+/// * `f`: called once to create the initial value
+///
+/// ```
+/// use accesskit::Role;
+/// use concoct::{compose, Modifier};
+/// use concoct::composable::{state, text};
+/// use concoct::test::Tester;
+///
+/// // Create a new composable with an integer state `count`.
+/// #[compose]
+/// fn app() {
+///     let count = state(|| 0);
+///
+///     // Create a new text composable
+///     text(
+///         Modifier::default().clickable(Role::Button, move || {
+///             // Increase the counter state
+///             *count.get().as_mut() += 1
+///         }),
+/// 
+///         // Display the current count
+///         count.get().as_ref().to_string(),
+///     )
+/// }
+///
+/// let mut tester = Tester::new(app);
+/// 
+/// // Verify the count starts at `0`, then rigger the click event
+/// tester.on_node_with_text(&quot;0&quot;).click();
+/// 
+/// // Assert the count is now displayed as `1`
+/// tester.on_node_with_text(&quot;1&quot;).assert_exists();
+/// ```
+///
+/// ## Composable
+/// This function must be run in the context of a `Composer`.
+</span><span class="attr">#[track_caller]
 </span><span class="kw">pub fn </span>state&lt;T&gt;(f: <span class="kw">impl </span>FnOnce() -&gt; T) -&gt; State&lt;T&gt;
 <span class="kw">where
     </span>T: <span class="lifetime">&#39;static</span>,
 {
+    <span class="kw">let </span>location = Location::caller();
     Composer::with(|composer| {
         <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-        <span class="kw">let </span>id = cx.id(Location::caller(), <span class="prelude-val">None</span>);
+        <span class="kw">let </span>id = cx.id(location, <span class="prelude-val">None</span>);
 
         <span class="kw">match </span>cx.build_kind {
             BuildKind::Build =&gt; {
@@ -254,7 +335,6 @@
 
                         state
                     } <span class="kw">else </span>{
-                        <span class="macro">dbg!</span>(<span class="kw-2">&amp;</span>node.id, <span class="kw-2">&amp;</span>id);
                         drop(cx);
                         <span class="kw">let </span>value = Rc::new(RefCell::new(f()));
 
@@ -328,11 +408,11 @@
 <span class="kw">where
     </span>T: <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; StateRef&lt;T&gt; {
+    <span class="doccomment">/// Get a reference to this state&#39;s value
+    </span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; StateRef&lt;T&gt; {
         Composer::with(|composer| {
             <span class="kw">let </span>composer = composer.borrow_mut();
             <span class="kw">let </span>(<span class="kw">_</span>, <span class="kw">_</span>, idx) = <span class="kw-2">*</span>composer.states.get(<span class="self">self</span>.key).unwrap();
-            <span class="macro">dbg!</span>(idx);
 
             <span class="kw">if let </span>NodeKind::Child { data } = <span class="kw-2">&amp;</span>composer.nodes[idx].kind {
                 <span class="kw">let </span>(<span class="kw">_</span>, data): <span class="kw-2">&amp;</span>(DefaultKey, Rc&lt;RefCell&lt;T&gt;&gt;) = data.downcast_ref().unwrap();
@@ -347,17 +427,21 @@
     }
 }
 
-<span class="kw">pub struct </span>StateRef&lt;T&gt; {
+<span class="doccomment">/// A reference to a state&#39;s value
+</span><span class="kw">pub struct </span>StateRef&lt;T&gt; {
     key: DefaultKey,
     rc: Rc&lt;RefCell&lt;T&gt;&gt;,
 }
 
 <span class="kw">impl</span>&lt;T&gt; StateRef&lt;T&gt; {
-    <span class="kw">pub fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, T&gt; {
+    <span class="doccomment">/// Return a reference to this state&#39;s value.
+    </span><span class="kw">pub fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, T&gt; {
         <span class="self">self</span>.rc.as_ref().borrow()
     }
 
-    <span class="kw">pub fn </span>as_mut(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RefMut&lt;<span class="lifetime">&#39;_</span>, T&gt; {
+    <span class="doccomment">/// Return a mutable reference to this state&#39;s value.
+    /// This will trigger a recompose for this state&#39;s parent.
+    </span><span class="kw">pub fn </span>as_mut(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RefMut&lt;<span class="lifetime">&#39;_</span>, T&gt; {
         Composer::with(|composer| {
             composer.borrow_mut().set_states.insert(<span class="self">self</span>.key);
         });

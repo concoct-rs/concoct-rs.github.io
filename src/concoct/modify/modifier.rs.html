@@ -136,9 +136,15 @@
 <a href="#136" id="136">136</a>
 <a href="#137" id="137">137</a>
 <a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
 </pre><pre class="rust"><code><span class="kw">use super</span>::{
     clickable::{ClickHandler, IntoClickHandler},
     selectable::Selectable,
+    style::FlexShrink,
     BackgroundColor, Chain, Clickable, FlexGrow, FontFamily, FontSize, Gap, Key, Modify, Position,
     TestTag,
 };
@@ -222,6 +228,10 @@
 
     <span class="kw">pub fn </span>flex_grow(<span class="self">self</span>, flex_grow: f32) -&gt; Modifier&lt;U, Chain&lt;T, FlexGrow&gt;&gt; {
         <span class="self">self</span>.chain(FlexGrow { value: flex_grow })
+    }
+
+    <span class="kw">pub fn </span>flex_shrink(<span class="self">self</span>, flex_shrink: f32) -&gt; Modifier&lt;U, Chain&lt;T, FlexShrink&gt;&gt; {
+        <span class="self">self</span>.chain(FlexShrink { value: flex_shrink })
     }
 
     <span class="kw">pub fn </span>font_family(<span class="self">self</span>, value: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; Modifier&lt;U, Chain&lt;T, FontFamily&gt;&gt; {

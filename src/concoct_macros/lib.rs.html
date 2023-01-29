@@ -24,6 +24,10 @@
 <a href="#24" id="24">24</a>
 <a href="#25" id="25">25</a>
 <a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
 </pre><pre class="rust"><code><span class="kw">use </span>proc_macro::TokenStream;
 <span class="kw">use </span>quote::quote;
 <span class="kw">use </span>syn::{parse_macro_input, ItemFn};
@@ -32,6 +36,7 @@
 </span><span class="kw">pub fn </span>compose(_attr: TokenStream, item: TokenStream) -&gt; TokenStream {
     <span class="kw">let </span>func: ItemFn = <span class="macro">parse_macro_input!</span>(item <span class="kw">as </span>ItemFn);
 
+    <span class="kw">let </span>fn_attrs = <span class="kw-2">&amp;</span>func.attrs;
     <span class="kw">let </span>fn_vis = func.vis;
     <span class="kw">let </span>fn_args = <span class="kw-2">&amp;</span>func.sig.inputs;
     <span class="kw">let </span>fn_name = <span class="kw-2">&amp;</span>func.sig.ident;
@@ -42,6 +47,9 @@
 
     <span class="kw">let </span>token_stream = <span class="macro">quote! </span>{
         <span class="attr">#[track_caller]
+        </span>#(#fn_attrs),*
+        <span class="doccomment">/// ## Composable
+        /// This function must be run in the context of a `Composer`.
         </span>#fn_vis <span class="kw">fn </span>#fn_name&lt;#fn_generics&gt;(#fn_args) #fn_return
         #fn_where
         {

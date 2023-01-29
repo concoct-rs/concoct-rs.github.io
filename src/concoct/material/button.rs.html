@@ -196,6 +196,7 @@
 <a href="#196" id="196">196</a>
 <a href="#197" id="197">197</a>
 <a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
 </pre><pre class="rust"><code><span class="kw">use crate</span>::{
     <span class="self">self </span><span class="kw">as </span>concoct,
     composable::{animated, container, state, text},
@@ -214,7 +215,8 @@
 };
 <span class="kw">use </span>winit::{dpi::PhysicalPosition, event::ElementState};
 
-<span class="attr">#[compose]
+<span class="doccomment">/// Filled button
+</span><span class="attr">#[compose]
 </span><span class="kw">pub fn </span>button(
     label: <span class="kw">impl </span>Into&lt;String&gt; + Clone + <span class="lifetime">&#39;static</span>,
     on_press: <span class="kw">impl </span>FnMut() + Clone + <span class="lifetime">&#39;static</span>,

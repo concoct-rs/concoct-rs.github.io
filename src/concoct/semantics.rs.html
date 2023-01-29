@@ -64,13 +64,21 @@
 <a href="#64" id="64">64</a>
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
-</pre><pre class="rust"><code><span class="kw">use crate</span>::{Handler, LayoutNode};
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+</pre><pre class="rust"><code><span class="doccomment">//! The semantics tree of widgets
+//! This provides accessibility support through ![accesskit](https://github.com/AccessKit/accesskit)
+
+</span><span class="kw">use crate</span>::{Handler, LayoutNode};
 <span class="kw">use </span>accesskit::NodeId;
 <span class="kw">use </span>skia_safe::Point;
 <span class="kw">use </span>std::{collections::HashMap, num::NonZeroU128, sync::Arc};
 <span class="kw">use </span>taffy::{prelude::Layout, Taffy};
 
-<span class="kw">pub struct </span>Semantics {
+<span class="doccomment">/// The semantics tree of widgets
+</span><span class="kw">pub struct </span>Semantics {
     <span class="kw">pub </span>points: Vec&lt;Point&gt;,
     <span class="kw">pub </span>nodes: Vec&lt;(accesskit::NodeId, Arc&lt;accesskit::Node&gt;)&gt;,
     <span class="kw">pub </span>children: Vec&lt;accesskit::NodeId&gt;,

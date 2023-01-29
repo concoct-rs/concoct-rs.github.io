@@ -168,11 +168,12 @@
 <a href="#168" id="168">168</a>
 <a href="#169" id="169">169</a>
 <a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::Modify;
 <span class="kw">use crate</span>::{Event, Handler};
 <span class="kw">use </span>accesskit::{DefaultActionVerb, Node, NodeId, Role};
 <span class="kw">use </span>skia_safe::Canvas;
-<span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::{cell::RefCell, collections::HashMap, rc::Rc};
 <span class="kw">use </span>taffy::prelude::Layout;
 <span class="kw">use </span>winit::{
     dpi::PhysicalPosition,
@@ -235,9 +236,10 @@
 }
 
 <span class="doccomment">/// Configure component to receive clicks via input or accessibility &quot;click&quot; event.
+</span><span class="attr">#[derive(Clone)]
 </span><span class="kw">pub struct </span>Clickable {
     role: Role,
-    on_click: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>ClickHandler&gt;&gt;,
+    on_click: Rc&lt;RefCell&lt;<span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>ClickHandler&gt;&gt;&gt;&gt;,
 }
 
 <span class="kw">impl </span>Clickable {
@@ -247,7 +249,7 @@
     {
         <span class="self">Self </span>{
             role,
-            on_click: <span class="prelude-val">Some</span>(Box::new(handler.into_handle())),
+            on_click: Rc::new(RefCell::new(<span class="prelude-val">Some</span>(Box::new(handler.into_handle())))),
         }
     }
 }

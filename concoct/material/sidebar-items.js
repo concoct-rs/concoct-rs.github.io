@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["button",""],["text_field",""]]};
+window.SIDEBAR_ITEMS = {"fn":[["button","Filled button"],["text_field","Composable"]]};

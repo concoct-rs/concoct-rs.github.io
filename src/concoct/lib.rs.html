@@ -67,8 +67,28 @@
 <a href="#67" id="67">67</a>
 <a href="#68" id="68">68</a>
 <a href="#69" id="69">69</a>
-</pre><pre class="rust"><code><span class="kw">use </span>accesskit::NodeId;
-<span class="kw">use </span>skia_safe::Canvas;
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+</pre><pre class="rust"><code><span class="doccomment">//! # Concoct
+//! A cross-platform UI framework.
+//! 
+//! ## Composables
+//! Composables are the foundational components of UI in concoct.
+//! They are called each time their state, or their parent&#39;s state, changes.
+//! Generic pre-made composables can be found in the [`composable`] module.
+//! 
+//! To make your own composables, use the [`#[compose]`](`compose`) macro.
+//! 
+//! ## State
+//! State can be created with the [`state`](`composable::state::state`) composable.
+
+</span><span class="kw">use </span>skia_safe::Canvas;
 <span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>taffy::{prelude::Layout, Taffy};
 <span class="kw">use </span>winit::{
@@ -124,10 +144,6 @@
     KeyboardInput {
         state: ElementState,
         virtual_keycode: <span class="prelude-ty">Option</span>&lt;VirtualKeyCode&gt;,
-    },
-    Future {
-        node_id: NodeId,
-        value: Box&lt;<span class="kw">dyn </span>Any&gt;,
     },
 }
 

@@ -136,8 +136,6 @@
 <a href="#136" id="136">136</a>
 <a href="#137" id="137">137</a>
 <a href="#138" id="138">138</a>
-<a href="#139" id="139">139</a>
-<a href="#140" id="140">140</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::composer::{BuildKind, Composer, NodeKind};
 <span class="kw">use </span>std::panic::Location;
 
@@ -230,9 +228,7 @@
                             location,
                         );
                         cx.groups.insert(id.clone(), idx);
-                        cx.current_group_id
-                            .path
-                            .push(id.path.last().unwrap().clone());
+                        cx.current_group_id = id;
 
                         drop(cx);
                         f();

@@ -13,7 +13,7 @@ var sourcesIndex = JSON.parse('{\
 "cgl":["",[],["cgl.rs","lib.rs"]],\
 "cocoa":["",[],["appkit.rs","base.rs","foundation.rs","lib.rs","macros.rs","quartzcore.rs"]],\
 "cocoa_foundation":["",[],["base.rs","foundation.rs","lib.rs"]],\
-"concoct":["",[["composable",[],["animated.rs","container.rs","future.rs","group.rs","mod.rs","state.rs","stream.rs","text.rs"]],["material",[],["button.rs","mod.rs","text_field.rs"]],["modify",[],["clickable.rs","mod.rs","modifier.rs","selectable.rs","style.rs","text.rs"]]],["composer.rs","dimension.rs","lib.rs","render.rs","semantics.rs","test.rs"]],\
+"concoct":["",[["composable",[],["animated.rs","container.rs","group.rs","mod.rs","state.rs","text.rs"]],["material",[],["button.rs","mod.rs","text_field.rs"]],["modify",[],["clickable.rs","mod.rs","modifier.rs","selectable.rs","style.rs","text.rs"]]],["composer.rs","dimension.rs","lib.rs","render.rs","semantics.rs","test.rs"]],\
 "concoct_macros":["",[],["lib.rs"]],\
 "core_foundation":["",[],["array.rs","attributed_string.rs","base.rs","boolean.rs","bundle.rs","characterset.rs","data.rs","date.rs","dictionary.rs","error.rs","filedescriptor.rs","lib.rs","mach_port.rs","number.rs","propertylist.rs","runloop.rs","set.rs","string.rs","timezone.rs","url.rs","uuid.rs"]],\
 "core_foundation_sys":["",[],["array.rs","attributed_string.rs","base.rs","bundle.rs","characterset.rs","data.rs","date.rs","dictionary.rs","error.rs","filedescriptor.rs","lib.rs","mach_port.rs","messageport.rs","number.rs","propertylist.rs","runloop.rs","set.rs","string.rs","timezone.rs","url.rs","uuid.rs"]],\
