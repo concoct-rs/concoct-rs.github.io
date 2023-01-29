@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["layout_flexbox","Computes the layout of [`LayoutTree`] according to the flexbox algorithm"]]};

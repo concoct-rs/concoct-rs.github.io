@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["ClickSource",""]],"struct":[["Clickable","Configure component to receive clicks via input or accessibility “click” event."],["EmptyFn",""],["SourceFn",""]],"trait":[["ClickHandler",""],["IntoClickHandler",""]]};

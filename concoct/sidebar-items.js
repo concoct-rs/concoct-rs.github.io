@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"attr":[["compose",""]],"enum":[["Event",""]],"mod":[["composable",""],["composer",""],["dimension",""],["material",""],["modify",""],["render",""],["test",""]],"struct":[["Modifier",""],["Semantics",""]],"trait":[["Handler",""],["Widget",""]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Padding",""],["Size",""]],"trait":[["IntoPixels",""]]};
