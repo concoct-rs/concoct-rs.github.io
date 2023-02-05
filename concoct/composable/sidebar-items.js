@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["container",""],["group",""]],"mod":[["animated",""],["state",""],["text",""]]};
+window.SIDEBAR_ITEMS = {"fn":[["remember",""],["stream",""]],"mod":[["container",""],["material",""],["state",""],["text",""]]};

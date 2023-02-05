@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.27.5/src/platform_impl/macos/app_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>app_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.28.1/src/platform_impl/macos/app_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>app_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -432,45 +432,10 @@
 <a href="#432" id="432">432</a>
 <a href="#433" id="433">433</a>
 <a href="#434" id="434">434</a>
-<a href="#435" id="435">435</a>
-<a href="#436" id="436">436</a>
-<a href="#437" id="437">437</a>
-<a href="#438" id="438">438</a>
-<a href="#439" id="439">439</a>
-<a href="#440" id="440">440</a>
-<a href="#441" id="441">441</a>
-<a href="#442" id="442">442</a>
-<a href="#443" id="443">443</a>
-<a href="#444" id="444">444</a>
-<a href="#445" id="445">445</a>
-<a href="#446" id="446">446</a>
-<a href="#447" id="447">447</a>
-<a href="#448" id="448">448</a>
-<a href="#449" id="449">449</a>
-<a href="#450" id="450">450</a>
-<a href="#451" id="451">451</a>
-<a href="#452" id="452">452</a>
-<a href="#453" id="453">453</a>
-<a href="#454" id="454">454</a>
-<a href="#455" id="455">455</a>
-<a href="#456" id="456">456</a>
-<a href="#457" id="457">457</a>
-<a href="#458" id="458">458</a>
-<a href="#459" id="459">459</a>
-<a href="#460" id="460">460</a>
-<a href="#461" id="461">461</a>
-<a href="#462" id="462">462</a>
-<a href="#463" id="463">463</a>
-<a href="#464" id="464">464</a>
-<a href="#465" id="465">465</a>
-<a href="#466" id="466">466</a>
-<a href="#467" id="467">467</a>
-<a href="#468" id="468">468</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::{
     cell::{RefCell, RefMut},
     collections::VecDeque,
     fmt::{<span class="self">self</span>, Debug},
-    hint::unreachable_unchecked,
     mem,
     rc::{Rc, Weak},
     sync::{
@@ -480,32 +445,23 @@
     time::Instant,
 };
 
-<span class="kw">use </span>cocoa::{
-    appkit::{NSApp, NSApplication, NSWindow},
-    base::{id, nil},
-    foundation::NSSize,
-};
-<span class="kw">use </span>objc::{
-    rc::autoreleasepool,
-    runtime::{Object, BOOL, NO, YES},
-};
+<span class="kw">use </span>core_foundation::runloop::{CFRunLoopGetMain, CFRunLoopWakeUp};
+<span class="kw">use </span>objc2::foundation::{is_main_thread, NSSize};
+<span class="kw">use </span>objc2::rc::autoreleasepool;
 <span class="kw">use </span>once_cell::sync::Lazy;
 
+<span class="kw">use </span><span class="kw">super</span>::appkit::{NSApp, NSApplication, NSApplicationActivationPolicy, NSEvent};
 <span class="kw">use crate</span>::{
     dpi::LogicalSize,
     event::{Event, StartCause, WindowEvent},
     event_loop::{ControlFlow, EventLoopWindowTarget <span class="kw">as </span>RootWindowTarget},
-    platform::macos::ActivationPolicy,
-    platform_impl::{
-        get_aux_state_mut,
-        platform::{
-            event::{EventProxy, EventWrapper},
-            event_loop::{post_dummy_event, PanicInfo},
-            menu,
-            observer::{CFRunLoopGetMain, CFRunLoopWakeUp, EventLoopWaker},
-            util::{IdRef, Never},
-            window::get_window_id,
-        },
+    platform_impl::platform::{
+        event::{EventProxy, EventWrapper},
+        event_loop::PanicInfo,
+        menu,
+        observer::EventLoopWaker,
+        util::Never,
+        window::WinitWindow,
     },
     window::WindowId,
 };
@@ -517,7 +473,7 @@
         <span class="self">self</span>.map_nonuser_event()
             <span class="comment">// `Never` can&#39;t be constructed, so the `UserEvent` variant can&#39;t
             // be present here.
-            </span>.unwrap_or_else(|<span class="kw">_</span>| <span class="kw">unsafe </span>{ unreachable_unchecked() })
+            </span>.unwrap_or_else(|<span class="kw">_</span>| <span class="macro">unreachable!</span>())
     }
 }
 
@@ -674,7 +630,7 @@
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>callback) = <span class="kw-2">*</span><span class="self">self</span>.callback.lock().unwrap() {
             <span class="kw">match </span>wrapper {
                 EventWrapper::StaticEvent(event) =&gt; {
-                    callback.handle_nonuser_event(event, <span class="kw-2">&amp;mut *</span><span class="self">self</span>.control_flow.lock().unwrap())
+                    callback.handle_nonuser_event(event, <span class="kw-2">&amp;mut </span><span class="self">self</span>.control_flow.lock().unwrap())
                 }
                 EventWrapper::EventProxy(proxy) =&gt; <span class="self">self</span>.handle_proxy(proxy, callback),
             }
@@ -683,44 +639,44 @@
 
     <span class="kw">fn </span>handle_user_events(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>callback) = <span class="kw-2">*</span><span class="self">self</span>.callback.lock().unwrap() {
-            callback.handle_user_events(<span class="kw-2">&amp;mut *</span><span class="self">self</span>.control_flow.lock().unwrap());
+            callback.handle_user_events(<span class="kw-2">&amp;mut </span><span class="self">self</span>.control_flow.lock().unwrap());
         }
     }
 
     <span class="kw">fn </span>handle_scale_factor_changed_event(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         callback: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>EventHandler + <span class="lifetime">&#39;static</span>&gt;,
-        ns_window: IdRef,
+        window: <span class="kw-2">&amp;</span>WinitWindow,
         suggested_size: LogicalSize&lt;f64&gt;,
         scale_factor: f64,
     ) {
         <span class="kw">let </span><span class="kw-2">mut </span>size = suggested_size.to_physical(scale_factor);
         <span class="kw">let </span>new_inner_size = <span class="kw-2">&amp;mut </span>size;
         <span class="kw">let </span>event = Event::WindowEvent {
-            window_id: WindowId(get_window_id(<span class="kw-2">*</span>ns_window)),
+            window_id: WindowId(window.id()),
             event: WindowEvent::ScaleFactorChanged {
                 scale_factor,
                 new_inner_size,
             },
         };
 
-        callback.handle_nonuser_event(event, <span class="kw-2">&amp;mut *</span><span class="self">self</span>.control_flow.lock().unwrap());
+        callback.handle_nonuser_event(event, <span class="kw-2">&amp;mut </span><span class="self">self</span>.control_flow.lock().unwrap());
 
         <span class="kw">let </span>physical_size = <span class="kw-2">*</span>new_inner_size;
         <span class="kw">let </span>logical_size = physical_size.to_logical(scale_factor);
         <span class="kw">let </span>size = NSSize::new(logical_size.width, logical_size.height);
-        <span class="kw">unsafe </span>{ NSWindow::setContentSize_(<span class="kw-2">*</span>ns_window, size) };
+        window.setContentSize(size);
     }
 
     <span class="kw">fn </span>handle_proxy(<span class="kw-2">&amp;</span><span class="self">self</span>, proxy: EventProxy, callback: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>EventHandler + <span class="lifetime">&#39;static</span>&gt;) {
         <span class="kw">match </span>proxy {
             EventProxy::DpiChangedProxy {
-                ns_window,
+                window,
                 suggested_size,
                 scale_factor,
             } =&gt; <span class="self">self</span>.handle_scale_factor_changed_event(
                 callback,
-                ns_window,
+                <span class="kw-2">&amp;</span>window,
                 suggested_size,
                 scale_factor,
             ),
@@ -728,7 +684,7 @@
     }
 }
 
-<span class="kw">pub enum </span>AppState {}
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>AppState {}
 
 <span class="kw">impl </span>AppState {
     <span class="kw">pub fn </span>set_callback&lt;T&gt;(callback: Weak&lt;Callback&lt;T&gt;&gt;, window_target: Rc&lt;RootWindowTarget&lt;T&gt;&gt;) {
@@ -750,17 +706,22 @@
         </span>}
     }
 
-    <span class="kw">pub fn </span>launched(app_delegate: <span class="kw-2">&amp;</span>Object) {
-        apply_activation_policy(app_delegate);
-        <span class="kw">unsafe </span>{
-            <span class="kw">let </span>ns_app = NSApp();
-            window_activation_hack(ns_app);
-            <span class="comment">// TODO: Consider allowing the user to specify they don&#39;t want their application activated
-            </span>ns_app.activateIgnoringOtherApps_(YES);
-        };
+    <span class="kw">pub fn </span>launched(
+        activation_policy: NSApplicationActivationPolicy,
+        create_default_menu: bool,
+        activate_ignoring_other_apps: bool,
+    ) {
+        <span class="kw">let </span>app = NSApp();
+        <span class="comment">// We need to delay setting the activation policy and activating the app
+        // until `applicationDidFinishLaunching` has been called. Otherwise the
+        // menu bar is initially unresponsive on macOS 10.15.
+        </span>app.setActivationPolicy(activation_policy);
+
+        window_activation_hack(<span class="kw-2">&amp;</span>app);
+        app.activateIgnoringOtherApps(activate_ignoring_other_apps);
+
         HANDLER.set_ready();
         HANDLER.waker().start();
-        <span class="kw">let </span>create_default_menu = <span class="kw">unsafe </span>{ get_aux_state_mut(app_delegate).default_menu };
         <span class="kw">if </span>create_default_menu {
             <span class="comment">// The menubar initialization should be before the `NewEvents` event, to allow
             // overriding of the default menu even if it&#39;s created
@@ -825,23 +786,20 @@
     }
 
     <span class="kw">pub fn </span>handle_redraw(window_id: WindowId) {
-        HANDLER.handle_nonuser_event(EventWrapper::StaticEvent(Event::RedrawRequested(window_id)));
+        <span class="comment">// Redraw request might come out of order from the OS.
+        // -&gt; Don&#39;t go back into the callback when our callstack originates from there
+        </span><span class="kw">if </span>!HANDLER.in_callback.swap(<span class="bool-val">true</span>, Ordering::AcqRel) {
+            HANDLER
+                .handle_nonuser_event(EventWrapper::StaticEvent(Event::RedrawRequested(window_id)));
+            HANDLER.set_in_callback(<span class="bool-val">false</span>);
+        }
     }
 
     <span class="kw">pub fn </span>queue_event(wrapper: EventWrapper) {
-        <span class="kw">let </span>is_main_thread: BOOL = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>(<span class="macro">class!</span>(NSThread), isMainThread) };
-        <span class="kw">if </span>is_main_thread == NO {
-            <span class="macro">panic!</span>(<span class="string">&quot;Event queued from different thread: {:#?}&quot;</span>, wrapper);
+        <span class="kw">if </span>!is_main_thread() {
+            <span class="macro">panic!</span>(<span class="string">&quot;Event queued from different thread: {wrapper:#?}&quot;</span>);
         }
         HANDLER.events().push_back(wrapper);
-    }
-
-    <span class="kw">pub fn </span>queue_events(<span class="kw-2">mut </span>wrappers: VecDeque&lt;EventWrapper&gt;) {
-        <span class="kw">let </span>is_main_thread: BOOL = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>(<span class="macro">class!</span>(NSThread), isMainThread) };
-        <span class="kw">if </span>is_main_thread == NO {
-            <span class="macro">panic!</span>(<span class="string">&quot;Events queued from different thread: {:#?}&quot;</span>, wrappers);
-        }
-        HANDLER.events().append(<span class="kw-2">&amp;mut </span>wrappers);
     }
 
     <span class="kw">pub fn </span>cleared(panic_info: Weak&lt;PanicInfo&gt;) {
@@ -868,15 +826,12 @@
         HANDLER.set_in_callback(<span class="bool-val">false</span>);
 
         <span class="kw">if </span>HANDLER.should_exit() {
-            <span class="kw">unsafe </span>{
-                <span class="kw">let </span>app: id = NSApp();
-
-                autoreleasepool(|| {
-                    <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[app, stop: nil];
-                    <span class="comment">// To stop event loop immediately, we need to post some event here.
-                    </span>post_dummy_event(app);
-                });
-            };
+            <span class="kw">let </span>app = NSApp();
+            autoreleasepool(|<span class="kw">_</span>| {
+                app.stop(<span class="prelude-val">None</span>);
+                <span class="comment">// To stop event loop immediately, we need to post some event here.
+                </span>app.postEvent_atStart(<span class="kw-2">&amp;</span>NSEvent::dummy(), <span class="bool-val">true</span>);
+            });
         }
         HANDLER.update_start_time();
         <span class="kw">match </span>HANDLER.get_old_and_new_control_flow() {
@@ -897,42 +852,19 @@
 ///
 /// If this becomes too bothersome to maintain, it can probably be removed
 /// without too much damage.
-</span><span class="kw">unsafe fn </span>window_activation_hack(ns_app: id) {
-    <span class="comment">// Get the application&#39;s windows
-    // TODO: Proper ordering of the windows
-    </span><span class="kw">let </span>ns_windows: id = <span class="macro">msg_send!</span>[ns_app, windows];
-    <span class="kw">let </span>ns_enumerator: id = <span class="macro">msg_send!</span>[ns_windows, objectEnumerator];
-    <span class="kw">loop </span>{
-        <span class="comment">// Enumerate over the windows
-        </span><span class="kw">let </span>ns_window: id = <span class="macro">msg_send!</span>[ns_enumerator, nextObject];
-        <span class="kw">if </span>ns_window == nil {
-            <span class="kw">break</span>;
-        }
-        <span class="comment">// And call `makeKeyAndOrderFront` if it was called on the window in `UnownedWindow::new`
+</span><span class="kw">fn </span>window_activation_hack(app: <span class="kw-2">&amp;</span>NSApplication) {
+    <span class="comment">// TODO: Proper ordering of the windows
+    </span>app.windows().into_iter().for_each(|window| {
+        <span class="comment">// Call `makeKeyAndOrderFront` if it was called on the window in `WinitWindow::new`
         // This way we preserve the user&#39;s desired initial visiblity status
         // TODO: Also filter on the type/&quot;level&quot; of the window, and maybe other things?
-        </span><span class="kw">if </span>ns_window.isVisible() == YES {
+        </span><span class="kw">if </span>window.isVisible() {
             <span class="macro">trace!</span>(<span class="string">&quot;Activating visible window&quot;</span>);
-            ns_window.makeKeyAndOrderFront_(nil);
+            window.makeKeyAndOrderFront(<span class="prelude-val">None</span>);
         } <span class="kw">else </span>{
             <span class="macro">trace!</span>(<span class="string">&quot;Skipping activating invisible window&quot;</span>);
         }
-    }
-}
-<span class="kw">fn </span>apply_activation_policy(app_delegate: <span class="kw-2">&amp;</span>Object) {
-    <span class="kw">unsafe </span>{
-        <span class="kw">use </span>cocoa::appkit::NSApplicationActivationPolicy::<span class="kw-2">*</span>;
-        <span class="kw">let </span>ns_app = NSApp();
-        <span class="comment">// We need to delay setting the activation policy and activating the app
-        // until `applicationDidFinishLaunching` has been called. Otherwise the
-        // menu bar is initially unresponsive on macOS 10.15.
-        </span><span class="kw">let </span>act_pol = get_aux_state_mut(app_delegate).activation_policy;
-        ns_app.setActivationPolicy_(<span class="kw">match </span>act_pol {
-            ActivationPolicy::Regular =&gt; NSApplicationActivationPolicyRegular,
-            ActivationPolicy::Accessory =&gt; NSApplicationActivationPolicyAccessory,
-            ActivationPolicy::Prohibited =&gt; NSApplicationActivationPolicyProhibited,
-        });
-    }
+    })
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>

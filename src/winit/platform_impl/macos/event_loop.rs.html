@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.27.5/src/platform_impl/macos/event_loop.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event_loop.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.28.1/src/platform_impl/macos/event_loop.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event_loop.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -327,20 +327,6 @@
 <a href="#327" id="327">327</a>
 <a href="#328" id="328">328</a>
 <a href="#329" id="329">329</a>
-<a href="#330" id="330">330</a>
-<a href="#331" id="331">331</a>
-<a href="#332" id="332">332</a>
-<a href="#333" id="333">333</a>
-<a href="#334" id="334">334</a>
-<a href="#335" id="335">335</a>
-<a href="#336" id="336">336</a>
-<a href="#337" id="337">337</a>
-<a href="#338" id="338">338</a>
-<a href="#339" id="339">339</a>
-<a href="#340" id="340">340</a>
-<a href="#341" id="341">341</a>
-<a href="#342" id="342">342</a>
-<a href="#343" id="343">343</a>
 </pre><pre class="rust"><code><span class="kw">use </span>std::{
     any::Any,
     cell::{Cell, RefCell},
@@ -354,29 +340,27 @@
     sync::mpsc,
 };
 
-<span class="kw">use </span>cocoa::{
-    appkit::{NSApp, NSEventModifierFlags, NSEventSubtype, NSEventType::NSApplicationDefined},
-    base::{id, nil, BOOL, NO, YES},
-    foundation::{NSInteger, NSPoint, NSTimeInterval},
+<span class="kw">use </span>core_foundation::base::{CFIndex, CFRelease};
+<span class="kw">use </span>core_foundation::runloop::{
+    kCFRunLoopCommonModes, CFRunLoopAddSource, CFRunLoopGetMain, CFRunLoopSourceContext,
+    CFRunLoopSourceCreate, CFRunLoopSourceRef, CFRunLoopSourceSignal, CFRunLoopWakeUp,
 };
-<span class="kw">use </span>objc::rc::autoreleasepool;
+<span class="kw">use </span>objc2::foundation::is_main_thread;
+<span class="kw">use </span>objc2::rc::{autoreleasepool, Id, Shared};
+<span class="kw">use </span>objc2::{msg_send_id, ClassType};
 <span class="kw">use </span>raw_window_handle::{AppKitDisplayHandle, RawDisplayHandle};
 
+<span class="kw">use </span><span class="kw">super</span>::appkit::{NSApp, NSApplicationActivationPolicy, NSEvent};
 <span class="kw">use crate</span>::{
     event::Event,
     event_loop::{ControlFlow, EventLoopClosed, EventLoopWindowTarget <span class="kw">as </span>RootWindowTarget},
-    monitor::MonitorHandle <span class="kw">as </span>RootMonitorHandle,
     platform::macos::ActivationPolicy,
-    platform_impl::{
-        get_aux_state_mut,
-        platform::{
-            app::APP_CLASS,
-            app_delegate::APP_DELEGATE_CLASS,
-            app_state::{AppState, Callback},
-            monitor::{<span class="self">self</span>, MonitorHandle},
-            observer::<span class="kw-2">*</span>,
-            util::IdRef,
-        },
+    platform_impl::platform::{
+        app::WinitApplication,
+        app_delegate::ApplicationDelegate,
+        app_state::{AppState, Callback},
+        monitor::{<span class="self">self</span>, MonitorHandle},
+        observer::setup_control_flow_observers,
     },
 };
 
@@ -427,9 +411,9 @@
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>primary_monitor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;RootMonitorHandle&gt; {
+    </span><span class="kw">pub fn </span>primary_monitor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;MonitorHandle&gt; {
         <span class="kw">let </span>monitor = monitor::primary_monitor();
-        <span class="prelude-val">Some</span>(RootMonitorHandle { inner: monitor })
+        <span class="prelude-val">Some</span>(monitor)
     }
 
     <span class="attr">#[inline]
@@ -440,22 +424,18 @@
 
 <span class="kw">impl</span>&lt;T&gt; EventLoopWindowTarget&lt;T&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>hide_application(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let </span>cls = objc::runtime::Class::get(<span class="string">&quot;NSApplication&quot;</span>).unwrap();
-        <span class="kw">let </span>app: cocoa::base::id = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[cls, sharedApplication] };
-        <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[app, hide: <span class="number">0</span>] }
+        NSApp().hide(<span class="prelude-val">None</span>)
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>hide_other_applications(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let </span>cls = objc::runtime::Class::get(<span class="string">&quot;NSApplication&quot;</span>).unwrap();
-        <span class="kw">let </span>app: cocoa::base::id = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[cls, sharedApplication] };
-        <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[app, hideOtherApplications: <span class="number">0</span>] }
+        NSApp().hideOtherApplications(<span class="prelude-val">None</span>)
     }
 }
 
 <span class="kw">pub struct </span>EventLoop&lt;T: <span class="lifetime">&#39;static</span>&gt; {
     <span class="doccomment">/// The delegate is only weakly referenced by NSApplication, so we keep
     /// it around here as well.
-    </span>_delegate: IdRef,
+    </span>_delegate: Id&lt;ApplicationDelegate, Shared&gt;,
 
     window_target: Rc&lt;RootWindowTarget&lt;T&gt;&gt;,
     panic_info: Rc&lt;PanicInfo&gt;,
@@ -473,6 +453,7 @@
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>PlatformSpecificEventLoopAttributes {
     <span class="kw">pub</span>(<span class="kw">crate</span>) activation_policy: ActivationPolicy,
     <span class="kw">pub</span>(<span class="kw">crate</span>) default_menu: bool,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) activate_ignoring_other_apps: bool,
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>PlatformSpecificEventLoopAttributes {
@@ -480,36 +461,40 @@
         <span class="self">Self </span>{
             activation_policy: Default::default(), <span class="comment">// Regular
             </span>default_menu: <span class="bool-val">true</span>,
+            activate_ignoring_other_apps: <span class="bool-val">true</span>,
         }
     }
 }
 
 <span class="kw">impl</span>&lt;T&gt; EventLoop&lt;T&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(attributes: <span class="kw-2">&amp;</span>PlatformSpecificEventLoopAttributes) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>delegate = <span class="kw">unsafe </span>{
-            <span class="kw">let </span>is_main_thread: BOOL = <span class="macro">msg_send!</span>(<span class="macro">class!</span>(NSThread), isMainThread);
-            <span class="kw">if </span>is_main_thread == NO {
-                <span class="macro">panic!</span>(<span class="string">&quot;On macOS, `EventLoop` must be created on the main thread!&quot;</span>);
-            }
+        <span class="kw">if </span>!is_main_thread() {
+            <span class="macro">panic!</span>(<span class="string">&quot;On macOS, `EventLoop` must be created on the main thread!&quot;</span>);
+        }
 
-            <span class="comment">// This must be done before `NSApp()` (equivalent to sending
-            // `sharedApplication`) is called anywhere else, or we&#39;ll end up
-            // with the wrong `NSApplication` class and the wrong thread could
-            // be marked as main.
-            </span><span class="kw">let </span>app: id = <span class="macro">msg_send!</span>[APP_CLASS.<span class="number">0</span>, sharedApplication];
+        <span class="comment">// This must be done before `NSApp()` (equivalent to sending
+        // `sharedApplication`) is called anywhere else, or we&#39;ll end up
+        // with the wrong `NSApplication` class and the wrong thread could
+        // be marked as main.
+        </span><span class="kw">let </span>app: Id&lt;WinitApplication, Shared&gt; =
+            <span class="kw">unsafe </span>{ <span class="macro">msg_send_id!</span>[WinitApplication::class(), sharedApplication] };
 
-            <span class="kw">let </span>delegate = IdRef::new(<span class="macro">msg_send!</span>[APP_DELEGATE_CLASS.<span class="number">0</span>, new]);
-
-            <span class="kw">let </span><span class="kw-2">mut </span>aux_state = get_aux_state_mut(<span class="kw-2">&amp;**</span>delegate);
-            aux_state.activation_policy = attributes.activation_policy;
-            aux_state.default_menu = attributes.default_menu;
-
-            autoreleasepool(|| {
-                <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[app, setDelegate:<span class="kw-2">*</span>delegate];
-            });
-
-            delegate
+        <span class="kw">use </span>NSApplicationActivationPolicy::<span class="kw-2">*</span>;
+        <span class="kw">let </span>activation_policy = <span class="kw">match </span>attributes.activation_policy {
+            ActivationPolicy::Regular =&gt; NSApplicationActivationPolicyRegular,
+            ActivationPolicy::Accessory =&gt; NSApplicationActivationPolicyAccessory,
+            ActivationPolicy::Prohibited =&gt; NSApplicationActivationPolicyProhibited,
         };
+        <span class="kw">let </span>delegate = ApplicationDelegate::new(
+            activation_policy,
+            attributes.default_menu,
+            attributes.activate_ignoring_other_apps,
+        );
+
+        autoreleasepool(|<span class="kw">_</span>| {
+            app.setDelegate(<span class="kw-2">&amp;</span>delegate);
+        });
+
         <span class="kw">let </span>panic_info: Rc&lt;PanicInfo&gt; = Default::default();
         setup_control_flow_observers(Rc::downgrade(<span class="kw-2">&amp;</span>panic_info));
         EventLoop {
@@ -552,9 +537,8 @@
 
         <span class="self">self</span>._callback = <span class="prelude-val">Some</span>(Rc::clone(<span class="kw-2">&amp;</span>callback));
 
-        <span class="kw">let </span>exit_code = autoreleasepool(|| <span class="kw">unsafe </span>{
+        <span class="kw">let </span>exit_code = autoreleasepool(|<span class="kw">_</span>| {
             <span class="kw">let </span>app = NSApp();
-            <span class="macro">assert_ne!</span>(app, nil);
 
             <span class="comment">// A bit of juggling with the callback references to make sure
             // that `self.callback` is the only owner of the callback.
@@ -562,7 +546,7 @@
             drop(callback);
 
             AppState::set_callback(weak_cb, Rc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.window_target));
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[app, run];
+            <span class="kw">unsafe </span>{ app.run() };
 
             <span class="kw">if let </span><span class="prelude-val">Some</span>(panic) = <span class="self">self</span>.panic_info.take() {
                 drop(<span class="self">self</span>._callback.take());
@@ -578,24 +562,6 @@
     <span class="kw">pub fn </span>create_proxy(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; EventLoopProxy&lt;T&gt; {
         EventLoopProxy::new(<span class="self">self</span>.window_target.p.sender.clone())
     }
-}
-
-<span class="attr">#[inline]
-</span><span class="kw">pub unsafe fn </span>post_dummy_event(target: id) {
-    <span class="kw">let </span>event_class = <span class="macro">class!</span>(NSEvent);
-    <span class="kw">let </span>dummy_event: id = <span class="macro">msg_send!</span>[
-        event_class,
-        otherEventWithType: NSApplicationDefined
-        location: NSPoint::new(<span class="number">0.0</span>, <span class="number">0.0</span>)
-        modifierFlags: NSEventModifierFlags::empty()
-        timestamp: <span class="number">0 </span><span class="kw">as </span>NSTimeInterval
-        windowNumber: <span class="number">0 </span><span class="kw">as </span>NSInteger
-        context: nil
-        subtype: NSEventSubtype::NSWindowExposedEventType
-        data1: <span class="number">0 </span><span class="kw">as </span>NSInteger
-        data2: <span class="number">0 </span><span class="kw">as </span>NSInteger
-    ];
-    <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[target, postEvent: dummy_event atStart: YES];
 }
 
 <span class="doccomment">/// Catches panics that happen inside `f` and when a panic
@@ -616,15 +582,11 @@
                 <span class="kw">let </span>panic_info = panic_info.upgrade().unwrap();
                 panic_info.set_panic(e);
             }
-            <span class="kw">unsafe </span>{
-                <span class="kw">let </span>app_class = <span class="macro">class!</span>(NSApplication);
-                <span class="kw">let </span>app: id = <span class="macro">msg_send!</span>[app_class, sharedApplication];
-                <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[app, stop: nil];
-
-                <span class="comment">// Posting a dummy event to get `stop` to take effect immediately.
-                // See: https://stackoverflow.com/questions/48041279/stopping-the-nsapplication-main-event-loop/48064752#48064752
-                </span>post_dummy_event(app);
-            }
+            <span class="kw">let </span>app = NSApp();
+            app.stop(<span class="prelude-val">None</span>);
+            <span class="comment">// Posting a dummy event to get `stop` to take effect immediately.
+            // See: https://stackoverflow.com/questions/48041279/stopping-the-nsapplication-main-event-loop/48064752#48064752
+            </span>app.postEvent_atStart(<span class="kw-2">&amp;</span>NSEvent::dummy(), <span class="bool-val">true</span>);
             <span class="prelude-val">None
         </span>}
     }
@@ -655,13 +617,23 @@
     <span class="kw">fn </span>new(sender: mpsc::Sender&lt;T&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">unsafe </span>{
             <span class="comment">// just wake up the eventloop
-            </span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>event_loop_proxy_handler(<span class="kw">_</span>: <span class="kw-2">*mut </span>c_void) {}
+            </span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>event_loop_proxy_handler(<span class="kw">_</span>: <span class="kw-2">*const </span>c_void) {}
 
             <span class="comment">// adding a Source to the main CFRunLoop lets us wake it up and
             // process user events through the normal OS EventLoop mechanisms.
             </span><span class="kw">let </span>rl = CFRunLoopGetMain();
-            <span class="kw">let </span><span class="kw-2">mut </span>context: CFRunLoopSourceContext = mem::zeroed();
-            context.perform = <span class="prelude-val">Some</span>(event_loop_proxy_handler);
+            <span class="kw">let </span><span class="kw-2">mut </span>context = CFRunLoopSourceContext {
+                version: <span class="number">0</span>,
+                info: ptr::null_mut(),
+                retain: <span class="prelude-val">None</span>,
+                release: <span class="prelude-val">None</span>,
+                copyDescription: <span class="prelude-val">None</span>,
+                equal: <span class="prelude-val">None</span>,
+                hash: <span class="prelude-val">None</span>,
+                schedule: <span class="prelude-val">None</span>,
+                cancel: <span class="prelude-val">None</span>,
+                perform: event_loop_proxy_handler,
+            };
             <span class="kw">let </span>source =
                 CFRunLoopSourceCreate(ptr::null_mut(), CFIndex::max_value() - <span class="number">1</span>, <span class="kw-2">&amp;mut </span>context);
             CFRunLoopAddSource(rl, source, kCFRunLoopCommonModes);

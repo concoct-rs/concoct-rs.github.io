@@ -380,125 +380,10 @@
 <a href="#380" id="380">380</a>
 <a href="#381" id="381">381</a>
 <a href="#382" id="382">382</a>
-<a href="#383" id="383">383</a>
-<a href="#384" id="384">384</a>
-<a href="#385" id="385">385</a>
-<a href="#386" id="386">386</a>
-<a href="#387" id="387">387</a>
-<a href="#388" id="388">388</a>
-<a href="#389" id="389">389</a>
-<a href="#390" id="390">390</a>
-<a href="#391" id="391">391</a>
-<a href="#392" id="392">392</a>
-<a href="#393" id="393">393</a>
-<a href="#394" id="394">394</a>
-<a href="#395" id="395">395</a>
-<a href="#396" id="396">396</a>
-<a href="#397" id="397">397</a>
-<a href="#398" id="398">398</a>
-<a href="#399" id="399">399</a>
-<a href="#400" id="400">400</a>
-<a href="#401" id="401">401</a>
-<a href="#402" id="402">402</a>
-<a href="#403" id="403">403</a>
-<a href="#404" id="404">404</a>
-<a href="#405" id="405">405</a>
-<a href="#406" id="406">406</a>
-<a href="#407" id="407">407</a>
-<a href="#408" id="408">408</a>
-<a href="#409" id="409">409</a>
-<a href="#410" id="410">410</a>
-<a href="#411" id="411">411</a>
-<a href="#412" id="412">412</a>
-<a href="#413" id="413">413</a>
-<a href="#414" id="414">414</a>
-<a href="#415" id="415">415</a>
-<a href="#416" id="416">416</a>
-<a href="#417" id="417">417</a>
-<a href="#418" id="418">418</a>
-<a href="#419" id="419">419</a>
-<a href="#420" id="420">420</a>
-<a href="#421" id="421">421</a>
-<a href="#422" id="422">422</a>
-<a href="#423" id="423">423</a>
-<a href="#424" id="424">424</a>
-<a href="#425" id="425">425</a>
-<a href="#426" id="426">426</a>
-<a href="#427" id="427">427</a>
-<a href="#428" id="428">428</a>
-<a href="#429" id="429">429</a>
-<a href="#430" id="430">430</a>
-<a href="#431" id="431">431</a>
-<a href="#432" id="432">432</a>
-<a href="#433" id="433">433</a>
-<a href="#434" id="434">434</a>
-<a href="#435" id="435">435</a>
-<a href="#436" id="436">436</a>
-<a href="#437" id="437">437</a>
-<a href="#438" id="438">438</a>
-<a href="#439" id="439">439</a>
-<a href="#440" id="440">440</a>
-<a href="#441" id="441">441</a>
-<a href="#442" id="442">442</a>
-<a href="#443" id="443">443</a>
-<a href="#444" id="444">444</a>
-<a href="#445" id="445">445</a>
-<a href="#446" id="446">446</a>
-<a href="#447" id="447">447</a>
-<a href="#448" id="448">448</a>
-<a href="#449" id="449">449</a>
-<a href="#450" id="450">450</a>
-<a href="#451" id="451">451</a>
-<a href="#452" id="452">452</a>
-<a href="#453" id="453">453</a>
-<a href="#454" id="454">454</a>
-<a href="#455" id="455">455</a>
-<a href="#456" id="456">456</a>
-<a href="#457" id="457">457</a>
-<a href="#458" id="458">458</a>
-<a href="#459" id="459">459</a>
-<a href="#460" id="460">460</a>
-<a href="#461" id="461">461</a>
-<a href="#462" id="462">462</a>
-<a href="#463" id="463">463</a>
-<a href="#464" id="464">464</a>
-<a href="#465" id="465">465</a>
-<a href="#466" id="466">466</a>
-<a href="#467" id="467">467</a>
-<a href="#468" id="468">468</a>
-<a href="#469" id="469">469</a>
-<a href="#470" id="470">470</a>
-<a href="#471" id="471">471</a>
-<a href="#472" id="472">472</a>
-<a href="#473" id="473">473</a>
-<a href="#474" id="474">474</a>
-<a href="#475" id="475">475</a>
-<a href="#476" id="476">476</a>
-<a href="#477" id="477">477</a>
-<a href="#478" id="478">478</a>
-<a href="#479" id="479">479</a>
-<a href="#480" id="480">480</a>
-<a href="#481" id="481">481</a>
-<a href="#482" id="482">482</a>
-<a href="#483" id="483">483</a>
-<a href="#484" id="484">484</a>
-<a href="#485" id="485">485</a>
-<a href="#486" id="486">486</a>
-<a href="#487" id="487">487</a>
-<a href="#488" id="488">488</a>
-<a href="#489" id="489">489</a>
-<a href="#490" id="490">490</a>
-<a href="#491" id="491">491</a>
-<a href="#492" id="492">492</a>
-<a href="#493" id="493">493</a>
-<a href="#494" id="494">494</a>
-<a href="#495" id="495">495</a>
-<a href="#496" id="496">496</a>
-<a href="#497" id="497">497</a>
 </pre><pre class="rust"><code><span class="doccomment">//! Render engine
 
 </span><span class="kw">use crate</span>::{Composer, Semantics};
-<span class="kw">use </span>accesskit::{NodeId, Role, Tree, TreeUpdate};
+<span class="kw">use </span>accesskit::{NodeId, Tree};
 <span class="kw">use </span>accesskit_winit::{ActionRequestEvent, Adapter};
 <span class="kw">use </span>gl::types::<span class="kw-2">*</span>;
 <span class="kw">use </span>glutin::{
@@ -512,15 +397,17 @@
 <span class="kw">use </span>raw_window_handle::HasRawWindowHandle;
 <span class="kw">use </span>skia_safe::{
     gpu::{gl::FramebufferInfo, BackendRenderTarget, FlushInfo, SurfaceOrigin},
-    Color, ColorType, Point,
+    Color, ColorType,
 };
+<span class="kw">use </span>slotmap::DefaultKey;
 <span class="kw">use </span>std::{
+    any::Any,
     ffi::CString,
     num::{NonZeroU128, NonZeroU32},
-    sync::Arc,
 };
 <span class="kw">use </span>taffy::{prelude::Size, style::Style};
 <span class="kw">use </span>winit::{
+    dpi::LogicalSize,
     event::{Event, KeyboardInput, WindowEvent},
     event_loop::{ControlFlow, EventLoopBuilder},
     window::{Window, WindowBuilder},
@@ -529,9 +416,8 @@
 <span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>UserEvent {
     ActionRequest(ActionRequestEvent),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;tokio&quot;</span>)]
-    </span>Task {
-        id: tokio::task::Id,
+    Task {
+        id: DefaultKey,
         data: Box&lt;<span class="kw">dyn </span>Any + Send&gt;,
     },
 }
@@ -580,33 +466,21 @@
     gl_context: PossiblyCurrentContext,
 }
 
-<span class="kw">impl </span>Env {
-    <span class="kw">pub fn </span>redraw(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        _scale_factor: f64,
-        composer: <span class="kw-2">&amp;mut </span>Composer,
-        semantics: <span class="kw-2">&amp;mut </span>Semantics,
-    ) {
-        <span class="kw">let </span>canvas = <span class="self">self</span>.surface.canvas();
-        canvas.clear(Color::WHITE);
-
-        semantics.points = <span class="macro">vec!</span>[Point::new(<span class="number">0.</span>, <span class="number">0.</span>)];
-        <span class="kw">for </span>(id, widget) <span class="kw">in </span><span class="kw-2">&amp;mut </span>composer.widgets {
-            <span class="kw">let </span>point = widget.semantics(<span class="kw-2">&amp;</span>composer.taffy, <span class="kw-2">*</span>id, semantics);
-            widget.paint(point, canvas);
-        }
-
-        <span class="self">self</span>.gr_context.flush(<span class="kw-2">&amp;</span>FlushInfo::default());
-        <span class="self">self</span>.windowed_context
-            .surface
-            .swap_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>.gl_context)
-            .unwrap();
-    }
+<span class="attr">#[track_caller]
+#[cfg(not(target_os = <span class="string">&quot;android&quot;</span>))]
+</span><span class="kw">pub fn </span>run(view_builder: <span class="kw">fn</span>()) {
+    <span class="kw">let </span>event_loop_builder = EventLoopBuilder::with_user_event();
+    run_with_event_loop_builder(view_builder, event_loop_builder)
 }
 
 <span class="attr">#[track_caller]
-</span><span class="kw">pub fn </span>run(view_builder: <span class="kw">fn</span>()) {
-    <span class="kw">let </span>event_loop_builder = EventLoopBuilder::with_user_event();
+#[cfg(target_os = <span class="string">&quot;android&quot;</span>)]
+</span><span class="kw">pub fn </span>run(view_builder: <span class="kw">fn</span>(), android_app: android_activity::AndroidApp) {
+    <span class="kw">use </span>winit::platform::android::EventLoopBuilderExtAndroid;
+
+    <span class="kw">let </span><span class="kw-2">mut </span>event_loop_builder = EventLoopBuilder::with_user_event();
+    event_loop_builder.with_android_app(android_app);
+
     run_with_event_loop_builder(view_builder, event_loop_builder)
 }
 
@@ -618,7 +492,11 @@
     <span class="kw">let </span>event_loop = event_loop_builder.build();
 
     <span class="kw">let </span>window_builder = <span class="kw">if </span><span class="macro">cfg!</span>(wgl_backend) {
-        <span class="prelude-val">Some</span>(WindowBuilder::new())
+        <span class="prelude-val">Some</span>(
+            WindowBuilder::new()
+                .with_inner_size(LogicalSize::new(<span class="number">400.</span>, <span class="number">600.</span>))
+                .with_resizable(<span class="bool-val">false</span>),
+        )
     } <span class="kw">else </span>{
         <span class="prelude-val">None
     </span>};
@@ -657,27 +535,12 @@
     });
 
     <span class="kw">let </span><span class="kw-2">mut </span>env = <span class="prelude-val">None</span>;
-    <span class="kw">let </span><span class="kw-2">mut </span>scale_factor = <span class="number">1.</span>;
-
+    <span class="kw">let </span><span class="kw-2">mut </span>adapter = <span class="prelude-val">None</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>cursor = <span class="prelude-val">None</span>;
-
-    <span class="kw">let </span>root = Arc::new(accesskit::Node {
-        role: Role::Window,
-        children: <span class="macro">vec!</span>[],
-        name: <span class="prelude-val">Some</span>(<span class="string">&quot;WINDOW_TITLE&quot;</span>.into()),
-        ..Default::default()
-    });
-    <span class="kw">let </span><span class="kw-2">mut </span>nodes = <span class="macro">vec!</span>[(WINDOW_ID, root)];
-    <span class="kw">let </span>children = Vec::new();
     <span class="kw">let </span>proxy = event_loop.create_proxy();
 
-    <span class="kw">let </span><span class="kw-2">mut </span>adapter = <span class="prelude-val">None</span>;
-
-    <span class="kw">const </span>WINDOW_ID: NodeId = NodeId(<span class="kw">unsafe </span>{ NonZeroU128::new_unchecked(<span class="number">1</span>) });
-
     <span class="kw">let </span><span class="kw-2">mut </span>semantics = Semantics::default();
-
-    Composer::with(|composer| composer.borrow_mut().proxy = <span class="prelude-val">Some</span>(event_loop.create_proxy()));
+    semantics.proxy = <span class="prelude-val">Some</span>(event_loop.create_proxy());
 
     event_loop.run(<span class="kw">move </span>|event, window_target, control_flow| {
         <span class="kw-2">*</span>control_flow = ControlFlow::Wait;
@@ -685,29 +548,25 @@
         <span class="kw">match </span>event {
             Event::Resumed =&gt; {
                 <span class="kw">let </span>window = window.take().unwrap_or_else(|| {
-                    <span class="kw">let </span>window_builder = WindowBuilder::new().with_transparent(<span class="bool-val">true</span>);
+                    <span class="kw">let </span>window_builder = WindowBuilder::new()
+                        .with_inner_size(LogicalSize::new(<span class="number">400.</span>, <span class="number">600.</span>))
+                        .with_resizable(<span class="bool-val">false</span>);
                     glutin_winit::finalize_window(window_target, window_builder, <span class="kw-2">&amp;</span>gl_config)
                         .unwrap()
                 });
 
-                <span class="kw">let </span>window_size = window.inner_size();
-                scale_factor = window.scale_factor();
+                <span class="kw">let </span>scale_factor = <span class="kw">if </span><span class="macro">cfg!</span>(target_os = <span class="string">&quot;android&quot;</span>) {
+                    <span class="number">4.
+                </span>} <span class="kw">else </span>{
+                    window.scale_factor()
+                };
+                Composer::with(|composer| composer.borrow_mut().scale_factor = scale_factor <span class="kw">as _</span>);
 
-                Composer::with(|composer| {
-                    <span class="kw">let </span><span class="kw-2">mut </span>composer = composer.borrow_mut();
-                    composer.scale_factor = scale_factor <span class="kw">as _</span>;
-                });
+                view_builder();
 
-                <span class="kw">let </span>nodes = nodes.clone();
-                adapter = <span class="prelude-val">Some</span>(Adapter::new(
-                    <span class="kw-2">&amp;</span>window,
-                    <span class="kw">move </span>|| TreeUpdate {
-                        nodes,
-                        tree: <span class="prelude-val">Some</span>(Tree::new(WINDOW_ID)),
-                        focus: <span class="prelude-val">None</span>,
-                    },
-                    proxy.clone(),
-                ));
+                <span class="kw">let </span><span class="kw-2">mut </span>tree_update = semantics.tree_update();
+                tree_update.tree = <span class="prelude-val">Some</span>(Tree::new(NodeId(NonZeroU128::new(<span class="number">1</span>).unwrap())));
+                adapter = <span class="prelude-val">Some</span>(Adapter::new(<span class="kw-2">&amp;</span>window, <span class="kw">move </span>|| tree_update, proxy.clone()));
 
                 <span class="kw">let </span>gl_window = GlWindow::new(window, <span class="kw-2">&amp;</span>gl_config);
                 <span class="kw">let </span>gl_context = not_current_gl_context
@@ -736,17 +595,6 @@
                     windowed_context: gl_window,
                     gl_context,
                 });
-
-                view_builder();
-
-                <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
-                style.size = Size::from_points(window_size.width <span class="kw">as </span>f32, window_size.height <span class="kw">as </span>f32);
-                Composer::with(|composer| {
-                    <span class="kw">let </span><span class="kw-2">mut </span>composer = composer.borrow_mut();
-                    <span class="kw">let </span>children = composer.children.clone();
-                    <span class="kw">let </span>root = composer.taffy.new_with_children(style, <span class="kw-2">&amp;</span>children).unwrap();
-                    taffy::compute_layout(<span class="kw-2">&amp;mut </span>composer.taffy, root, Size::MAX_CONTENT).unwrap();
-                });
             }
             Event::Suspended =&gt; {
                 <span class="kw">let </span>env = env.take().unwrap();
@@ -768,30 +616,6 @@
                 WindowEvent::CloseRequested =&gt; <span class="kw-2">*</span>control_flow = ControlFlow::Exit,
                 WindowEvent::CursorMoved { position, .. } =&gt; {
                     cursor = <span class="prelude-val">Some</span>(position);
-
-                    <span class="kw">for </span>handler <span class="kw">in </span>semantics.handlers.values_mut() {
-                        handler.handle(<span class="kw">crate</span>::Event::CursorMoved { position });
-                    }
-
-                    Composer::recompose();
-
-                    Composer::with(|composer| {
-                        <span class="kw">let </span>window_size =
-                            env.as_ref().unwrap().windowed_context.window.inner_size();
-                        <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
-                        style.size =
-                            Size::from_points(window_size.width <span class="kw">as </span>f32, window_size.height <span class="kw">as </span>f32);
-                        <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-                        <span class="kw">let </span>children = cx.children.clone();
-                        <span class="kw">let </span>root = cx.taffy.new_with_children(style, <span class="kw-2">&amp;</span>children).unwrap();
-                        taffy::compute_layout(<span class="kw-2">&amp;mut </span>cx.taffy, root, Size::MAX_CONTENT).unwrap();
-                    });
-
-                    env.as_mut()
-                        .unwrap()
-                        .windowed_context
-                        .window
-                        .request_redraw();
                 }
                 WindowEvent::MouseInput {
                     device_id: <span class="kw">_</span>,
@@ -799,26 +623,18 @@
                     button: <span class="kw">_</span>,
                     ..
                 } =&gt; {
-                    <span class="kw">for </span>handler <span class="kw">in </span>semantics.handlers.values_mut() {
-                        handler.handle(<span class="kw">crate</span>::Event::MouseInput {
-                            state,
-                            position: cursor.unwrap(),
-                        });
+                    <span class="kw">for </span>(node_id, handler) <span class="kw">in </span>semantics.handlers.iter_mut() {
+                        <span class="kw">let </span>node = semantics.nodes.get(<span class="kw-2">&amp;</span>node_id).unwrap();
+                        handler(
+                            node,
+                            <span class="kw">crate</span>::Event::MouseInput {
+                                state,
+                                cursor: cursor.unwrap(),
+                            },
+                        )
                     }
 
-                    Composer::recompose();
-
-                    Composer::with(|composer| {
-                        <span class="kw">let </span>window_size =
-                            env.as_ref().unwrap().windowed_context.window.inner_size();
-                        <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
-                        style.size =
-                            Size::from_points(window_size.width <span class="kw">as </span>f32, window_size.height <span class="kw">as </span>f32);
-                        <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-                        <span class="kw">let </span>children = cx.children.clone();
-                        <span class="kw">let </span>root = cx.taffy.new_with_children(style, <span class="kw-2">&amp;</span>children).unwrap();
-                        taffy::compute_layout(<span class="kw-2">&amp;mut </span>cx.taffy, root, Size::MAX_CONTENT).unwrap();
-                    });
+                    Composer::recompose(<span class="kw-2">&amp;mut </span>semantics);
 
                     env.as_mut()
                         .unwrap()
@@ -826,7 +642,20 @@
                         .window
                         .request_redraw();
                 }
-                WindowEvent::Touch(_touch) =&gt; {}
+                WindowEvent::Touch(touch) =&gt; {
+                    <span class="kw">for </span>(node_id, handler) <span class="kw">in </span>semantics.handlers.iter_mut() {
+                        <span class="kw">let </span>node = semantics.nodes.get(<span class="kw-2">&amp;</span>node_id).unwrap();
+                        handler(node, <span class="kw">crate</span>::Event::Touch(touch))
+                    }
+
+                    Composer::recompose(<span class="kw-2">&amp;mut </span>semantics);
+
+                    env.as_mut()
+                        .unwrap()
+                        .windowed_context
+                        .window
+                        .request_redraw();
+                }
                 WindowEvent::KeyboardInput {
                     input:
                         KeyboardInput {
@@ -836,26 +665,14 @@
                         },
                     ..
                 } =&gt; {
-                    <span class="kw">for </span>handler <span class="kw">in </span>semantics.handlers.values_mut() {
-                        handler.handle(<span class="kw">crate</span>::Event::KeyboardInput {
-                            state,
-                            virtual_keycode,
-                        });
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(key_code) = virtual_keycode {
+                        <span class="kw">for </span>(node_id, handler) <span class="kw">in </span>semantics.handlers.iter_mut() {
+                            <span class="kw">let </span>node = semantics.nodes.get(<span class="kw-2">&amp;</span>node_id).unwrap();
+                            handler(node, <span class="kw">crate</span>::Event::KeyboardInput { state, key_code })
+                        }
                     }
 
-                    Composer::recompose();
-
-                    Composer::with(|composer| {
-                        <span class="kw">let </span>window_size =
-                            env.as_ref().unwrap().windowed_context.window.inner_size();
-                        <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
-                        style.size =
-                            Size::from_points(window_size.width <span class="kw">as </span>f32, window_size.height <span class="kw">as </span>f32);
-                        <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-                        <span class="kw">let </span>children = cx.children.clone();
-                        <span class="kw">let </span>root = cx.taffy.new_with_children(style, <span class="kw-2">&amp;</span>children).unwrap();
-                        taffy::compute_layout(<span class="kw-2">&amp;mut </span>cx.taffy, root, Size::MAX_CONTENT).unwrap();
-                    });
+                    Composer::recompose(<span class="kw-2">&amp;mut </span>semantics);
 
                     env.as_mut()
                         .unwrap()
@@ -867,60 +684,44 @@
             },
             Event::RedrawRequested(<span class="kw">_</span>) =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(env) = <span class="kw-2">&amp;mut </span>env {
+                    semantics.layout_children = <span class="macro">vec!</span>[Vec::new()];
+
+                    Composer::with(|composer| composer.borrow_mut().layout(<span class="kw-2">&amp;mut </span>semantics));
+
                     <span class="kw">let </span>window_size = env.windowed_context.window.inner_size();
-                    <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
-                    style.size =
-                        Size::from_points(window_size.width <span class="kw">as </span>f32, window_size.height <span class="kw">as </span>f32);
+                    <span class="kw">let </span>root = semantics
+                        .taffy
+                        .new_with_children(
+                            Style {
+                                size: Size::from_points(
+                                    window_size.width <span class="kw">as _</span>,
+                                    window_size.height <span class="kw">as _</span>,
+                                ),
+                                ..Default::default()
+                            },
+                            semantics.layout_children.last().unwrap(),
+                        )
+                        .unwrap();
+                    taffy::compute_layout(<span class="kw-2">&amp;mut </span>semantics.taffy, root, Size::MAX_CONTENT).unwrap();
 
-                    <span class="comment">//let root = taffy.new_with_children(style, &amp;composer.node_ids).unwrap();
+                    <span class="kw">let </span><span class="kw-2">mut </span>canvas = env.surface.canvas();
+                    canvas.clear(Color::WHITE);
 
-                    //taffy::compute_layout(&amp;mut taffy, root, Size::MAX_CONTENT).unwrap();
+                    semantics.children = <span class="macro">vec!</span>[Vec::new()];
+                    Composer::with(|composer| composer.borrow_mut().semantics(<span class="kw-2">&amp;mut </span>semantics));
+
+                    <span class="comment">// let tree_update = semantics.tree_update();
+                    // adapter.as_mut().unwrap().update(tree_update);
 
                     </span>Composer::with(|composer| {
-                        <span class="kw">let </span><span class="kw-2">mut </span>composer = composer.borrow_mut();
-                        env.redraw(scale_factor, <span class="kw-2">&amp;mut </span>composer, <span class="kw-2">&amp;mut </span>semantics);
+                        composer.borrow_mut().paint(<span class="kw-2">&amp;mut </span>semantics, <span class="kw-2">&amp;mut </span>canvas)
                     });
 
-                    <span class="kw">let </span>root = Arc::new(accesskit::Node {
-                        role: Role::Window,
-                        children: children.clone(),
-                        name: <span class="prelude-val">Some</span>(<span class="string">&quot;WINDOW_TITLE&quot;</span>.into()),
-                        ..Default::default()
-                    });
-                    nodes[<span class="number">0</span>].<span class="number">1 </span>= root;
-
-                    <span class="kw">let </span>nodes = nodes.clone();
-                    <span class="kw">let </span>tree_update = TreeUpdate {
-                        nodes,
-                        tree: <span class="prelude-val">None</span>,
-                        focus: <span class="prelude-val">Some</span>(WINDOW_ID),
-                    };
-                    adapter.as_mut().unwrap().update(tree_update);
-
-                    <span class="kw">if </span>Composer::with(|composer| {
-                        <span class="kw">if </span>composer.borrow().is_recompose_requested {
-                            composer.borrow_mut().is_recompose_requested = <span class="bool-val">false</span>;
-                            <span class="bool-val">true
-                        </span>} <span class="kw">else </span>{
-                            <span class="bool-val">false
-                        </span>}
-                    }) {
-                        Composer::recompose();
-
-                        <span class="kw">let </span>window_size = env.windowed_context.window.inner_size();
-                        <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
-                        style.size =
-                            Size::from_points(window_size.width <span class="kw">as </span>f32, window_size.height <span class="kw">as </span>f32);
-
-                        Composer::with(|composer| {
-                            <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-                            <span class="kw">let </span>children = cx.children.clone();
-                            <span class="kw">let </span>root = cx.taffy.new_with_children(style, <span class="kw-2">&amp;</span>children).unwrap();
-                            taffy::compute_layout(<span class="kw-2">&amp;mut </span>cx.taffy, root, Size::MAX_CONTENT).unwrap();
-                        });
-
-                        env.windowed_context.window.request_redraw();
-                    }
+                    env.gr_context.flush(<span class="kw-2">&amp;</span>FlushInfo::default());
+                    env.windowed_context
+                        .surface
+                        .swap_buffers(<span class="kw-2">&amp;</span>env.gl_context)
+                        .unwrap();
                 }
             }
             Event::MainEventsCleared =&gt; {}
@@ -928,38 +729,7 @@
                 UserEvent::ActionRequest(action_request) =&gt; {
                     <span class="macro">dbg!</span>(action_request);
                 }
-                <span class="attr">#[cfg(feature = <span class="string">&quot;tokio&quot;</span>)]
-                </span>UserEvent::Task { id, data } =&gt; {
-                    <span class="kw">let </span><span class="kw-2">mut </span>f = Composer::with(|composer| {
-                        <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-                        cx.tasks.remove(<span class="kw-2">&amp;</span>id).unwrap()
-                    });
-                    f(data);
-
-                    Composer::recompose();
-
-                    Composer::with(|composer| {
-                        <span class="comment">// TODO this is only needed for streams
-                        // also need a way to remove tasks when done
-                        </span>composer.borrow_mut().tasks.insert(id, f);
-
-                        <span class="kw">let </span>window_size =
-                            env.as_ref().unwrap().windowed_context.window.inner_size();
-                        <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
-                        style.size =
-                            Size::from_points(window_size.width <span class="kw">as </span>f32, window_size.height <span class="kw">as </span>f32);
-                        <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-                        <span class="kw">let </span>children = cx.children.clone();
-                        <span class="kw">let </span>root = cx.taffy.new_with_children(style, <span class="kw-2">&amp;</span>children).unwrap();
-                        taffy::compute_layout(<span class="kw-2">&amp;mut </span>cx.taffy, root, Size::MAX_CONTENT).unwrap();
-                    });
-
-                    env.as_mut()
-                        .unwrap()
-                        .windowed_context
-                        .window
-                        .request_redraw();
-                }
+                UserEvent::Task { id, data } =&gt; (semantics.tasks.get_mut(id).unwrap())(data),
             },
             <span class="kw">_ </span>=&gt; (),
         }

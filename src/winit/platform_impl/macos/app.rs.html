@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.27.5/src/platform_impl/macos/app.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>app.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.28.1/src/platform_impl/macos/app.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>app.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -96,165 +96,103 @@
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
 <a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
-<a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
-<a href="#128" id="128">128</a>
-<a href="#129" id="129">129</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::collections::VecDeque;
+</pre><pre class="rust"><code><span class="attr">#![allow(clippy::unnecessary_cast)]
 
-<span class="kw">use </span>cocoa::{
-    appkit::{<span class="self">self</span>, NSEvent},
-    base::id,
-};
-<span class="kw">use </span>objc::{
-    declare::ClassDecl,
-    runtime::{Class, Object, Sel},
-};
-<span class="kw">use </span>once_cell::sync::Lazy;
+</span><span class="kw">use </span>objc2::foundation::NSObject;
+<span class="kw">use </span>objc2::{declare_class, msg_send, ClassType};
 
-<span class="kw">use super</span>::{app_state::AppState, event::EventWrapper, util, DEVICE_ID};
+<span class="kw">use </span><span class="kw">super</span>::appkit::{NSApplication, NSEvent, NSEventModifierFlags, NSEventType, NSResponder};
+<span class="kw">use super</span>::{app_state::AppState, event::EventWrapper, DEVICE_ID};
 <span class="kw">use </span><span class="kw">crate</span>::event::{DeviceEvent, ElementState, Event};
 
-<span class="kw">pub struct </span>AppClass(<span class="kw">pub </span><span class="kw-2">*const </span>Class);
-<span class="kw">unsafe impl </span>Send <span class="kw">for </span>AppClass {}
-<span class="kw">unsafe impl </span>Sync <span class="kw">for </span>AppClass {}
+<span class="macro">declare_class!</span>(
+    <span class="attr">#[derive(Debug, PartialEq, Eq, Hash)]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>WinitApplication {}
 
-<span class="kw">pub static </span>APP_CLASS: Lazy&lt;AppClass&gt; = Lazy::new(|| <span class="kw">unsafe </span>{
-    <span class="kw">let </span>superclass = <span class="macro">class!</span>(NSApplication);
-    <span class="kw">let </span><span class="kw-2">mut </span>decl = ClassDecl::new(<span class="string">&quot;WinitApp&quot;</span>, superclass).unwrap();
+    <span class="kw">unsafe impl </span>ClassType <span class="kw">for </span>WinitApplication {
+        <span class="attr">#[inherits(NSResponder, NSObject)]
+        </span><span class="kw">type </span>Super = NSApplication;
+    }
 
-    decl.add_method(
-        <span class="macro">sel!</span>(sendEvent:),
-        send_event <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-
-    AppClass(decl.register())
-});
-
-<span class="comment">// Normally, holding Cmd + any key never sends us a `keyUp` event for that key.
-// Overriding `sendEvent:` like this fixes that. (https://stackoverflow.com/a/15294196)
-// Fun fact: Firefox still has this bug! (https://bugzilla.mozilla.org/show_bug.cgi?id=1299553)
-</span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>send_event(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="kw">unsafe </span>{
-        <span class="comment">// For posterity, there are some undocumented event types
-        // (https://github.com/servo/cocoa-rs/issues/155)
-        // but that doesn&#39;t really matter here.
-        </span><span class="kw">let </span>event_type = event.eventType();
-        <span class="kw">let </span>modifier_flags = event.modifierFlags();
-        <span class="kw">if </span>event_type == appkit::NSKeyUp
-            &amp;&amp; util::has_flag(
-                modifier_flags,
-                appkit::NSEventModifierFlags::NSCommandKeyMask,
-            )
-        {
-            <span class="kw">let </span>key_window: id = <span class="macro">msg_send!</span>[this, keyWindow];
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[key_window, sendEvent: event];
-        } <span class="kw">else </span>{
-            maybe_dispatch_device_event(event);
-            <span class="kw">let </span>superclass = util::superclass(this);
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[<span class="kw">super</span>(this, superclass), sendEvent: event];
+    <span class="kw">unsafe impl </span>WinitApplication {
+        <span class="comment">// Normally, holding Cmd + any key never sends us a `keyUp` event for that key.
+        // Overriding `sendEvent:` like this fixes that. (https://stackoverflow.com/a/15294196)
+        // Fun fact: Firefox still has this bug! (https://bugzilla.mozilla.org/show_bug.cgi?id=1299553)
+        </span><span class="attr">#[sel(sendEvent:)]
+        </span><span class="kw">fn </span>send_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="comment">// For posterity, there are some undocumented event types
+            // (https://github.com/servo/cocoa-rs/issues/155)
+            // but that doesn&#39;t really matter here.
+            </span><span class="kw">let </span>event_type = event.type_();
+            <span class="kw">let </span>modifier_flags = event.modifierFlags();
+            <span class="kw">if </span>event_type == NSEventType::NSKeyUp
+                &amp;&amp; modifier_flags.contains(NSEventModifierFlags::NSCommandKeyMask)
+            {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(key_window) = <span class="self">self</span>.keyWindow() {
+                    <span class="kw">unsafe </span>{ key_window.sendEvent(event) };
+                }
+            } <span class="kw">else </span>{
+                maybe_dispatch_device_event(event);
+                <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw">super</span>(<span class="self">self</span>), sendEvent: event] }
+            }
         }
     }
-}
+);
 
-<span class="kw">unsafe fn </span>maybe_dispatch_device_event(event: id) {
-    <span class="kw">let </span>event_type = event.eventType();
+<span class="kw">fn </span>maybe_dispatch_device_event(event: <span class="kw-2">&amp;</span>NSEvent) {
+    <span class="kw">let </span>event_type = event.type_();
     <span class="kw">match </span>event_type {
-        appkit::NSMouseMoved
-        | appkit::NSLeftMouseDragged
-        | appkit::NSOtherMouseDragged
-        | appkit::NSRightMouseDragged =&gt; {
-            <span class="kw">let </span><span class="kw-2">mut </span>events = VecDeque::with_capacity(<span class="number">3</span>);
-
+        NSEventType::NSMouseMoved
+        | NSEventType::NSLeftMouseDragged
+        | NSEventType::NSOtherMouseDragged
+        | NSEventType::NSRightMouseDragged =&gt; {
             <span class="kw">let </span>delta_x = event.deltaX() <span class="kw">as </span>f64;
             <span class="kw">let </span>delta_y = event.deltaY() <span class="kw">as </span>f64;
 
             <span class="kw">if </span>delta_x != <span class="number">0.0 </span>{
-                events.push_back(EventWrapper::StaticEvent(Event::DeviceEvent {
-                    device_id: DEVICE_ID,
-                    event: DeviceEvent::Motion {
-                        axis: <span class="number">0</span>,
-                        value: delta_x,
-                    },
-                }));
+                queue_device_event(DeviceEvent::Motion {
+                    axis: <span class="number">0</span>,
+                    value: delta_x,
+                });
             }
 
             <span class="kw">if </span>delta_y != <span class="number">0.0 </span>{
-                events.push_back(EventWrapper::StaticEvent(Event::DeviceEvent {
-                    device_id: DEVICE_ID,
-                    event: DeviceEvent::Motion {
-                        axis: <span class="number">1</span>,
-                        value: delta_y,
-                    },
-                }));
+                queue_device_event(DeviceEvent::Motion {
+                    axis: <span class="number">1</span>,
+                    value: delta_y,
+                })
             }
 
             <span class="kw">if </span>delta_x != <span class="number">0.0 </span>|| delta_y != <span class="number">0.0 </span>{
-                events.push_back(EventWrapper::StaticEvent(Event::DeviceEvent {
-                    device_id: DEVICE_ID,
-                    event: DeviceEvent::MouseMotion {
-                        delta: (delta_x, delta_y),
-                    },
-                }));
+                queue_device_event(DeviceEvent::MouseMotion {
+                    delta: (delta_x, delta_y),
+                });
             }
-
-            AppState::queue_events(events);
         }
-        appkit::NSLeftMouseDown | appkit::NSRightMouseDown | appkit::NSOtherMouseDown =&gt; {
-            <span class="kw">let </span><span class="kw-2">mut </span>events = VecDeque::with_capacity(<span class="number">1</span>);
-
-            events.push_back(EventWrapper::StaticEvent(Event::DeviceEvent {
-                device_id: DEVICE_ID,
-                event: DeviceEvent::Button {
-                    button: event.buttonNumber() <span class="kw">as </span>u32,
-                    state: ElementState::Pressed,
-                },
-            }));
-
-            AppState::queue_events(events);
+        NSEventType::NSLeftMouseDown
+        | NSEventType::NSRightMouseDown
+        | NSEventType::NSOtherMouseDown =&gt; {
+            queue_device_event(DeviceEvent::Button {
+                button: event.buttonNumber() <span class="kw">as </span>u32,
+                state: ElementState::Pressed,
+            });
         }
-        appkit::NSLeftMouseUp | appkit::NSRightMouseUp | appkit::NSOtherMouseUp =&gt; {
-            <span class="kw">let </span><span class="kw-2">mut </span>events = VecDeque::with_capacity(<span class="number">1</span>);
-
-            events.push_back(EventWrapper::StaticEvent(Event::DeviceEvent {
-                device_id: DEVICE_ID,
-                event: DeviceEvent::Button {
-                    button: event.buttonNumber() <span class="kw">as </span>u32,
-                    state: ElementState::Released,
-                },
-            }));
-
-            AppState::queue_events(events);
+        NSEventType::NSLeftMouseUp | NSEventType::NSRightMouseUp | NSEventType::NSOtherMouseUp =&gt; {
+            queue_device_event(DeviceEvent::Button {
+                button: event.buttonNumber() <span class="kw">as </span>u32,
+                state: ElementState::Released,
+            });
         }
         <span class="kw">_ </span>=&gt; (),
     }
+}
+
+<span class="kw">fn </span>queue_device_event(event: DeviceEvent) {
+    <span class="kw">let </span>event = Event::DeviceEvent {
+        device_id: DEVICE_ID,
+        event,
+    };
+    AppState::queue_event(EventWrapper::StaticEvent(event));
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["state","A value that can change over time."]],"struct":[["State",""],["StateRef","A reference to a state’s value"]]};
+window.SIDEBAR_ITEMS = {"fn":[["state",""]],"struct":[["State",""],["StateRef",""],["StateWidget",""]]};

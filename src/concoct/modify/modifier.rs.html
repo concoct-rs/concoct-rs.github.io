@@ -141,147 +141,151 @@
 <a href="#141" id="141">141</a>
 <a href="#142" id="142">142</a>
 <a href="#143" id="143">143</a>
-</pre><pre class="rust"><code><span class="kw">use super</span>::{
-    clickable::{ClickHandler, IntoClickHandler},
-    selectable::Selectable,
-    style::FlexShrink,
-    BackgroundColor, Chain, Clickable, FlexGrow, FontFamily, FontSize, Gap, Key, Modify, Position,
-    TestTag,
-};
-<span class="kw">use </span><span class="kw">crate</span>::dimension::{Padding, Size};
-<span class="kw">use </span>accesskit::Role;
-<span class="kw">use </span>skia_safe::Color4f;
-<span class="kw">use </span>std::marker::PhantomData;
-<span class="kw">use </span>taffy::style::{AlignItems, Dimension, FlexDirection, JustifyContent, PositionType};
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::Modify;
 
-<span class="kw">pub struct </span>Modifier&lt;U, T&gt; {
-    <span class="kw">pub </span>modify: T,
-    _marker: PhantomData&lt;U&gt;,
+<span class="kw">use super</span>::{
+    container::MergeDescendants,
+    keyboard_input::{KeyboardHandler, KeyboardInput},
+    BackgroundColor, Chain, Clickable, FlexBasis, FlexGrow, FlexShrink, FontSize, Gap, Margin,
+    Padding,
+};
+<span class="kw">use </span>accesskit::Role;
+<span class="kw">use </span>skia_safe::{Color4f, Typeface};
+<span class="kw">use </span>std::marker::PhantomData;
+<span class="kw">use </span>taffy::{
+    prelude::{Rect, Size},
+    style::{AlignItems, Dimension, FlexDirection, JustifyContent},
+};
+
+<span class="kw">pub struct </span>Modifier&lt;T, M&gt; {
+    <span class="kw">pub </span>modify: M,
+    _marker: PhantomData&lt;T&gt;,
 }
 
-<span class="kw">impl</span>&lt;U, T&gt; Modifier&lt;U, T&gt; {
-    <span class="kw">pub fn </span>new(modify: T) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;T&gt; Default <span class="kw">for </span>Modifier&lt;T, ()&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new(())
+    }
+}
+
+<span class="kw">impl</span>&lt;T, M&gt; Modifier&lt;T, M&gt; {
+    <span class="kw">pub fn </span>new(modify: M) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             modify,
             _marker: PhantomData,
         }
     }
-}
 
-<span class="kw">impl</span>&lt;T&gt; Default <span class="kw">for </span>Modifier&lt;T, ()&gt; {
-    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            modify: (),
-            _marker: PhantomData,
-        }
-    }
-}
-
-<span class="kw">impl</span>&lt;U, T: Clone&gt; Clone <span class="kw">for </span>Modifier&lt;U, T&gt; {
-    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            modify: <span class="self">self</span>.modify.clone(),
-            _marker: <span class="self">self</span>._marker.clone(),
-        }
-    }
-}
-
-<span class="kw">impl</span>&lt;U, T: Modify&lt;U&gt;&gt; Modifier&lt;U, T&gt; {
-    <span class="kw">pub fn </span>chain&lt;B&gt;(<span class="self">self</span>, b: B) -&gt; Modifier&lt;U, Chain&lt;T, B&gt;&gt; {
-        <span class="kw">let </span>chain = Chain {
-            t: <span class="self">self</span>.modify,
-            u: b,
-        };
-        Modifier::new(chain)
+    <span class="kw">pub fn </span>align_items(<span class="self">self</span>, align_items: AlignItems) -&gt; Modifier&lt;T, Chain&lt;M, AlignItems&gt;&gt; {
+        <span class="self">self</span>.chain(align_items)
     }
 
     <span class="kw">pub fn </span>background_color(
         <span class="self">self</span>,
         color: <span class="kw">impl </span>Into&lt;Color4f&gt;,
-    ) -&gt; Modifier&lt;U, Chain&lt;T, BackgroundColor&gt;&gt; {
+    ) -&gt; Modifier&lt;T, Chain&lt;M, BackgroundColor&gt;&gt; {
         <span class="self">self</span>.chain(BackgroundColor {
             color: color.into(),
         })
     }
 
-    <span class="kw">pub fn </span>clickable&lt;H&gt;(
-        <span class="self">self</span>,
-        role: Role,
-        input_handler: <span class="kw">impl </span>IntoClickHandler&lt;H&gt; + <span class="lifetime">&#39;static</span>,
-    ) -&gt; Modifier&lt;U, Chain&lt;T, Clickable&gt;&gt;
-    <span class="kw">where
-        </span>H: ClickHandler + <span class="lifetime">&#39;static</span>,
-    {
-        <span class="self">self</span>.chain(Clickable::new(role, input_handler))
+    <span class="kw">pub fn </span>chain&lt;B&gt;(<span class="self">self</span>, modify: B) -&gt; Modifier&lt;T, Chain&lt;M, B&gt;&gt; {
+        Modifier::new(Chain {
+            a: <span class="self">self</span>.modify,
+            b: modify,
+        })
     }
 
-    <span class="kw">pub fn </span>align_items(<span class="self">self</span>, align_items: AlignItems) -&gt; Modifier&lt;U, Chain&lt;T, AlignItems&gt;&gt; {
-        <span class="self">self</span>.chain(align_items)
+    <span class="kw">pub fn </span>clickable&lt;F&gt;(<span class="self">self</span>, on_click: F) -&gt; Modifier&lt;T, Chain&lt;M, Clickable&lt;F&gt;&gt;&gt;
+    <span class="kw">where
+        </span>F: FnMut() + <span class="lifetime">&#39;static</span>,
+    {
+        <span class="self">self</span>.chain(Clickable { f: <span class="prelude-val">Some</span>(on_click) })
+    }
+
+    <span class="kw">pub fn </span>flex_basis(<span class="self">self</span>, dimension: Dimension) -&gt; Modifier&lt;T, Chain&lt;M, FlexBasis&gt;&gt; {
+        <span class="self">self</span>.chain(FlexBasis { dimension })
     }
 
     <span class="kw">pub fn </span>flex_direction(
         <span class="self">self</span>,
         flex_direction: FlexDirection,
-    ) -&gt; Modifier&lt;U, Chain&lt;T, FlexDirection&gt;&gt; {
+    ) -&gt; Modifier&lt;T, Chain&lt;M, FlexDirection&gt;&gt; {
         <span class="self">self</span>.chain(flex_direction)
     }
 
-    <span class="kw">pub fn </span>flex_grow(<span class="self">self</span>, flex_grow: f32) -&gt; Modifier&lt;U, Chain&lt;T, FlexGrow&gt;&gt; {
-        <span class="self">self</span>.chain(FlexGrow { value: flex_grow })
+    <span class="kw">pub fn </span>flex_grow(<span class="self">self</span>, value: f32) -&gt; Modifier&lt;T, Chain&lt;M, FlexGrow&gt;&gt; {
+        <span class="self">self</span>.chain(FlexGrow { value })
     }
 
-    <span class="kw">pub fn </span>flex_shrink(<span class="self">self</span>, flex_shrink: f32) -&gt; Modifier&lt;U, Chain&lt;T, FlexShrink&gt;&gt; {
-        <span class="self">self</span>.chain(FlexShrink { value: flex_shrink })
+    <span class="kw">pub fn </span>flex_shrink(<span class="self">self</span>, value: f32) -&gt; Modifier&lt;T, Chain&lt;M, FlexShrink&gt;&gt; {
+        <span class="self">self</span>.chain(FlexShrink { value })
     }
 
-    <span class="kw">pub fn </span>font_family(<span class="self">self</span>, value: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; Modifier&lt;U, Chain&lt;T, FontFamily&gt;&gt; {
-        <span class="self">self</span>.chain(FontFamily::from(value.into()))
+    <span class="kw">pub fn </span>font_size(<span class="self">self</span>, value: f32) -&gt; Modifier&lt;T, Chain&lt;M, FontSize&gt;&gt; {
+        <span class="self">self</span>.chain(FontSize { value })
     }
 
-    <span class="kw">pub fn </span>font_size(<span class="self">self</span>, value: f32) -&gt; Modifier&lt;U, Chain&lt;T, FontSize&gt;&gt; {
-        <span class="self">self</span>.chain(value.into())
-    }
-
-    <span class="kw">pub fn </span>gap(<span class="self">self</span>, size: Size) -&gt; Modifier&lt;U, Chain&lt;T, Gap&gt;&gt; {
-        <span class="self">self</span>.chain(Gap { size })
+    <span class="kw">pub fn </span>gap(<span class="self">self</span>, gap: Gap) -&gt; Modifier&lt;T, Chain&lt;M, Gap&gt;&gt; {
+        <span class="self">self</span>.chain(gap)
     }
 
     <span class="kw">pub fn </span>justify_content(
         <span class="self">self</span>,
         justify_content: JustifyContent,
-    ) -&gt; Modifier&lt;U, Chain&lt;T, JustifyContent&gt;&gt; {
+    ) -&gt; Modifier&lt;T, Chain&lt;M, JustifyContent&gt;&gt; {
         <span class="self">self</span>.chain(justify_content)
     }
 
-    <span class="kw">pub fn </span>key(<span class="self">self</span>, key: u64) -&gt; Modifier&lt;U, Chain&lt;T, Key&gt;&gt; {
-        <span class="self">self</span>.chain(Key(key))
+    <span class="kw">pub fn </span>keyboard_handler&lt;H&gt;(<span class="self">self</span>, handler: H) -&gt; Modifier&lt;T, Chain&lt;M, KeyboardInput&lt;H&gt;&gt;&gt;
+    <span class="kw">where
+        </span>H: KeyboardHandler + <span class="lifetime">&#39;static</span>,
+    {
+        <span class="self">self</span>.chain(KeyboardInput::new(handler))
     }
 
-    <span class="kw">pub fn </span>padding(<span class="self">self</span>, padding: Padding) -&gt; Modifier&lt;U, Chain&lt;T, Padding&gt;&gt; {
+    <span class="kw">pub fn </span>margin(<span class="self">self</span>, rect: Rect&lt;Dimension&gt;) -&gt; Modifier&lt;T, Chain&lt;M, Margin&gt;&gt; {
+        <span class="self">self</span>.chain(Margin { rect })
+    }
+
+    <span class="kw">pub fn </span>merge_descendants(<span class="self">self</span>) -&gt; Modifier&lt;T, Chain&lt;M, MergeDescendants&gt;&gt; {
+        <span class="self">self</span>.chain(MergeDescendants)
+    }
+
+    <span class="kw">pub fn </span>padding(<span class="self">self</span>, padding: Padding) -&gt; Modifier&lt;T, Chain&lt;M, Padding&gt;&gt; {
         <span class="self">self</span>.chain(padding)
     }
 
-    <span class="kw">pub fn </span>position(
-        <span class="self">self</span>,
-        rect: taffy::prelude::Rect&lt;Dimension&gt;,
-    ) -&gt; Modifier&lt;U, Chain&lt;T, Position&gt;&gt; {
-        <span class="self">self</span>.chain(Position { rect })
+    <span class="kw">pub fn </span>role(<span class="self">self</span>, role: Role) -&gt; Modifier&lt;T, Chain&lt;M, Role&gt;&gt; {
+        <span class="self">self</span>.chain(role)
     }
 
-    <span class="kw">pub fn </span>position_type(<span class="self">self</span>, position_type: PositionType) -&gt; Modifier&lt;U, Chain&lt;T, PositionType&gt;&gt; {
-        <span class="self">self</span>.chain(position_type)
-    }
-
-    <span class="kw">pub fn </span>selectable(<span class="self">self</span>) -&gt; Modifier&lt;U, Chain&lt;T, Selectable&gt;&gt; {
-        <span class="self">self</span>.chain(Selectable::default())
-    }
-
-    <span class="kw">pub fn </span>size(<span class="self">self</span>, size: Size) -&gt; Modifier&lt;U, Chain&lt;T, Size&gt;&gt; {
+    <span class="kw">pub fn </span>size(<span class="self">self</span>, size: Size&lt;Dimension&gt;) -&gt; Modifier&lt;T, Chain&lt;M, Size&lt;Dimension&gt;&gt;&gt; {
         <span class="self">self</span>.chain(size)
     }
 
-    <span class="kw">pub fn </span>test_tag(<span class="self">self</span>, tag: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; Modifier&lt;U, Chain&lt;T, TestTag&gt;&gt; {
-        <span class="self">self</span>.chain(TestTag { tag: tag.into() })
+    <span class="kw">pub fn </span>typeface(<span class="self">self</span>, typeface: Typeface) -&gt; Modifier&lt;T, Chain&lt;M, Typeface&gt;&gt; {
+        <span class="self">self</span>.chain(typeface)
+    }
+}
+
+<span class="kw">impl</span>&lt;T, M: Modify&lt;T&gt;&gt; Modify&lt;T&gt; <span class="kw">for </span>Modifier&lt;T, M&gt; {
+    <span class="kw">fn </span>modify(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: <span class="kw-2">&amp;mut </span>T) {
+        <span class="self">self</span>.modify.modify(value)
+    }
+
+    <span class="kw">fn </span>semantics(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node_id: accesskit::NodeId, semantics: <span class="kw-2">&amp;mut </span><span class="kw">crate</span>::Semantics) {
+        <span class="self">self</span>.modify.semantics(node_id, semantics)
+    }
+
+    <span class="kw">fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, layout: <span class="kw-2">&amp;</span>taffy::prelude::Layout, canvas: <span class="kw-2">&amp;mut </span>skia_safe::Canvas) {
+        <span class="self">self</span>.modify.paint(layout, canvas)
+    }
+
+    <span class="kw">fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node_id: accesskit::NodeId, semantics: <span class="kw-2">&amp;mut </span><span class="kw">crate</span>::Semantics) {
+        <span class="self">self</span>.modify.remove(node_id, semantics)
     }
 }
 </code></pre></div>

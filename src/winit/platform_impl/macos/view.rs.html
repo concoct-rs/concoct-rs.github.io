@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.27.5/src/platform_impl/macos/view.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>view.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.28.1/src/platform_impl/macos/view.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>view.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1020,245 +1020,24 @@
 <a href="#1020" id="1020">1020</a>
 <a href="#1021" id="1021">1021</a>
 <a href="#1022" id="1022">1022</a>
-<a href="#1023" id="1023">1023</a>
-<a href="#1024" id="1024">1024</a>
-<a href="#1025" id="1025">1025</a>
-<a href="#1026" id="1026">1026</a>
-<a href="#1027" id="1027">1027</a>
-<a href="#1028" id="1028">1028</a>
-<a href="#1029" id="1029">1029</a>
-<a href="#1030" id="1030">1030</a>
-<a href="#1031" id="1031">1031</a>
-<a href="#1032" id="1032">1032</a>
-<a href="#1033" id="1033">1033</a>
-<a href="#1034" id="1034">1034</a>
-<a href="#1035" id="1035">1035</a>
-<a href="#1036" id="1036">1036</a>
-<a href="#1037" id="1037">1037</a>
-<a href="#1038" id="1038">1038</a>
-<a href="#1039" id="1039">1039</a>
-<a href="#1040" id="1040">1040</a>
-<a href="#1041" id="1041">1041</a>
-<a href="#1042" id="1042">1042</a>
-<a href="#1043" id="1043">1043</a>
-<a href="#1044" id="1044">1044</a>
-<a href="#1045" id="1045">1045</a>
-<a href="#1046" id="1046">1046</a>
-<a href="#1047" id="1047">1047</a>
-<a href="#1048" id="1048">1048</a>
-<a href="#1049" id="1049">1049</a>
-<a href="#1050" id="1050">1050</a>
-<a href="#1051" id="1051">1051</a>
-<a href="#1052" id="1052">1052</a>
-<a href="#1053" id="1053">1053</a>
-<a href="#1054" id="1054">1054</a>
-<a href="#1055" id="1055">1055</a>
-<a href="#1056" id="1056">1056</a>
-<a href="#1057" id="1057">1057</a>
-<a href="#1058" id="1058">1058</a>
-<a href="#1059" id="1059">1059</a>
-<a href="#1060" id="1060">1060</a>
-<a href="#1061" id="1061">1061</a>
-<a href="#1062" id="1062">1062</a>
-<a href="#1063" id="1063">1063</a>
-<a href="#1064" id="1064">1064</a>
-<a href="#1065" id="1065">1065</a>
-<a href="#1066" id="1066">1066</a>
-<a href="#1067" id="1067">1067</a>
-<a href="#1068" id="1068">1068</a>
-<a href="#1069" id="1069">1069</a>
-<a href="#1070" id="1070">1070</a>
-<a href="#1071" id="1071">1071</a>
-<a href="#1072" id="1072">1072</a>
-<a href="#1073" id="1073">1073</a>
-<a href="#1074" id="1074">1074</a>
-<a href="#1075" id="1075">1075</a>
-<a href="#1076" id="1076">1076</a>
-<a href="#1077" id="1077">1077</a>
-<a href="#1078" id="1078">1078</a>
-<a href="#1079" id="1079">1079</a>
-<a href="#1080" id="1080">1080</a>
-<a href="#1081" id="1081">1081</a>
-<a href="#1082" id="1082">1082</a>
-<a href="#1083" id="1083">1083</a>
-<a href="#1084" id="1084">1084</a>
-<a href="#1085" id="1085">1085</a>
-<a href="#1086" id="1086">1086</a>
-<a href="#1087" id="1087">1087</a>
-<a href="#1088" id="1088">1088</a>
-<a href="#1089" id="1089">1089</a>
-<a href="#1090" id="1090">1090</a>
-<a href="#1091" id="1091">1091</a>
-<a href="#1092" id="1092">1092</a>
-<a href="#1093" id="1093">1093</a>
-<a href="#1094" id="1094">1094</a>
-<a href="#1095" id="1095">1095</a>
-<a href="#1096" id="1096">1096</a>
-<a href="#1097" id="1097">1097</a>
-<a href="#1098" id="1098">1098</a>
-<a href="#1099" id="1099">1099</a>
-<a href="#1100" id="1100">1100</a>
-<a href="#1101" id="1101">1101</a>
-<a href="#1102" id="1102">1102</a>
-<a href="#1103" id="1103">1103</a>
-<a href="#1104" id="1104">1104</a>
-<a href="#1105" id="1105">1105</a>
-<a href="#1106" id="1106">1106</a>
-<a href="#1107" id="1107">1107</a>
-<a href="#1108" id="1108">1108</a>
-<a href="#1109" id="1109">1109</a>
-<a href="#1110" id="1110">1110</a>
-<a href="#1111" id="1111">1111</a>
-<a href="#1112" id="1112">1112</a>
-<a href="#1113" id="1113">1113</a>
-<a href="#1114" id="1114">1114</a>
-<a href="#1115" id="1115">1115</a>
-<a href="#1116" id="1116">1116</a>
-<a href="#1117" id="1117">1117</a>
-<a href="#1118" id="1118">1118</a>
-<a href="#1119" id="1119">1119</a>
-<a href="#1120" id="1120">1120</a>
-<a href="#1121" id="1121">1121</a>
-<a href="#1122" id="1122">1122</a>
-<a href="#1123" id="1123">1123</a>
-<a href="#1124" id="1124">1124</a>
-<a href="#1125" id="1125">1125</a>
-<a href="#1126" id="1126">1126</a>
-<a href="#1127" id="1127">1127</a>
-<a href="#1128" id="1128">1128</a>
-<a href="#1129" id="1129">1129</a>
-<a href="#1130" id="1130">1130</a>
-<a href="#1131" id="1131">1131</a>
-<a href="#1132" id="1132">1132</a>
-<a href="#1133" id="1133">1133</a>
-<a href="#1134" id="1134">1134</a>
-<a href="#1135" id="1135">1135</a>
-<a href="#1136" id="1136">1136</a>
-<a href="#1137" id="1137">1137</a>
-<a href="#1138" id="1138">1138</a>
-<a href="#1139" id="1139">1139</a>
-<a href="#1140" id="1140">1140</a>
-<a href="#1141" id="1141">1141</a>
-<a href="#1142" id="1142">1142</a>
-<a href="#1143" id="1143">1143</a>
-<a href="#1144" id="1144">1144</a>
-<a href="#1145" id="1145">1145</a>
-<a href="#1146" id="1146">1146</a>
-<a href="#1147" id="1147">1147</a>
-<a href="#1148" id="1148">1148</a>
-<a href="#1149" id="1149">1149</a>
-<a href="#1150" id="1150">1150</a>
-<a href="#1151" id="1151">1151</a>
-<a href="#1152" id="1152">1152</a>
-<a href="#1153" id="1153">1153</a>
-<a href="#1154" id="1154">1154</a>
-<a href="#1155" id="1155">1155</a>
-<a href="#1156" id="1156">1156</a>
-<a href="#1157" id="1157">1157</a>
-<a href="#1158" id="1158">1158</a>
-<a href="#1159" id="1159">1159</a>
-<a href="#1160" id="1160">1160</a>
-<a href="#1161" id="1161">1161</a>
-<a href="#1162" id="1162">1162</a>
-<a href="#1163" id="1163">1163</a>
-<a href="#1164" id="1164">1164</a>
-<a href="#1165" id="1165">1165</a>
-<a href="#1166" id="1166">1166</a>
-<a href="#1167" id="1167">1167</a>
-<a href="#1168" id="1168">1168</a>
-<a href="#1169" id="1169">1169</a>
-<a href="#1170" id="1170">1170</a>
-<a href="#1171" id="1171">1171</a>
-<a href="#1172" id="1172">1172</a>
-<a href="#1173" id="1173">1173</a>
-<a href="#1174" id="1174">1174</a>
-<a href="#1175" id="1175">1175</a>
-<a href="#1176" id="1176">1176</a>
-<a href="#1177" id="1177">1177</a>
-<a href="#1178" id="1178">1178</a>
-<a href="#1179" id="1179">1179</a>
-<a href="#1180" id="1180">1180</a>
-<a href="#1181" id="1181">1181</a>
-<a href="#1182" id="1182">1182</a>
-<a href="#1183" id="1183">1183</a>
-<a href="#1184" id="1184">1184</a>
-<a href="#1185" id="1185">1185</a>
-<a href="#1186" id="1186">1186</a>
-<a href="#1187" id="1187">1187</a>
-<a href="#1188" id="1188">1188</a>
-<a href="#1189" id="1189">1189</a>
-<a href="#1190" id="1190">1190</a>
-<a href="#1191" id="1191">1191</a>
-<a href="#1192" id="1192">1192</a>
-<a href="#1193" id="1193">1193</a>
-<a href="#1194" id="1194">1194</a>
-<a href="#1195" id="1195">1195</a>
-<a href="#1196" id="1196">1196</a>
-<a href="#1197" id="1197">1197</a>
-<a href="#1198" id="1198">1198</a>
-<a href="#1199" id="1199">1199</a>
-<a href="#1200" id="1200">1200</a>
-<a href="#1201" id="1201">1201</a>
-<a href="#1202" id="1202">1202</a>
-<a href="#1203" id="1203">1203</a>
-<a href="#1204" id="1204">1204</a>
-<a href="#1205" id="1205">1205</a>
-<a href="#1206" id="1206">1206</a>
-<a href="#1207" id="1207">1207</a>
-<a href="#1208" id="1208">1208</a>
-<a href="#1209" id="1209">1209</a>
-<a href="#1210" id="1210">1210</a>
-<a href="#1211" id="1211">1211</a>
-<a href="#1212" id="1212">1212</a>
-<a href="#1213" id="1213">1213</a>
-<a href="#1214" id="1214">1214</a>
-<a href="#1215" id="1215">1215</a>
-<a href="#1216" id="1216">1216</a>
-<a href="#1217" id="1217">1217</a>
-<a href="#1218" id="1218">1218</a>
-<a href="#1219" id="1219">1219</a>
-<a href="#1220" id="1220">1220</a>
-<a href="#1221" id="1221">1221</a>
-<a href="#1222" id="1222">1222</a>
-<a href="#1223" id="1223">1223</a>
-<a href="#1224" id="1224">1224</a>
-<a href="#1225" id="1225">1225</a>
-<a href="#1226" id="1226">1226</a>
-<a href="#1227" id="1227">1227</a>
-<a href="#1228" id="1228">1228</a>
-<a href="#1229" id="1229">1229</a>
-<a href="#1230" id="1230">1230</a>
-<a href="#1231" id="1231">1231</a>
-<a href="#1232" id="1232">1232</a>
-<a href="#1233" id="1233">1233</a>
-<a href="#1234" id="1234">1234</a>
-<a href="#1235" id="1235">1235</a>
-<a href="#1236" id="1236">1236</a>
-<a href="#1237" id="1237">1237</a>
-<a href="#1238" id="1238">1238</a>
-<a href="#1239" id="1239">1239</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::{
-    boxed::Box,
-    collections::VecDeque,
-    os::raw::<span class="kw-2">*</span>,
-    ptr, slice, str,
-    sync::{
-        atomic::{compiler_fence, Ordering},
-        Arc, Mutex, Weak,
-    },
-};
+</pre><pre class="rust"><code><span class="attr">#![allow(clippy::unnecessary_cast)]
 
-<span class="kw">use </span>cocoa::{
-    appkit::{NSApp, NSEvent, NSEventModifierFlags, NSEventPhase, NSView, NSWindow},
-    base::{id, nil},
-    foundation::{NSInteger, NSPoint, NSRect, NSSize, NSString, NSUInteger},
-};
-<span class="kw">use </span>objc::{
-    declare::ClassDecl,
-    runtime::{Class, Object, Protocol, Sel, BOOL, NO, YES},
-};
-<span class="kw">use </span>once_cell::sync::Lazy;
+</span><span class="kw">use </span>std::{boxed::Box, os::raw::<span class="kw-2">*</span>, ptr, str, sync::Mutex};
 
+<span class="kw">use </span>objc2::declare::{Ivar, IvarDrop};
+<span class="kw">use </span>objc2::foundation::{
+    NSArray, NSAttributedString, NSAttributedStringKey, NSCopying, NSMutableAttributedString,
+    NSObject, NSPoint, NSRange, NSRect, NSSize, NSString, NSUInteger,
+};
+<span class="kw">use </span>objc2::rc::{Id, Owned, Shared};
+<span class="kw">use </span>objc2::runtime::{Object, Sel};
+<span class="kw">use </span>objc2::{class, declare_class, msg_send, msg_send_id, sel, ClassType};
+
+<span class="kw">use </span><span class="kw">super</span>::appkit::{
+    NSApp, NSCursor, NSEvent, NSEventModifierFlags, NSEventPhase, NSResponder, NSTrackingRectTag,
+    NSView,
+};
+<span class="kw">use </span><span class="kw">crate</span>::platform::macos::{OptionAsAlt, WindowExtMacOS};
 <span class="kw">use crate</span>::{
     dpi::{LogicalPosition, LogicalSize},
     event::{
@@ -1268,20 +1047,20 @@
     platform_impl::platform::{
         app_state::AppState,
         event::{
-            char_to_keycode, check_function_keys, event_mods, get_scancode, modifier_event,
-            scancode_to_keycode, EventWrapper,
+            char_to_keycode, check_function_keys, event_mods, modifier_event, scancode_to_keycode,
+            EventWrapper,
         },
-        ffi::<span class="kw-2">*</span>,
-        util::{<span class="self">self</span>, id_to_string_lossy, IdRef},
-        window::get_window_id,
+        util,
+        window::WinitWindow,
         DEVICE_ID,
     },
     window::WindowId,
 };
 
-<span class="kw">pub struct </span>CursorState {
+<span class="attr">#[derive(Debug)]
+</span><span class="kw">pub struct </span>CursorState {
     <span class="kw">pub </span>visible: bool,
-    <span class="kw">pub </span>cursor: util::Cursor,
+    <span class="kw">pub</span>(<span class="kw">super</span>) cursor: Id&lt;NSCursor, Shared&gt;,
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>CursorState {
@@ -1308,12 +1087,12 @@
     </span>Commited,
 }
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>ViewState {
-    ns_window: id,
-    <span class="kw">pub </span>cursor_state: Arc&lt;Mutex&lt;CursorState&gt;&gt;,
+<span class="attr">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>ViewState {
+    <span class="kw">pub </span>cursor_state: Mutex&lt;CursorState&gt;,
     ime_position: LogicalPosition&lt;f64&gt;,
     <span class="kw">pub</span>(<span class="kw">super</span>) modifiers: ModifiersState,
-    tracking_rect: <span class="prelude-ty">Option</span>&lt;NSInteger&gt;,
+    tracking_rect: <span class="prelude-ty">Option</span>&lt;NSTrackingRectTag&gt;,
     ime_state: ImeState,
     input_source: String,
 
@@ -1327,612 +1106,14 @@
     </span>forward_key_to_app: bool,
 }
 
-<span class="kw">impl </span>ViewState {
-    <span class="kw">fn </span>get_scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
-        (<span class="kw">unsafe </span>{ NSWindow::backingScaleFactor(<span class="self">self</span>.ns_window) }) <span class="kw">as </span>f64
+<span class="kw">fn </span>get_characters(event: <span class="kw-2">&amp;</span>NSEvent, ignore_modifiers: bool) -&gt; String {
+    <span class="kw">if </span>ignore_modifiers {
+        event.charactersIgnoringModifiers()
+    } <span class="kw">else </span>{
+        event.characters()
     }
-
-    <span class="kw">fn </span>is_ime_enabled(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        !<span class="macro">matches!</span>(<span class="self">self</span>.ime_state, ImeState::Disabled)
-    }
-}
-
-<span class="kw">pub fn </span>new_view(ns_window: id) -&gt; (IdRef, Weak&lt;Mutex&lt;CursorState&gt;&gt;) {
-    <span class="kw">let </span>cursor_state = Default::default();
-    <span class="kw">let </span>cursor_access = Arc::downgrade(<span class="kw-2">&amp;</span>cursor_state);
-    <span class="kw">let </span>state = ViewState {
-        ns_window,
-        cursor_state,
-        ime_position: LogicalPosition::new(<span class="number">0.0</span>, <span class="number">0.0</span>),
-        modifiers: Default::default(),
-        tracking_rect: <span class="prelude-val">None</span>,
-        ime_state: ImeState::Disabled,
-        input_source: String::new(),
-        ime_allowed: <span class="bool-val">false</span>,
-        forward_key_to_app: <span class="bool-val">false</span>,
-    };
-    <span class="kw">unsafe </span>{
-        <span class="comment">// This is free&#39;d in `dealloc`
-        </span><span class="kw">let </span>state_ptr = Box::into_raw(Box::new(state)) <span class="kw">as </span><span class="kw-2">*mut </span>c_void;
-        <span class="kw">let </span>ns_view: id = <span class="macro">msg_send!</span>[VIEW_CLASS.<span class="number">0</span>, alloc];
-        (
-            IdRef::new(<span class="macro">msg_send!</span>[ns_view, initWithWinit: state_ptr]),
-            cursor_access,
-        )
-    }
-}
-
-<span class="kw">pub unsafe fn </span>set_ime_position(ns_view: id, position: LogicalPosition&lt;f64&gt;) {
-    <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>(<span class="kw-2">*</span>ns_view).get_mut_ivar(<span class="string">&quot;winitState&quot;</span>);
-    <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-    state.ime_position = position;
-    <span class="kw">let </span>input_context: id = <span class="macro">msg_send!</span>[ns_view, inputContext];
-    <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[input_context, invalidateCharacterCoordinates];
-}
-
-<span class="kw">pub unsafe fn </span>set_ime_allowed(ns_view: id, ime_allowed: bool) {
-    <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>(<span class="kw-2">*</span>ns_view).get_mut_ivar(<span class="string">&quot;winitState&quot;</span>);
-    <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-    <span class="kw">if </span>state.ime_allowed == ime_allowed {
-        <span class="kw">return</span>;
-    }
-    state.ime_allowed = ime_allowed;
-    <span class="kw">if </span>state.ime_allowed {
-        <span class="kw">return</span>;
-    }
-    <span class="kw">let </span>marked_text_ref: <span class="kw-2">&amp;mut </span>id = (<span class="kw-2">*</span>ns_view).get_mut_ivar(<span class="string">&quot;markedText&quot;</span>);
-
-    <span class="comment">// Clear markedText
-    </span><span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[<span class="kw-2">*</span>marked_text_ref, release];
-    <span class="kw">let </span>marked_text =
-        &lt;id <span class="kw">as </span>NSMutableAttributedString&gt;::init(NSMutableAttributedString::alloc(nil));
-    <span class="kw-2">*</span>marked_text_ref = marked_text;
-
-    <span class="kw">if </span>state.ime_state != ImeState::Disabled {
-        state.ime_state = ImeState::Disabled;
-        AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::Ime(Ime::Disabled),
-        }));
-    }
-}
-
-<span class="kw">struct </span>ViewClass(<span class="kw-2">*const </span>Class);
-<span class="kw">unsafe impl </span>Send <span class="kw">for </span>ViewClass {}
-<span class="kw">unsafe impl </span>Sync <span class="kw">for </span>ViewClass {}
-
-<span class="kw">static </span>VIEW_CLASS: Lazy&lt;ViewClass&gt; = Lazy::new(|| <span class="kw">unsafe </span>{
-    <span class="kw">let </span>superclass = <span class="macro">class!</span>(NSView);
-    <span class="kw">let </span><span class="kw-2">mut </span>decl = ClassDecl::new(<span class="string">&quot;WinitView&quot;</span>, superclass).unwrap();
-    decl.add_method(<span class="macro">sel!</span>(dealloc), dealloc <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel));
-    decl.add_method(
-        <span class="macro">sel!</span>(initWithWinit:),
-        init_with_winit <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, <span class="kw-2">*mut </span>c_void) -&gt; id,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(viewDidMoveToWindow),
-        view_did_move_to_window <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(drawRect:),
-        draw_rect <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, NSRect),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(acceptsFirstResponder),
-        accepts_first_responder <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel) -&gt; BOOL,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(touchBar),
-        touch_bar <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel) -&gt; BOOL,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(resetCursorRects),
-        reset_cursor_rects <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel),
-    );
-
-    <span class="comment">// ------------------------------------------------------------------
-    // NSTextInputClient
-    </span>decl.add_method(
-        <span class="macro">sel!</span>(hasMarkedText),
-        has_marked_text <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel) -&gt; BOOL,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(markedRange),
-        marked_range <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel) -&gt; NSRange,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(selectedRange),
-        selected_range <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel) -&gt; NSRange,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(setMarkedText:selectedRange:replacementRange:),
-        set_marked_text <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;mut </span>Object, Sel, id, NSRange, NSRange),
-    );
-    decl.add_method(<span class="macro">sel!</span>(unmarkText), unmark_text <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel));
-    decl.add_method(
-        <span class="macro">sel!</span>(validAttributesForMarkedText),
-        valid_attributes_for_marked_text <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel) -&gt; id,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(attributedSubstringForProposedRange:actualRange:),
-        attributed_substring_for_proposed_range
-            <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, NSRange, <span class="kw-2">*mut </span>c_void) -&gt; id,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(insertText:replacementRange:),
-        insert_text <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id, NSRange),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(characterIndexForPoint:),
-        character_index_for_point <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, NSPoint) -&gt; NSUInteger,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(firstRectForCharacterRange:actualRange:),
-        first_rect_for_character_range
-            <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, NSRange, <span class="kw-2">*mut </span>c_void) -&gt; NSRect,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(doCommandBySelector:),
-        do_command_by_selector <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, Sel),
-    );
-    <span class="comment">// ------------------------------------------------------------------
-
-    </span>decl.add_method(<span class="macro">sel!</span>(keyDown:), key_down <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id));
-    decl.add_method(<span class="macro">sel!</span>(keyUp:), key_up <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id));
-    decl.add_method(
-        <span class="macro">sel!</span>(flagsChanged:),
-        flags_changed <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(insertTab:),
-        insert_tab <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(insertBackTab:),
-        insert_back_tab <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(mouseDown:),
-        mouse_down <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(<span class="macro">sel!</span>(mouseUp:), mouse_up <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id));
-    decl.add_method(
-        <span class="macro">sel!</span>(rightMouseDown:),
-        right_mouse_down <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(rightMouseUp:),
-        right_mouse_up <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(otherMouseDown:),
-        other_mouse_down <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(otherMouseUp:),
-        other_mouse_up <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(mouseMoved:),
-        mouse_moved <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(mouseDragged:),
-        mouse_dragged <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(rightMouseDragged:),
-        right_mouse_dragged <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(otherMouseDragged:),
-        other_mouse_dragged <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(mouseEntered:),
-        mouse_entered <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(mouseExited:),
-        mouse_exited <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(scrollWheel:),
-        scroll_wheel <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(pressureChangeWithEvent:),
-        pressure_change_with_event <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(_wantsKeyDownForEvent:),
-        wants_key_down_for_event <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id) -&gt; BOOL,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(cancelOperation:),
-        cancel_operation <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(frameDidChange:),
-        frame_did_change <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id),
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(acceptsFirstMouse:),
-        accepts_first_mouse <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel, id) -&gt; BOOL,
-    );
-    decl.add_ivar::&lt;<span class="kw-2">*mut </span>c_void&gt;(<span class="string">&quot;winitState&quot;</span>);
-    decl.add_ivar::&lt;id&gt;(<span class="string">&quot;markedText&quot;</span>);
-    <span class="kw">let </span>protocol = Protocol::get(<span class="string">&quot;NSTextInputClient&quot;</span>).unwrap();
-    decl.add_protocol(protocol);
-    ViewClass(decl.register())
-});
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>dealloc(this: <span class="kw-2">&amp;</span>Object, _sel: Sel) {
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>marked_text: id = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;markedText&quot;</span>);
-        <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[marked_text, release];
-        <span class="kw">let </span>state: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        drop(Box::from_raw(state <span class="kw">as </span><span class="kw-2">*mut </span>ViewState));
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>init_with_winit(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, state: <span class="kw-2">*mut </span>c_void) -&gt; id {
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>this: id = <span class="macro">msg_send!</span>[this, init];
-        <span class="kw">if </span>this != nil {
-            (<span class="kw-2">*</span>this).set_ivar(<span class="string">&quot;winitState&quot;</span>, state);
-            <span class="kw">let </span>marked_text =
-                &lt;id <span class="kw">as </span>NSMutableAttributedString&gt;::init(NSMutableAttributedString::alloc(nil));
-            (<span class="kw-2">*</span>this).set_ivar(<span class="string">&quot;markedText&quot;</span>, marked_text);
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[this, setPostsFrameChangedNotifications: YES];
-
-            <span class="kw">let </span>notification_center: <span class="kw-2">&amp;</span>Object =
-                <span class="macro">msg_send!</span>[<span class="macro">class!</span>(NSNotificationCenter), defaultCenter];
-            <span class="comment">// About frame change
-            </span><span class="kw">let </span>frame_did_change_notification_name =
-                IdRef::new(NSString::alloc(nil).init_str(<span class="string">&quot;NSViewFrameDidChangeNotification&quot;</span>));
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[
-                notification_center,
-                addObserver: this
-                selector: <span class="macro">sel!</span>(frameDidChange:)
-                name: frame_did_change_notification_name
-                object: this
-            ];
-
-            <span class="kw">let </span>winit_state = <span class="kw-2">&amp;mut *</span>(state <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-            winit_state.input_source = current_input_source(this);
-        }
-        this
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>view_did_move_to_window(this: <span class="kw-2">&amp;</span>Object, _sel: Sel) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;viewDidMoveToWindow&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(tracking_rect) = state.tracking_rect.take() {
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[this, removeTrackingRect: tracking_rect];
-        }
-
-        <span class="kw">let </span>rect: NSRect = <span class="macro">msg_send!</span>[this, visibleRect];
-        <span class="kw">let </span>tracking_rect: NSInteger = <span class="macro">msg_send!</span>[this,
-            addTrackingRect:rect
-            owner:this
-            userData:ptr::null_mut::&lt;c_void&gt;()
-            assumeInside:NO
-        ];
-        state.tracking_rect = <span class="prelude-val">Some</span>(tracking_rect);
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>frame_did_change(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;frameDidChange:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(tracking_rect) = state.tracking_rect.take() {
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[this, removeTrackingRect: tracking_rect];
-        }
-
-        <span class="kw">let </span>rect: NSRect = <span class="macro">msg_send!</span>[this, visibleRect];
-        <span class="kw">let </span>tracking_rect: NSInteger = <span class="macro">msg_send!</span>[this,
-            addTrackingRect:rect
-            owner:this
-            userData:ptr::null_mut::&lt;c_void&gt;()
-            assumeInside:NO
-        ];
-        state.tracking_rect = <span class="prelude-val">Some</span>(tracking_rect);
-
-        <span class="comment">// Emit resize event here rather than from windowDidResize because:
-        // 1. When a new window is created as a tab, the frame size may change without a window resize occurring.
-        // 2. Even when a window resize does occur on a new tabbed window, it contains the wrong size (includes tab height).
-        </span><span class="kw">let </span>logical_size = LogicalSize::new(rect.size.width <span class="kw">as </span>f64, rect.size.height <span class="kw">as </span>f64);
-        <span class="kw">let </span>size = logical_size.to_physical::&lt;u32&gt;(state.get_scale_factor());
-        AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::Resized(size),
-        }));
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>draw_rect(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, rect: NSRect) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;drawRect:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        AppState::handle_redraw(WindowId(get_window_id(state.ns_window)));
-
-        <span class="kw">let </span>superclass = util::superclass(this);
-        <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[<span class="kw">super</span>(this, superclass), drawRect: rect];
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>accepts_first_responder(_this: <span class="kw-2">&amp;</span>Object, _sel: Sel) -&gt; BOOL {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;acceptsFirstResponder&quot;</span>);
-    YES
-}
-
-<span class="comment">// This is necessary to prevent a beefy terminal error on MacBook Pros:
-// IMKInputSession [0x7fc573576ff0 presentFunctionRowItemTextInputViewWithEndpoint:completionHandler:] : [self textInputContext]=0x7fc573558e10 *NO* NSRemoteViewController to client, NSError=Error Domain=NSCocoaErrorDomain Code=4099 &quot;The connection from pid 0 was invalidated from this process.&quot; UserInfo={NSDebugDescription=The connection from pid 0 was invalidated from this process.}, com.apple.inputmethod.EmojiFunctionRowItem
-// TODO: Add an API extension for using `NSTouchBar`
-</span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>touch_bar(_this: <span class="kw-2">&amp;</span>Object, _sel: Sel) -&gt; BOOL {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;touchBar&quot;</span>);
-    NO
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>reset_cursor_rects(this: <span class="kw-2">&amp;</span>Object, _sel: Sel) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;resetCursorRects&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="kw">let </span>bounds: NSRect = <span class="macro">msg_send!</span>[this, bounds];
-        <span class="kw">let </span>cursor_state = state.cursor_state.lock().unwrap();
-        <span class="kw">let </span>cursor = <span class="kw">if </span>cursor_state.visible {
-            cursor_state.cursor.load()
-        } <span class="kw">else </span>{
-            util::invisible_cursor()
-        };
-        <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[this,
-            addCursorRect:bounds
-            cursor:cursor
-        ];
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>has_marked_text(this: <span class="kw-2">&amp;</span>Object, _sel: Sel) -&gt; BOOL {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;hasMarkedText&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>marked_text: id = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;markedText&quot;</span>);
-        (marked_text.length() &gt; <span class="number">0</span>) <span class="kw">as </span>BOOL
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>marked_range(this: <span class="kw-2">&amp;</span>Object, _sel: Sel) -&gt; NSRange {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;markedRange&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>marked_text: id = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;markedText&quot;</span>);
-        <span class="kw">let </span>length = marked_text.length();
-        <span class="kw">if </span>length &gt; <span class="number">0 </span>{
-            NSRange::new(<span class="number">0</span>, length)
-        } <span class="kw">else </span>{
-            util::EMPTY_RANGE
-        }
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>selected_range(_this: <span class="kw-2">&amp;</span>Object, _sel: Sel) -&gt; NSRange {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;selectedRange&quot;</span>);
-    util::EMPTY_RANGE
-}
-
-<span class="doccomment">/// Safety: Assumes that `view` is an instance of `VIEW_CLASS` from winit.
-</span><span class="kw">unsafe fn </span>current_input_source(view: <span class="kw-2">*const </span>Object) -&gt; String {
-    <span class="kw">let </span>input_context: id = <span class="macro">msg_send!</span>[view, inputContext];
-    <span class="kw">let </span>input_source: id = <span class="macro">msg_send!</span>[input_context, selectedKeyboardInputSource];
-    id_to_string_lossy(input_source)
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>set_marked_text(
-    this: <span class="kw-2">&amp;mut </span>Object,
-    _sel: Sel,
-    string: id,
-    _selected_range: NSRange,
-    _replacement_range: NSRange,
-) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;setMarkedText:selectedRange:replacementRange:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="comment">// Get pre-edit text
-        </span><span class="kw">let </span>marked_text_ref: <span class="kw-2">&amp;mut </span>id = this.get_mut_ivar(<span class="string">&quot;markedText&quot;</span>);
-
-        <span class="comment">// Update markedText
-        </span><span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[(<span class="kw-2">*</span>marked_text_ref), release];
-        <span class="kw">let </span>marked_text = NSMutableAttributedString::alloc(nil);
-        <span class="kw">let </span>has_attr: BOOL = <span class="macro">msg_send!</span>[string, isKindOfClass: <span class="macro">class!</span>(NSAttributedString)];
-        <span class="kw">if </span>has_attr != NO {
-            marked_text.initWithAttributedString(string);
-        } <span class="kw">else </span>{
-            marked_text.initWithString(string);
-        };
-        <span class="kw-2">*</span>marked_text_ref = marked_text;
-
-        <span class="comment">// Update ViewState with new marked text
-        </span><span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-        <span class="kw">let </span>preedit_string = id_to_string_lossy(string);
-
-        <span class="comment">// Notify IME is active if application still doesn&#39;t know it.
-        </span><span class="kw">if </span>state.ime_state == ImeState::Disabled {
-            state.input_source = current_input_source(this);
-            AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-                window_id: WindowId(get_window_id(state.ns_window)),
-                event: WindowEvent::Ime(Ime::Enabled),
-            }));
-        }
-
-        <span class="comment">// Don&#39;t update state to preedit when we&#39;ve just commited a string, since the following
-        // preedit string will be None anyway.
-        </span><span class="kw">if </span>state.ime_state != ImeState::Commited {
-            state.ime_state = ImeState::Preedit;
-        }
-
-        <span class="comment">// Empty string basically means that there&#39;s no preedit, so indicate that by sending
-        // `None` cursor range.
-        </span><span class="kw">let </span>cursor_range = <span class="kw">if </span>preedit_string.is_empty() {
-            <span class="prelude-val">None
-        </span>} <span class="kw">else </span>{
-            <span class="prelude-val">Some</span>((preedit_string.len(), preedit_string.len()))
-        };
-
-        <span class="comment">// Send WindowEvent for updating marked text
-        </span>AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::Ime(Ime::Preedit(preedit_string, cursor_range)),
-        }));
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>unmark_text(this: <span class="kw-2">&amp;</span>Object, _sel: Sel) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;unmarkText&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>marked_text: id = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;markedText&quot;</span>);
-        <span class="kw">let </span>mutable_string = marked_text.mutableString();
-        <span class="kw">let </span>s: id = <span class="macro">msg_send!</span>[<span class="macro">class!</span>(NSString), new];
-        <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[mutable_string, setString: s];
-        <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[s, release];
-        <span class="kw">let </span>input_context: id = <span class="macro">msg_send!</span>[this, inputContext];
-        <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[input_context, discardMarkedText];
-
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-        AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::Ime(Ime::Preedit(String::new(), <span class="prelude-val">None</span>)),
-        }));
-        <span class="kw">if </span>state.is_ime_enabled() {
-            <span class="comment">// Leave the Preedit state
-            </span>state.ime_state = ImeState::Enabled;
-        } <span class="kw">else </span>{
-            <span class="macro">warn!</span>(<span class="string">&quot;Expected to have IME enabled when receiving unmarkText&quot;</span>);
-        }
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>valid_attributes_for_marked_text(_this: <span class="kw-2">&amp;</span>Object, _sel: Sel) -&gt; id {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;validAttributesForMarkedText&quot;</span>);
-    <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="macro">class!</span>(NSArray), array] }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>attributed_substring_for_proposed_range(
-    _this: <span class="kw-2">&amp;</span>Object,
-    _sel: Sel,
-    _range: NSRange,
-    _actual_range: <span class="kw-2">*mut </span>c_void, <span class="comment">// *mut NSRange
-</span>) -&gt; id {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;attributedSubstringForProposedRange:actualRange:&quot;</span>);
-    nil
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>character_index_for_point(_this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _point: NSPoint) -&gt; NSUInteger {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;characterIndexForPoint:&quot;</span>);
-    <span class="number">0
-</span>}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>first_rect_for_character_range(
-    this: <span class="kw-2">&amp;</span>Object,
-    _sel: Sel,
-    _range: NSRange,
-    _actual_range: <span class="kw-2">*mut </span>c_void, <span class="comment">// *mut NSRange
-</span>) -&gt; NSRect {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;firstRectForCharacterRange:actualRange:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-        <span class="kw">let </span>content_rect =
-            NSWindow::contentRectForFrameRect_(state.ns_window, NSWindow::frame(state.ns_window));
-        <span class="kw">let </span>base_x = content_rect.origin.x <span class="kw">as </span>f64;
-        <span class="kw">let </span>base_y = (content_rect.origin.y + content_rect.size.height) <span class="kw">as </span>f64;
-        <span class="kw">let </span>x = base_x + state.ime_position.x;
-        <span class="kw">let </span>y = base_y - state.ime_position.y;
-        <span class="comment">// This is not ideal: We _should_ return a different position based on
-        // the currently selected character (which varies depending on the type
-        // and size of the character), but in the current `winit` API there is
-        // no way to express this. Same goes for the `NSSize`.
-        </span>NSRect::new(NSPoint::new(x <span class="kw">as _</span>, y <span class="kw">as _</span>), NSSize::new(<span class="number">0.0</span>, <span class="number">0.0</span>))
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>insert_text(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, string: id, _replacement_range: NSRange) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;insertText:replacementRange:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="kw">let </span>string = id_to_string_lossy(string);
-
-        <span class="kw">let </span>is_control = string.chars().next().map_or(<span class="bool-val">false</span>, |c| c.is_control());
-
-        <span class="comment">// We don&#39;t need this now, but it&#39;s here if that changes.
-        //let event: id = msg_send![NSApp(), currentEvent];
-
-        </span><span class="kw">if </span>state.is_ime_enabled() &amp;&amp; !is_control {
-            AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-                window_id: WindowId(get_window_id(state.ns_window)),
-                event: WindowEvent::Ime(Ime::Preedit(String::new(), <span class="prelude-val">None</span>)),
-            }));
-            AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-                window_id: WindowId(get_window_id(state.ns_window)),
-                event: WindowEvent::Ime(Ime::Commit(string)),
-            }));
-            state.ime_state = ImeState::Commited;
-        }
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>do_command_by_selector(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _command: Sel) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;doCommandBySelector:&quot;</span>);
-    <span class="comment">// Basically, we&#39;re sent this message whenever a keyboard event that doesn&#39;t generate a &quot;human
-    // readable&quot; character happens, i.e. newlines, tabs, and Ctrl+C.
-    </span><span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="comment">// We shouldn&#39;t forward any character from just commited text, since we&#39;ll end up sending
-        // it twice with some IMEs like Korean one. We&#39;ll also always send `Enter` in that case,
-        // which is not desired given it was used to confirm IME input.
-        </span><span class="kw">if </span>state.ime_state == ImeState::Commited {
-            <span class="kw">return</span>;
-        }
-
-        state.forward_key_to_app = <span class="bool-val">true</span>;
-
-        <span class="kw">let </span>has_marked_text: BOOL = <span class="macro">msg_send!</span>[this, hasMarkedText];
-        <span class="kw">if </span>has_marked_text == NO &amp;&amp; state.ime_state == ImeState::Preedit {
-            <span class="comment">// Leave preedit so that we also report the keyup for this key
-            </span>state.ime_state = ImeState::Enabled;
-        }
-    }
-}
-
-<span class="kw">fn </span>get_characters(event: id, ignore_modifiers: bool) -&gt; String {
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>characters: id = <span class="kw">if </span>ignore_modifiers {
-            <span class="macro">msg_send!</span>[event, charactersIgnoringModifiers]
-        } <span class="kw">else </span>{
-            <span class="macro">msg_send!</span>[event, characters]
-        };
-
-        <span class="macro">assert_ne!</span>(characters, nil);
-        <span class="kw">let </span>slice =
-            slice::from_raw_parts(characters.UTF8String() <span class="kw">as </span><span class="kw-2">*const </span>c_uchar, characters.len());
-
-        <span class="kw">let </span>string = str::from_utf8_unchecked(slice);
-        string.to_owned()
-    }
+    .expect(<span class="string">&quot;expected characters to be non-null&quot;</span>)
+    .to_string()
 }
 
 <span class="comment">// As defined in: https://www.unicode.org/Public/MAPPINGS/VENDORS/APPLE/CORPCHAR.TXT
@@ -1950,9 +1131,9 @@
 }
 
 <span class="comment">// Retrieves a layout-independent keycode given an event.
-</span><span class="kw">fn </span>retrieve_keycode(event: id) -&gt; <span class="prelude-ty">Option</span>&lt;VirtualKeyCode&gt; {
+</span><span class="kw">fn </span>retrieve_keycode(event: <span class="kw-2">&amp;</span>NSEvent) -&gt; <span class="prelude-ty">Option</span>&lt;VirtualKeyCode&gt; {
     <span class="attr">#[inline]
-    </span><span class="kw">fn </span>get_code(ev: id, raw: bool) -&gt; <span class="prelude-ty">Option</span>&lt;VirtualKeyCode&gt; {
+    </span><span class="kw">fn </span>get_code(ev: <span class="kw-2">&amp;</span>NSEvent, raw: bool) -&gt; <span class="prelude-ty">Option</span>&lt;VirtualKeyCode&gt; {
         <span class="kw">let </span>characters = get_characters(ev, raw);
         characters.chars().next().and_then(char_to_keycode)
     }
@@ -1968,124 +1149,423 @@
     // can vary, but we know that they are encoded
     // in characters property.
     </span>code.or_else(|| {
-        <span class="kw">let </span>scancode = get_scancode(event);
+        <span class="kw">let </span>scancode = event.scancode();
         scancode_to_keycode(scancode).or_else(|| check_function_keys(<span class="kw-2">&amp;</span>get_characters(event, <span class="bool-val">true</span>)))
     })
 }
 
-<span class="comment">// Update `state.modifiers` if `event` has something different
-</span><span class="kw">fn </span>update_potentially_stale_modifiers(state: <span class="kw-2">&amp;mut </span>ViewState, event: id) {
-    <span class="kw">let </span>event_modifiers = event_mods(event);
-    <span class="kw">if </span>state.modifiers != event_modifiers {
-        state.modifiers = event_modifiers;
-
-        AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::ModifiersChanged(state.modifiers),
-        }));
+<span class="macro">declare_class!</span>(
+    <span class="attr">#[derive(Debug)]
+    #[allow(non_snake_case)]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>WinitView {
+        _ns_window: IvarDrop&lt;Id&lt;WinitWindow, Shared&gt;&gt;,
+        <span class="kw">pub</span>(<span class="kw">super</span>) state: IvarDrop&lt;Box&lt;ViewState&gt;&gt;,
+        marked_text: IvarDrop&lt;Id&lt;NSMutableAttributedString, Owned&gt;&gt;,
+        accepts_first_mouse: bool,
     }
-}
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>key_down(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;keyDown:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-        <span class="kw">let </span>window_id = WindowId(get_window_id(state.ns_window));
+    <span class="kw">unsafe impl </span>ClassType <span class="kw">for </span>WinitView {
+        <span class="attr">#[inherits(NSResponder, NSObject)]
+        </span><span class="kw">type </span>Super = NSView;
+    }
 
-        <span class="kw">let </span>input_source = current_input_source(this);
-        <span class="kw">if </span>state.input_source != input_source &amp;&amp; state.is_ime_enabled() {
-            state.ime_state = ImeState::Disabled;
-            state.input_source = input_source;
-            AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-                window_id: WindowId(get_window_id(state.ns_window)),
-                event: WindowEvent::Ime(Ime::Disabled),
-            }));
+    <span class="kw">unsafe impl </span>WinitView {
+        <span class="attr">#[sel(initWithId:acceptsFirstMouse:)]
+        </span><span class="kw">fn </span>init_with_id(
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+            window: <span class="kw-2">&amp;</span>WinitWindow,
+            accepts_first_mouse: bool,
+        ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt; {
+            <span class="kw">let </span>this: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt; = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw">super</span>(<span class="self">self</span>), init] };
+            this.map(|this| {
+                <span class="kw">let </span>state = ViewState {
+                    cursor_state: Default::default(),
+                    ime_position: LogicalPosition::new(<span class="number">0.0</span>, <span class="number">0.0</span>),
+                    modifiers: Default::default(),
+                    tracking_rect: <span class="prelude-val">None</span>,
+                    ime_state: ImeState::Disabled,
+                    input_source: String::new(),
+                    ime_allowed: <span class="bool-val">false</span>,
+                    forward_key_to_app: <span class="bool-val">false</span>,
+                };
+
+                Ivar::write(<span class="kw-2">&amp;mut </span>this._ns_window, window.retain());
+                Ivar::write(<span class="kw-2">&amp;mut </span>this.state, Box::new(state));
+                Ivar::write(<span class="kw-2">&amp;mut </span>this.marked_text, NSMutableAttributedString::new());
+                Ivar::write(<span class="kw-2">&amp;mut </span>this.accepts_first_mouse, accepts_first_mouse);
+
+                this.setPostsFrameChangedNotifications(<span class="bool-val">true</span>);
+
+                <span class="kw">let </span>notification_center: <span class="kw-2">&amp;</span>Object =
+                    <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="macro">class!</span>(NSNotificationCenter), defaultCenter] };
+                <span class="comment">// About frame change
+                </span><span class="kw">let </span>frame_did_change_notification_name =
+                    NSString::from_str(<span class="string">&quot;NSViewFrameDidChangeNotification&quot;</span>);
+                <span class="attr">#[allow(clippy::let_unit_value)]
+                </span><span class="kw">unsafe </span>{
+                    <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[
+                        notification_center,
+                        addObserver: <span class="kw-2">&amp;*</span>this,
+                        selector: <span class="macro">sel!</span>(frameDidChange:),
+                        name: <span class="kw-2">&amp;*</span>frame_did_change_notification_name,
+                        object: <span class="kw-2">&amp;*</span>this,
+                    ];
+                }
+
+                this.state.input_source = this.current_input_source();
+                this
+            })
         }
-        <span class="kw">let </span>was_in_preedit = state.ime_state == ImeState::Preedit;
+    }
 
-        <span class="kw">let </span>characters = get_characters(event, <span class="bool-val">false</span>);
-        state.forward_key_to_app = <span class="bool-val">false</span>;
+    <span class="kw">unsafe impl </span>WinitView {
+        <span class="attr">#[sel(viewDidMoveToWindow)]
+        </span><span class="kw">fn </span>view_did_move_to_window(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;viewDidMoveToWindow&quot;</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(tracking_rect) = <span class="self">self</span>.state.tracking_rect.take() {
+                <span class="self">self</span>.removeTrackingRect(tracking_rect);
+            }
 
-        <span class="comment">// The `interpretKeyEvents` function might call
-        // `setMarkedText`, `insertText`, and `doCommandBySelector`.
-        // It&#39;s important that we call this before queuing the KeyboardInput, because
-        // we must send the `KeyboardInput` event during IME if it triggered
-        // `doCommandBySelector`. (doCommandBySelector means that the keyboard input
-        // is not handled by IME and should be handled by the application)
-        </span><span class="kw">let </span><span class="kw-2">mut </span>text_commited = <span class="bool-val">false</span>;
-        <span class="kw">if </span>state.ime_allowed {
-            <span class="kw">let </span>events_for_nsview: id = <span class="macro">msg_send!</span>[<span class="macro">class!</span>(NSArray), arrayWithObject: event];
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[this, interpretKeyEvents: events_for_nsview];
+            <span class="kw">let </span>rect = <span class="self">self</span>.visibleRect();
+            <span class="kw">let </span>tracking_rect = <span class="self">self</span>.add_tracking_rect(rect, <span class="bool-val">false</span>);
+            <span class="self">self</span>.state.tracking_rect = <span class="prelude-val">Some</span>(tracking_rect);
+        }
 
-            <span class="comment">// Using a compiler fence because `interpretKeyEvents` might call
-            // into functions that modify the `ViewState`, but the compiler
-            // doesn&#39;t know this. Without the fence, the compiler may think that
-            // some of the reads (eg `state.ime_state`) that happen after this
-            // point are not needed.
-            </span>compiler_fence(Ordering::SeqCst);
+        <span class="attr">#[sel(frameDidChange:)]
+        </span><span class="kw">fn </span>frame_did_change(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;frameDidChange:&quot;</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(tracking_rect) = <span class="self">self</span>.state.tracking_rect.take() {
+                <span class="self">self</span>.removeTrackingRect(tracking_rect);
+            }
 
-            <span class="comment">// If the text was commited we must treat the next keyboard event as IME related.
-            </span><span class="kw">if </span>state.ime_state == ImeState::Commited {
-                state.ime_state = ImeState::Enabled;
-                text_commited = <span class="bool-val">true</span>;
+            <span class="kw">let </span>rect = <span class="self">self</span>.visibleRect();
+            <span class="kw">let </span>tracking_rect = <span class="self">self</span>.add_tracking_rect(rect, <span class="bool-val">false</span>);
+            <span class="self">self</span>.state.tracking_rect = <span class="prelude-val">Some</span>(tracking_rect);
+
+            <span class="comment">// Emit resize event here rather than from windowDidResize because:
+            // 1. When a new window is created as a tab, the frame size may change without a window resize occurring.
+            // 2. Even when a window resize does occur on a new tabbed window, it contains the wrong size (includes tab height).
+            </span><span class="kw">let </span>logical_size = LogicalSize::new(rect.size.width <span class="kw">as </span>f64, rect.size.height <span class="kw">as </span>f64);
+            <span class="kw">let </span>size = logical_size.to_physical::&lt;u32&gt;(<span class="self">self</span>.scale_factor());
+            <span class="self">self</span>.queue_event(WindowEvent::Resized(size));
+        }
+
+        <span class="attr">#[sel(drawRect:)]
+        </span><span class="kw">fn </span>draw_rect(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rect: NSRect) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;drawRect:&quot;</span>);
+
+            AppState::handle_redraw(<span class="self">self</span>.window_id());
+
+            <span class="attr">#[allow(clippy::let_unit_value)]
+            </span><span class="kw">unsafe </span>{
+                <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[<span class="kw">super</span>(<span class="self">self</span>), drawRect: rect];
             }
         }
 
-        <span class="kw">let </span>now_in_preedit = state.ime_state == ImeState::Preedit;
+        <span class="attr">#[sel(acceptsFirstResponder)]
+        </span><span class="kw">fn </span>accepts_first_responder(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;acceptsFirstResponder&quot;</span>);
+            <span class="bool-val">true
+        </span>}
 
-        <span class="kw">let </span>scancode = get_scancode(event) <span class="kw">as </span>u32;
-        <span class="kw">let </span>virtual_keycode = retrieve_keycode(event);
+        <span class="comment">// This is necessary to prevent a beefy terminal error on MacBook Pros:
+        // IMKInputSession [0x7fc573576ff0 presentFunctionRowItemTextInputViewWithEndpoint:completionHandler:] : [self textInputContext]=0x7fc573558e10 *NO* NSRemoteViewController to client, NSError=Error Domain=NSCocoaErrorDomain Code=4099 &quot;The connection from pid 0 was invalidated from this process.&quot; UserInfo={NSDebugDescription=The connection from pid 0 was invalidated from this process.}, com.apple.inputmethod.EmojiFunctionRowItem
+        // TODO: Add an API extension for using `NSTouchBar`
+        </span><span class="attr">#[sel(touchBar)]
+        </span><span class="kw">fn </span>touch_bar(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;touchBar&quot;</span>);
+            <span class="bool-val">false
+        </span>}
 
-        update_potentially_stale_modifiers(state, event);
+        <span class="attr">#[sel(resetCursorRects)]
+        </span><span class="kw">fn </span>reset_cursor_rects(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;resetCursorRects&quot;</span>);
+            <span class="kw">let </span>bounds = <span class="self">self</span>.bounds();
+            <span class="kw">let </span>cursor_state = <span class="self">self</span>.state.cursor_state.lock().unwrap();
+            <span class="comment">// We correctly invoke `addCursorRect` only from inside `resetCursorRects`
+            </span><span class="kw">if </span>cursor_state.visible {
+                <span class="self">self</span>.addCursorRect(bounds, <span class="kw-2">&amp;</span>cursor_state.cursor);
+            } <span class="kw">else </span>{
+                <span class="self">self</span>.addCursorRect(bounds, <span class="kw-2">&amp;</span>NSCursor::invisible());
+            }
+        }
+    }
 
-        <span class="kw">let </span>ime_related = was_in_preedit || now_in_preedit || text_commited;
+    <span class="kw">unsafe impl </span>Protocol&lt;NSTextInputClient&gt; <span class="kw">for </span>WinitView {
+        <span class="attr">#[sel(hasMarkedText)]
+        </span><span class="kw">fn </span>has_marked_text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;hasMarkedText&quot;</span>);
+            <span class="self">self</span>.marked_text.len_utf16() &gt; <span class="number">0
+        </span>}
 
-        <span class="kw">if </span>!ime_related || state.forward_key_to_app || !state.ime_allowed {
-            <span class="attr">#[allow(deprecated)]
-            </span><span class="kw">let </span>window_event = Event::WindowEvent {
-                window_id,
-                event: WindowEvent::KeyboardInput {
+        <span class="attr">#[sel(markedRange)]
+        </span><span class="kw">fn </span>marked_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NSRange {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;markedRange&quot;</span>);
+            <span class="kw">let </span>length = <span class="self">self</span>.marked_text.len_utf16();
+            <span class="kw">if </span>length &gt; <span class="number">0 </span>{
+                NSRange::new(<span class="number">0</span>, length)
+            } <span class="kw">else </span>{
+                util::EMPTY_RANGE
+            }
+        }
+
+        <span class="attr">#[sel(selectedRange)]
+        </span><span class="kw">fn </span>selected_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NSRange {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;selectedRange&quot;</span>);
+            util::EMPTY_RANGE
+        }
+
+        <span class="attr">#[sel(setMarkedText:selectedRange:replacementRange:)]
+        </span><span class="kw">fn </span>set_marked_text(
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+            string: <span class="kw-2">&amp;</span>NSObject,
+            _selected_range: NSRange,
+            _replacement_range: NSRange,
+        ) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;setMarkedText:selectedRange:replacementRange:&quot;</span>);
+
+            <span class="comment">// SAFETY: This method is guaranteed to get either a `NSString` or a `NSAttributedString`.
+            </span><span class="kw">let </span>(marked_text, preedit_string) = <span class="kw">if </span>string.is_kind_of::&lt;NSAttributedString&gt;() {
+                <span class="kw">let </span>string: <span class="kw-2">*const </span>NSObject = string;
+                <span class="kw">let </span>string: <span class="kw-2">*const </span>NSAttributedString = string.cast();
+                <span class="kw">let </span>string = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>string };
+                (
+                    NSMutableAttributedString::from_attributed_nsstring(string),
+                    string.string().to_string(),
+                )
+            } <span class="kw">else </span>{
+                <span class="kw">let </span>string: <span class="kw-2">*const </span>NSObject = string;
+                <span class="kw">let </span>string: <span class="kw-2">*const </span>NSString = string.cast();
+                <span class="kw">let </span>string = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>string };
+                (
+                    NSMutableAttributedString::from_nsstring(string),
+                    string.to_string(),
+                )
+            };
+
+            <span class="comment">// Update marked text
+            </span><span class="kw-2">*</span><span class="self">self</span>.marked_text = marked_text;
+
+            <span class="comment">// Notify IME is active if application still doesn&#39;t know it.
+            </span><span class="kw">if </span><span class="self">self</span>.state.ime_state == ImeState::Disabled {
+                <span class="self">self</span>.state.input_source = <span class="self">self</span>.current_input_source();
+                <span class="self">self</span>.queue_event(WindowEvent::Ime(Ime::Enabled));
+            }
+
+            <span class="comment">// Don&#39;t update self.state to preedit when we&#39;ve just commited a string, since the following
+            // preedit string will be None anyway.
+            </span><span class="kw">if </span><span class="self">self</span>.state.ime_state != ImeState::Commited {
+                <span class="self">self</span>.state.ime_state = ImeState::Preedit;
+            }
+
+            <span class="comment">// Empty string basically means that there&#39;s no preedit, so indicate that by sending
+            // `None` cursor range.
+            </span><span class="kw">let </span>cursor_range = <span class="kw">if </span>preedit_string.is_empty() {
+                <span class="prelude-val">None
+            </span>} <span class="kw">else </span>{
+                <span class="prelude-val">Some</span>((preedit_string.len(), preedit_string.len()))
+            };
+
+            <span class="comment">// Send WindowEvent for updating marked text
+            </span><span class="self">self</span>.queue_event(WindowEvent::Ime(Ime::Preedit(preedit_string, cursor_range)));
+        }
+
+        <span class="attr">#[sel(unmarkText)]
+        </span><span class="kw">fn </span>unmark_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;unmarkText&quot;</span>);
+            <span class="kw-2">*</span><span class="self">self</span>.marked_text = NSMutableAttributedString::new();
+
+            <span class="kw">let </span>input_context = <span class="self">self</span>.inputContext().expect(<span class="string">&quot;input context&quot;</span>);
+            input_context.discardMarkedText();
+
+            <span class="self">self</span>.queue_event(WindowEvent::Ime(Ime::Preedit(String::new(), <span class="prelude-val">None</span>)));
+            <span class="kw">if </span><span class="self">self</span>.is_ime_enabled() {
+                <span class="comment">// Leave the Preedit self.state
+                </span><span class="self">self</span>.state.ime_state = ImeState::Enabled;
+            } <span class="kw">else </span>{
+                <span class="macro">warn!</span>(<span class="string">&quot;Expected to have IME enabled when receiving unmarkText&quot;</span>);
+            }
+        }
+
+        <span class="attr">#[sel(validAttributesForMarkedText)]
+        </span><span class="kw">fn </span>valid_attributes_for_marked_text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const </span>NSArray&lt;NSAttributedStringKey&gt; {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;validAttributesForMarkedText&quot;</span>);
+            Id::autorelease_return(NSArray::new())
+        }
+
+        <span class="attr">#[sel(attributedSubstringForProposedRange:actualRange:)]
+        </span><span class="kw">fn </span>attributed_substring_for_proposed_range(
+            <span class="kw-2">&amp;</span><span class="self">self</span>,
+            _range: NSRange,
+            _actual_range: <span class="kw-2">*mut </span>c_void, <span class="comment">// *mut NSRange
+        </span>) -&gt; <span class="kw-2">*const </span>NSAttributedString {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;attributedSubstringForProposedRange:actualRange:&quot;</span>);
+            ptr::null()
+        }
+
+        <span class="attr">#[sel(characterIndexForPoint:)]
+        </span><span class="kw">fn </span>character_index_for_point(<span class="kw-2">&amp;</span><span class="self">self</span>, _point: NSPoint) -&gt; NSUInteger {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;characterIndexForPoint:&quot;</span>);
+            <span class="number">0
+        </span>}
+
+        <span class="attr">#[sel(firstRectForCharacterRange:actualRange:)]
+        </span><span class="kw">fn </span>first_rect_for_character_range(
+            <span class="kw-2">&amp;</span><span class="self">self</span>,
+            _range: NSRange,
+            _actual_range: <span class="kw-2">*mut </span>c_void, <span class="comment">// *mut NSRange
+        </span>) -&gt; NSRect {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;firstRectForCharacterRange:actualRange:&quot;</span>);
+            <span class="kw">let </span>window = <span class="self">self</span>.window();
+            <span class="kw">let </span>content_rect = window.contentRectForFrameRect(window.frame());
+            <span class="kw">let </span>base_x = content_rect.origin.x <span class="kw">as </span>f64;
+            <span class="kw">let </span>base_y = (content_rect.origin.y + content_rect.size.height) <span class="kw">as </span>f64;
+            <span class="kw">let </span>x = base_x + <span class="self">self</span>.state.ime_position.x;
+            <span class="kw">let </span>y = base_y - <span class="self">self</span>.state.ime_position.y;
+            <span class="comment">// This is not ideal: We _should_ return a different position based on
+            // the currently selected character (which varies depending on the type
+            // and size of the character), but in the current `winit` API there is
+            // no way to express this. Same goes for the `NSSize`.
+            </span>NSRect::new(NSPoint::new(x <span class="kw">as _</span>, y <span class="kw">as _</span>), NSSize::new(<span class="number">0.0</span>, <span class="number">0.0</span>))
+        }
+
+        <span class="attr">#[sel(insertText:replacementRange:)]
+        </span><span class="kw">fn </span>insert_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, string: <span class="kw-2">&amp;</span>NSObject, _replacement_range: NSRange) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;insertText:replacementRange:&quot;</span>);
+
+            <span class="comment">// SAFETY: This method is guaranteed to get either a `NSString` or a `NSAttributedString`.
+            </span><span class="kw">let </span>string = <span class="kw">if </span>string.is_kind_of::&lt;NSAttributedString&gt;() {
+                <span class="kw">let </span>string: <span class="kw-2">*const </span>NSObject = string;
+                <span class="kw">let </span>string: <span class="kw-2">*const </span>NSAttributedString = string.cast();
+                <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>string }.string().to_string()
+            } <span class="kw">else </span>{
+                <span class="kw">let </span>string: <span class="kw-2">*const </span>NSObject = string;
+                <span class="kw">let </span>string: <span class="kw-2">*const </span>NSString = string.cast();
+                <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>string }.to_string()
+            };
+
+            <span class="kw">let </span>is_control = string.chars().next().map_or(<span class="bool-val">false</span>, |c| c.is_control());
+
+            <span class="comment">// Commit only if we have marked text.
+            </span><span class="kw">if </span><span class="self">self</span>.hasMarkedText() &amp;&amp; <span class="self">self</span>.is_ime_enabled() &amp;&amp; !is_control {
+                <span class="self">self</span>.queue_event(WindowEvent::Ime(Ime::Preedit(String::new(), <span class="prelude-val">None</span>)));
+                <span class="self">self</span>.queue_event(WindowEvent::Ime(Ime::Commit(string)));
+                <span class="self">self</span>.state.ime_state = ImeState::Commited;
+            }
+        }
+
+        <span class="comment">// Basically, we&#39;re sent this message whenever a keyboard event that doesn&#39;t generate a &quot;human
+        // readable&quot; character happens, i.e. newlines, tabs, and Ctrl+C.
+        </span><span class="attr">#[sel(doCommandBySelector:)]
+        </span><span class="kw">fn </span>do_command_by_selector(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _command: Sel) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;doCommandBySelector:&quot;</span>);
+            <span class="comment">// We shouldn&#39;t forward any character from just commited text, since we&#39;ll end up sending
+            // it twice with some IMEs like Korean one. We&#39;ll also always send `Enter` in that case,
+            // which is not desired given it was used to confirm IME input.
+            </span><span class="kw">if </span><span class="self">self</span>.state.ime_state == ImeState::Commited {
+                <span class="kw">return</span>;
+            }
+
+            <span class="self">self</span>.state.forward_key_to_app = <span class="bool-val">true</span>;
+
+            <span class="kw">if </span><span class="self">self</span>.hasMarkedText() &amp;&amp; <span class="self">self</span>.state.ime_state == ImeState::Preedit {
+                <span class="comment">// Leave preedit so that we also report the keyup for this key
+                </span><span class="self">self</span>.state.ime_state = ImeState::Enabled;
+            }
+        }
+    }
+
+    <span class="kw">unsafe impl </span>WinitView {
+        <span class="attr">#[sel(keyDown:)]
+        </span><span class="kw">fn </span>key_down(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;keyDown:&quot;</span>);
+            <span class="kw">let </span>input_source = <span class="self">self</span>.current_input_source();
+            <span class="kw">if </span><span class="self">self</span>.state.input_source != input_source &amp;&amp; <span class="self">self</span>.is_ime_enabled() {
+                <span class="self">self</span>.state.ime_state = ImeState::Disabled;
+                <span class="self">self</span>.state.input_source = input_source;
+                <span class="self">self</span>.queue_event(WindowEvent::Ime(Ime::Disabled));
+            }
+            <span class="kw">let </span>was_in_preedit = <span class="self">self</span>.state.ime_state == ImeState::Preedit;
+
+            <span class="comment">// Get the characters from the event.
+            </span><span class="kw">let </span>ev_mods = event_mods(event);
+            <span class="kw">let </span>ignore_alt_characters = <span class="kw">match </span><span class="self">self</span>.window().option_as_alt() {
+                OptionAsAlt::OnlyLeft <span class="kw">if </span>event.lalt_pressed() =&gt; <span class="bool-val">true</span>,
+                OptionAsAlt::OnlyRight <span class="kw">if </span>event.ralt_pressed() =&gt; <span class="bool-val">true</span>,
+                OptionAsAlt::Both <span class="kw">if </span>ev_mods.alt() =&gt; <span class="bool-val">true</span>,
+                <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
+            } &amp;&amp; !ev_mods.ctrl()
+                &amp;&amp; !ev_mods.logo();
+
+            <span class="kw">let </span>characters = get_characters(event, ignore_alt_characters);
+            <span class="self">self</span>.state.forward_key_to_app = <span class="bool-val">false</span>;
+
+            <span class="comment">// The `interpretKeyEvents` function might call
+            // `setMarkedText`, `insertText`, and `doCommandBySelector`.
+            // It&#39;s important that we call this before queuing the KeyboardInput, because
+            // we must send the `KeyboardInput` event during IME if it triggered
+            // `doCommandBySelector`. (doCommandBySelector means that the keyboard input
+            // is not handled by IME and should be handled by the application)
+            </span><span class="kw">let </span><span class="kw-2">mut </span>text_commited = <span class="bool-val">false</span>;
+            <span class="kw">if </span><span class="self">self</span>.state.ime_allowed {
+                <span class="kw">let </span>new_event = <span class="kw">if </span>ignore_alt_characters {
+                    replace_event_chars(event, <span class="kw-2">&amp;</span>characters)
+                } <span class="kw">else </span>{
+                    event.copy()
+                };
+
+                <span class="kw">let </span>events_for_nsview = NSArray::from_slice(<span class="kw-2">&amp;</span>[new_event]);
+                <span class="kw">unsafe </span>{ <span class="self">self</span>.interpretKeyEvents(<span class="kw-2">&amp;</span>events_for_nsview) };
+
+                <span class="comment">// If the text was commited we must treat the next keyboard event as IME related.
+                </span><span class="kw">if </span><span class="self">self</span>.state.ime_state == ImeState::Commited {
+                    <span class="comment">// Remove any marked text, so normal input can continue.
+                    </span><span class="kw-2">*</span><span class="self">self</span>.marked_text = NSMutableAttributedString::new();
+                    <span class="self">self</span>.state.ime_state = ImeState::Enabled;
+                    text_commited = <span class="bool-val">true</span>;
+                }
+            }
+
+            <span class="kw">let </span>now_in_preedit = <span class="self">self</span>.state.ime_state == ImeState::Preedit;
+
+            <span class="kw">let </span>scancode = event.scancode() <span class="kw">as </span>u32;
+            <span class="kw">let </span>virtual_keycode = retrieve_keycode(event);
+
+            <span class="self">self</span>.update_potentially_stale_modifiers(event);
+
+            <span class="kw">let </span>ime_related = was_in_preedit || now_in_preedit || text_commited;
+
+            <span class="kw">if </span>!ime_related || <span class="self">self</span>.state.forward_key_to_app || !<span class="self">self</span>.state.ime_allowed {
+                <span class="attr">#[allow(deprecated)]
+                </span><span class="self">self</span>.queue_event(WindowEvent::KeyboardInput {
                     device_id: DEVICE_ID,
                     input: KeyboardInput {
                         state: ElementState::Pressed,
                         scancode,
                         virtual_keycode,
-                        modifiers: event_mods(event),
+                        modifiers: ev_mods,
                     },
                     is_synthetic: <span class="bool-val">false</span>,
-                },
-            };
+                });
 
-            AppState::queue_event(EventWrapper::StaticEvent(window_event));
-
-            <span class="kw">for </span>character <span class="kw">in </span>characters.chars().filter(|c| !is_corporate_character(<span class="kw-2">*</span>c)) {
-                AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-                    window_id,
-                    event: WindowEvent::ReceivedCharacter(character),
-                }));
+                <span class="kw">for </span>character <span class="kw">in </span>characters.chars().filter(|c| !is_corporate_character(<span class="kw-2">*</span>c)) {
+                    <span class="self">self</span>.queue_event(WindowEvent::ReceivedCharacter(character));
+                }
             }
         }
-    }
-}
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>key_up(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;keyUp:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
+        <span class="attr">#[sel(keyUp:)]
+        </span><span class="kw">fn </span>key_up(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;keyUp:&quot;</span>);
+            <span class="kw">let </span>scancode = event.scancode() <span class="kw">as </span>u32;
+            <span class="kw">let </span>virtual_keycode = retrieve_keycode(event);
 
-        <span class="kw">let </span>scancode = get_scancode(event) <span class="kw">as </span>u32;
-        <span class="kw">let </span>virtual_keycode = retrieve_keycode(event);
+            <span class="self">self</span>.update_potentially_stale_modifiers(event);
 
-        update_potentially_stale_modifiers(state, event);
-
-        <span class="comment">// We want to send keyboard input when we are not currently in preedit
-        </span><span class="kw">if </span>state.ime_state != ImeState::Preedit {
-            <span class="attr">#[allow(deprecated)]
-            </span><span class="kw">let </span>window_event = Event::WindowEvent {
-                window_id: WindowId(get_window_id(state.ns_window)),
-                event: WindowEvent::KeyboardInput {
+            <span class="comment">// We want to send keyboard input when we are not currently in preedit
+            </span><span class="kw">if </span><span class="self">self</span>.state.ime_state != ImeState::Preedit {
+                <span class="attr">#[allow(deprecated)]
+                </span><span class="self">self</span>.queue_event(WindowEvent::KeyboardInput {
                     device_id: DEVICE_ID,
                     input: KeyboardInput {
                         state: ElementState::Released,
@@ -2094,208 +1574,424 @@
                         modifiers: event_mods(event),
                     },
                     is_synthetic: <span class="bool-val">false</span>,
-                },
-            };
-
-            AppState::queue_event(EventWrapper::StaticEvent(window_event));
-        }
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>flags_changed(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;flagsChanged:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="kw">let </span><span class="kw-2">mut </span>events = VecDeque::with_capacity(<span class="number">4</span>);
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event) = modifier_event(
-            event,
-            NSEventModifierFlags::NSShiftKeyMask,
-            state.modifiers.shift(),
-        ) {
-            state.modifiers.toggle(ModifiersState::SHIFT);
-            events.push_back(window_event);
+                });
+            }
         }
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event) = modifier_event(
-            event,
-            NSEventModifierFlags::NSControlKeyMask,
-            state.modifiers.ctrl(),
-        ) {
-            state.modifiers.toggle(ModifiersState::CTRL);
-            events.push_back(window_event);
-        }
+        <span class="attr">#[sel(flagsChanged:)]
+        </span><span class="kw">fn </span>flags_changed(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;flagsChanged:&quot;</span>);
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event) = modifier_event(
-            event,
-            NSEventModifierFlags::NSCommandKeyMask,
-            state.modifiers.logo(),
-        ) {
-            state.modifiers.toggle(ModifiersState::LOGO);
-            events.push_back(window_event);
-        }
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event) = modifier_event(
-            event,
-            NSEventModifierFlags::NSAlternateKeyMask,
-            state.modifiers.alt(),
-        ) {
-            state.modifiers.toggle(ModifiersState::ALT);
-            events.push_back(window_event);
-        }
-
-        <span class="kw">let </span>window_id = WindowId(get_window_id(state.ns_window));
-
-        <span class="kw">for </span>event <span class="kw">in </span>events {
-            AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-                window_id,
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event) = modifier_event(
                 event,
-            }));
+                NSEventModifierFlags::NSShiftKeyMask,
+                <span class="self">self</span>.state.modifiers.shift(),
+            ) {
+                <span class="self">self</span>.state.modifiers.toggle(ModifiersState::SHIFT);
+                <span class="self">self</span>.queue_event(window_event);
+            }
+
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event) = modifier_event(
+                event,
+                NSEventModifierFlags::NSControlKeyMask,
+                <span class="self">self</span>.state.modifiers.ctrl(),
+            ) {
+                <span class="self">self</span>.state.modifiers.toggle(ModifiersState::CTRL);
+                <span class="self">self</span>.queue_event(window_event);
+            }
+
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event) = modifier_event(
+                event,
+                NSEventModifierFlags::NSCommandKeyMask,
+                <span class="self">self</span>.state.modifiers.logo(),
+            ) {
+                <span class="self">self</span>.state.modifiers.toggle(ModifiersState::LOGO);
+                <span class="self">self</span>.queue_event(window_event);
+            }
+
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(window_event) = modifier_event(
+                event,
+                NSEventModifierFlags::NSAlternateKeyMask,
+                <span class="self">self</span>.state.modifiers.alt(),
+            ) {
+                <span class="self">self</span>.state.modifiers.toggle(ModifiersState::ALT);
+                <span class="self">self</span>.queue_event(window_event);
+            }
+
+            <span class="self">self</span>.queue_event(WindowEvent::ModifiersChanged(<span class="self">self</span>.state.modifiers));
         }
 
-        AppState::queue_event(EventWrapper::StaticEvent(Event::WindowEvent {
-            window_id,
-            event: WindowEvent::ModifiersChanged(state.modifiers),
-        }));
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>insert_tab(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _sender: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;insertTab:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>window: id = <span class="macro">msg_send!</span>[this, window];
-        <span class="kw">let </span>first_responder: id = <span class="macro">msg_send!</span>[window, firstResponder];
-        <span class="kw">let </span>this_ptr = this <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as </span><span class="kw-2">*mut </span><span class="kw">_</span>;
-        <span class="kw">if </span>first_responder == this_ptr {
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[window, selectNextKeyView: this];
+        <span class="attr">#[sel(insertTab:)]
+        </span><span class="kw">fn </span>insert_tab(<span class="kw-2">&amp;</span><span class="self">self</span>, _sender: <span class="kw-2">*const </span>Object) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;insertTab:&quot;</span>);
+            <span class="kw">let </span>window = <span class="self">self</span>.window();
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(first_responder) = window.firstResponder() {
+                <span class="kw">if </span><span class="kw-2">*</span>first_responder == <span class="kw-2">***</span><span class="self">self </span>{
+                    window.selectNextKeyView(<span class="prelude-val">Some</span>(<span class="self">self</span>))
+                }
+            }
         }
-    }
-}
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>insert_back_tab(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _sender: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;insertBackTab:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>window: id = <span class="macro">msg_send!</span>[this, window];
-        <span class="kw">let </span>first_responder: id = <span class="macro">msg_send!</span>[window, firstResponder];
-        <span class="kw">let </span>this_ptr = this <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as </span><span class="kw-2">*mut </span><span class="kw">_</span>;
-        <span class="kw">if </span>first_responder == this_ptr {
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[window, selectPreviousKeyView: this];
+        <span class="attr">#[sel(insertBackTab:)]
+        </span><span class="kw">fn </span>insert_back_tab(<span class="kw-2">&amp;</span><span class="self">self</span>, _sender: <span class="kw-2">*const </span>Object) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;insertBackTab:&quot;</span>);
+            <span class="kw">let </span>window = <span class="self">self</span>.window();
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(first_responder) = window.firstResponder() {
+                <span class="kw">if </span><span class="kw-2">*</span>first_responder == <span class="kw-2">***</span><span class="self">self </span>{
+                    window.selectPreviousKeyView(<span class="prelude-val">Some</span>(<span class="self">self</span>))
+                }
+            }
         }
-    }
-}
 
-<span class="comment">// Allows us to receive Cmd-. (the shortcut for closing a dialog)
-// https://bugs.eclipse.org/bugs/show_bug.cgi?id=300620#c6
-</span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>cancel_operation(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _sender: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;cancelOperation:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
+        <span class="comment">// Allows us to receive Cmd-. (the shortcut for closing a dialog)
+        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=300620#c6
+        </span><span class="attr">#[sel(cancelOperation:)]
+        </span><span class="kw">fn </span>cancel_operation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _sender: <span class="kw-2">*const </span>Object) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;cancelOperation:&quot;</span>);
+            <span class="kw">let </span>scancode = <span class="number">0x2f</span>;
+            <span class="kw">let </span>virtual_keycode = scancode_to_keycode(scancode);
+            <span class="macro">debug_assert_eq!</span>(virtual_keycode, <span class="prelude-val">Some</span>(VirtualKeyCode::Period));
 
-        <span class="kw">let </span>scancode = <span class="number">0x2f</span>;
-        <span class="kw">let </span>virtual_keycode = scancode_to_keycode(scancode);
-        <span class="macro">debug_assert_eq!</span>(virtual_keycode, <span class="prelude-val">Some</span>(VirtualKeyCode::Period));
+            <span class="kw">let </span>event = NSApp()
+                .currentEvent()
+                .expect(<span class="string">&quot;could not find current event&quot;</span>);
 
-        <span class="kw">let </span>event: id = <span class="macro">msg_send!</span>[NSApp(), currentEvent];
+            <span class="self">self</span>.update_potentially_stale_modifiers(<span class="kw-2">&amp;</span>event);
 
-        update_potentially_stale_modifiers(state, event);
-
-        <span class="attr">#[allow(deprecated)]
-        </span><span class="kw">let </span>window_event = Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::KeyboardInput {
+            <span class="attr">#[allow(deprecated)]
+            </span><span class="self">self</span>.queue_event(WindowEvent::KeyboardInput {
                 device_id: DEVICE_ID,
                 input: KeyboardInput {
                     state: ElementState::Pressed,
                     scancode: scancode <span class="kw">as _</span>,
                     virtual_keycode,
-                    modifiers: event_mods(event),
+                    modifiers: event_mods(<span class="kw-2">&amp;</span>event),
                 },
                 is_synthetic: <span class="bool-val">false</span>,
-            },
-        };
+            });
+        }
 
-        AppState::queue_event(EventWrapper::StaticEvent(window_event));
-    }
-}
+        <span class="attr">#[sel(mouseDown:)]
+        </span><span class="kw">fn </span>mouse_down(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;mouseDown:&quot;</span>);
+            <span class="self">self</span>.mouse_motion(event);
+            <span class="self">self</span>.mouse_click(event, ElementState::Pressed);
+        }
 
-<span class="kw">fn </span>mouse_click(this: <span class="kw-2">&amp;</span>Object, event: id, button: MouseButton, button_state: ElementState) {
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
+        <span class="attr">#[sel(mouseUp:)]
+        </span><span class="kw">fn </span>mouse_up(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;mouseUp:&quot;</span>);
+            <span class="self">self</span>.mouse_motion(event);
+            <span class="self">self</span>.mouse_click(event, ElementState::Released);
+        }
 
-        update_potentially_stale_modifiers(state, event);
+        <span class="attr">#[sel(rightMouseDown:)]
+        </span><span class="kw">fn </span>right_mouse_down(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;rightMouseDown:&quot;</span>);
+            <span class="self">self</span>.mouse_motion(event);
+            <span class="self">self</span>.mouse_click(event, ElementState::Pressed);
+        }
 
-        <span class="kw">let </span>window_event = Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::MouseInput {
+        <span class="attr">#[sel(rightMouseUp:)]
+        </span><span class="kw">fn </span>right_mouse_up(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;rightMouseUp:&quot;</span>);
+            <span class="self">self</span>.mouse_motion(event);
+            <span class="self">self</span>.mouse_click(event, ElementState::Released);
+        }
+
+        <span class="attr">#[sel(otherMouseDown:)]
+        </span><span class="kw">fn </span>other_mouse_down(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;otherMouseDown:&quot;</span>);
+            <span class="self">self</span>.mouse_motion(event);
+            <span class="self">self</span>.mouse_click(event, ElementState::Pressed);
+        }
+
+        <span class="attr">#[sel(otherMouseUp:)]
+        </span><span class="kw">fn </span>other_mouse_up(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;otherMouseUp:&quot;</span>);
+            <span class="self">self</span>.mouse_motion(event);
+            <span class="self">self</span>.mouse_click(event, ElementState::Released);
+        }
+
+        <span class="comment">// No tracing on these because that would be overly verbose
+
+        </span><span class="attr">#[sel(mouseMoved:)]
+        </span><span class="kw">fn </span>mouse_moved(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="self">self</span>.mouse_motion(event);
+        }
+
+        <span class="attr">#[sel(mouseDragged:)]
+        </span><span class="kw">fn </span>mouse_dragged(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="self">self</span>.mouse_motion(event);
+        }
+
+        <span class="attr">#[sel(rightMouseDragged:)]
+        </span><span class="kw">fn </span>right_mouse_dragged(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="self">self</span>.mouse_motion(event);
+        }
+
+        <span class="attr">#[sel(otherMouseDragged:)]
+        </span><span class="kw">fn </span>other_mouse_dragged(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="self">self</span>.mouse_motion(event);
+        }
+
+        <span class="attr">#[sel(mouseEntered:)]
+        </span><span class="kw">fn </span>mouse_entered(<span class="kw-2">&amp;</span><span class="self">self</span>, _event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;mouseEntered:&quot;</span>);
+            <span class="self">self</span>.queue_event(WindowEvent::CursorEntered {
                 device_id: DEVICE_ID,
-                state: button_state,
-                button,
+            });
+        }
+
+        <span class="attr">#[sel(mouseExited:)]
+        </span><span class="kw">fn </span>mouse_exited(<span class="kw-2">&amp;</span><span class="self">self</span>, _event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;mouseExited:&quot;</span>);
+
+            <span class="self">self</span>.queue_event(WindowEvent::CursorLeft {
+                device_id: DEVICE_ID,
+            });
+        }
+
+        <span class="attr">#[sel(scrollWheel:)]
+        </span><span class="kw">fn </span>scroll_wheel(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;scrollWheel:&quot;</span>);
+
+            <span class="self">self</span>.mouse_motion(event);
+
+            <span class="kw">let </span>delta = {
+                <span class="kw">let </span>(x, y) = (event.scrollingDeltaX(), event.scrollingDeltaY());
+                <span class="kw">if </span>event.hasPreciseScrollingDeltas() {
+                    <span class="kw">let </span>delta = LogicalPosition::new(x, y).to_physical(<span class="self">self</span>.scale_factor());
+                    MouseScrollDelta::PixelDelta(delta)
+                } <span class="kw">else </span>{
+                    MouseScrollDelta::LineDelta(x <span class="kw">as </span>f32, y <span class="kw">as </span>f32)
+                }
+            };
+
+            <span class="comment">// The &quot;momentum phase,&quot; if any, has higher priority than touch phase (the two should
+            // be mutually exclusive anyhow, which is why the API is rather incoherent). If no momentum
+            // phase is recorded (or rather, the started/ended cases of the momentum phase) then we
+            // report the touch phase.
+            </span><span class="kw">let </span>phase = <span class="kw">match </span>event.momentumPhase() {
+                NSEventPhase::NSEventPhaseMayBegin | NSEventPhase::NSEventPhaseBegan =&gt; {
+                    TouchPhase::Started
+                }
+                NSEventPhase::NSEventPhaseEnded | NSEventPhase::NSEventPhaseCancelled =&gt; {
+                    TouchPhase::Ended
+                }
+                <span class="kw">_ </span>=&gt; <span class="kw">match </span>event.phase() {
+                    NSEventPhase::NSEventPhaseMayBegin | NSEventPhase::NSEventPhaseBegan =&gt; {
+                        TouchPhase::Started
+                    }
+                    NSEventPhase::NSEventPhaseEnded | NSEventPhase::NSEventPhaseCancelled =&gt; {
+                        TouchPhase::Ended
+                    }
+                    <span class="kw">_ </span>=&gt; TouchPhase::Moved,
+                },
+            };
+
+            <span class="self">self</span>.update_potentially_stale_modifiers(event);
+
+            <span class="self">self</span>.queue_device_event(DeviceEvent::MouseWheel { delta });
+            <span class="self">self</span>.queue_event(WindowEvent::MouseWheel {
+                device_id: DEVICE_ID,
+                delta,
+                phase,
                 modifiers: event_mods(event),
-            },
-        };
+            });
+        }
 
-        AppState::queue_event(EventWrapper::StaticEvent(window_event));
+        <span class="attr">#[sel(magnifyWithEvent:)]
+        </span><span class="kw">fn </span>magnify_with_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;magnifyWithEvent:&quot;</span>);
+
+            <span class="kw">let </span>phase = <span class="kw">match </span>event.phase() {
+                NSEventPhase::NSEventPhaseBegan =&gt; TouchPhase::Started,
+                NSEventPhase::NSEventPhaseChanged =&gt; TouchPhase::Moved,
+                NSEventPhase::NSEventPhaseCancelled =&gt; TouchPhase::Cancelled,
+                NSEventPhase::NSEventPhaseEnded =&gt; TouchPhase::Ended,
+                <span class="kw">_ </span>=&gt; <span class="kw">return</span>,
+            };
+
+            <span class="self">self</span>.queue_event(WindowEvent::TouchpadMagnify {
+                device_id: DEVICE_ID,
+                delta: event.magnification(),
+                phase,
+            });
+        }
+
+        <span class="attr">#[sel(smartMagnifyWithEvent:)]
+        </span><span class="kw">fn </span>smart_magnify_with_event(<span class="kw-2">&amp;</span><span class="self">self</span>, _event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;smartMagnifyWithEvent:&quot;</span>);
+
+            <span class="self">self</span>.queue_event(WindowEvent::SmartMagnify {
+                device_id: DEVICE_ID,
+            });
+        }
+
+        <span class="attr">#[sel(rotateWithEvent:)]
+        </span><span class="kw">fn </span>rotate_with_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;rotateWithEvent:&quot;</span>);
+
+            <span class="kw">let </span>phase = <span class="kw">match </span>event.phase() {
+                NSEventPhase::NSEventPhaseBegan =&gt; TouchPhase::Started,
+                NSEventPhase::NSEventPhaseChanged =&gt; TouchPhase::Moved,
+                NSEventPhase::NSEventPhaseCancelled =&gt; TouchPhase::Cancelled,
+                NSEventPhase::NSEventPhaseEnded =&gt; TouchPhase::Ended,
+                <span class="kw">_ </span>=&gt; <span class="kw">return</span>,
+            };
+
+            <span class="self">self</span>.queue_event(WindowEvent::TouchpadRotate {
+                device_id: DEVICE_ID,
+                delta: event.rotation(),
+                phase,
+            });
+        }
+
+        <span class="attr">#[sel(pressureChangeWithEvent:)]
+        </span><span class="kw">fn </span>pressure_change_with_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;pressureChangeWithEvent:&quot;</span>);
+
+            <span class="self">self</span>.mouse_motion(event);
+
+            <span class="self">self</span>.queue_event(WindowEvent::TouchpadPressure {
+                device_id: DEVICE_ID,
+                pressure: event.pressure(),
+                stage: event.stage() <span class="kw">as </span>i64,
+            });
+        }
+
+        <span class="comment">// Allows us to receive Ctrl-Tab and Ctrl-Esc.
+        // Note that this *doesn&#39;t* help with any missing Cmd inputs.
+        // https://github.com/chromium/chromium/blob/a86a8a6bcfa438fa3ac2eba6f02b3ad1f8e0756f/ui/views/cocoa/bridged_content_view.mm#L816
+        </span><span class="attr">#[sel(_wantsKeyDownForEvent:)]
+        </span><span class="kw">fn </span>wants_key_down_for_event(<span class="kw-2">&amp;</span><span class="self">self</span>, _event: <span class="kw-2">&amp;</span>NSEvent) -&gt; bool {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;_wantsKeyDownForEvent:&quot;</span>);
+            <span class="bool-val">true
+        </span>}
+
+        <span class="attr">#[sel(acceptsFirstMouse:)]
+        </span><span class="kw">fn </span>accepts_first_mouse(<span class="kw-2">&amp;</span><span class="self">self</span>, _event: <span class="kw-2">&amp;</span>NSEvent) -&gt; bool {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;acceptsFirstMouse:&quot;</span>);
+            <span class="kw-2">*</span><span class="self">self</span>.accepts_first_mouse
+        }
     }
-}
+);
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>mouse_down(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;mouseDown:&quot;</span>);
-    mouse_motion(this, event);
-    mouse_click(this, event, MouseButton::Left, ElementState::Pressed);
-}
+<span class="kw">impl </span>WinitView {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(window: <span class="kw-2">&amp;</span>WinitWindow, accepts_first_mouse: bool) -&gt; Id&lt;<span class="self">Self</span>, Shared&gt; {
+        <span class="kw">unsafe </span>{
+            <span class="macro">msg_send_id!</span>[
+                <span class="macro">msg_send_id!</span>[<span class="self">Self</span>::class(), alloc],
+                initWithId: window,
+                acceptsFirstMouse: accepts_first_mouse,
+            ]
+        }
+    }
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>mouse_up(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;mouseUp:&quot;</span>);
-    mouse_motion(this, event);
-    mouse_click(this, event, MouseButton::Left, ElementState::Released);
-}
+    <span class="kw">fn </span>window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Id&lt;WinitWindow, Shared&gt; {
+        <span class="comment">// TODO: Simply use `window` property on `NSView`.
+        // That only returns a window _after_ the view has been attached though!
+        // (which is incompatible with `frameDidChange:`)
+        //
+        // unsafe { msg_send_id![self, window] }
+        </span>(<span class="kw-2">*</span><span class="self">self</span>._ns_window).clone()
+    }
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>right_mouse_down(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;rightMouseDown:&quot;</span>);
-    mouse_motion(this, event);
-    mouse_click(this, event, MouseButton::Right, ElementState::Pressed);
-}
+    <span class="kw">fn </span>window_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WindowId {
+        WindowId(<span class="self">self</span>._ns_window.id())
+    }
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>right_mouse_up(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;rightMouseUp:&quot;</span>);
-    mouse_motion(this, event);
-    mouse_click(this, event, MouseButton::Right, ElementState::Released);
-}
+    <span class="kw">fn </span>queue_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: WindowEvent&lt;<span class="lifetime">&#39;static</span>&gt;) {
+        <span class="kw">let </span>event = Event::WindowEvent {
+            window_id: <span class="self">self</span>.window_id(),
+            event,
+        };
+        AppState::queue_event(EventWrapper::StaticEvent(event));
+    }
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>other_mouse_down(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;otherMouseDown:&quot;</span>);
-    mouse_motion(this, event);
-    mouse_click(this, event, MouseButton::Middle, ElementState::Pressed);
-}
+    <span class="kw">fn </span>queue_device_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: DeviceEvent) {
+        <span class="kw">let </span>event = Event::DeviceEvent {
+            device_id: DEVICE_ID,
+            event,
+        };
+        AppState::queue_event(EventWrapper::StaticEvent(event));
+    }
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>other_mouse_up(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;otherMouseUp:&quot;</span>);
-    mouse_motion(this, event);
-    mouse_click(this, event, MouseButton::Middle, ElementState::Released);
-}
+    <span class="kw">fn </span>scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
+        <span class="self">self</span>.window().backingScaleFactor() <span class="kw">as </span>f64
+    }
 
-<span class="kw">fn </span>mouse_motion(this: <span class="kw-2">&amp;</span>Object, event: id) {
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
+    <span class="kw">fn </span>is_ime_enabled(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        !<span class="macro">matches!</span>(<span class="self">self</span>.state.ime_state, ImeState::Disabled)
+    }
 
-        <span class="comment">// We have to do this to have access to the `NSView` trait...
-        </span><span class="kw">let </span>view: id = this <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as </span><span class="kw-2">*mut </span><span class="kw">_</span>;
+    <span class="kw">fn </span>current_input_source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+        <span class="self">self</span>.inputContext()
+            .expect(<span class="string">&quot;input context&quot;</span>)
+            .selectedKeyboardInputSource()
+            .map(|input_source| input_source.to_string())
+            .unwrap_or_else(String::new)
+    }
 
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_ime_allowed(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ime_allowed: bool) {
+        <span class="kw">if </span><span class="self">self</span>.state.ime_allowed == ime_allowed {
+            <span class="kw">return</span>;
+        }
+        <span class="self">self</span>.state.ime_allowed = ime_allowed;
+        <span class="kw">if </span><span class="self">self</span>.state.ime_allowed {
+            <span class="kw">return</span>;
+        }
+
+        <span class="comment">// Clear markedText
+        </span><span class="kw-2">*</span><span class="self">self</span>.marked_text = NSMutableAttributedString::new();
+
+        <span class="kw">if </span><span class="self">self</span>.state.ime_state != ImeState::Disabled {
+            <span class="self">self</span>.state.ime_state = ImeState::Disabled;
+            <span class="self">self</span>.queue_event(WindowEvent::Ime(Ime::Disabled));
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_ime_position(<span class="kw-2">&amp;mut </span><span class="self">self</span>, position: LogicalPosition&lt;f64&gt;) {
+        <span class="self">self</span>.state.ime_position = position;
+        <span class="kw">let </span>input_context = <span class="self">self</span>.inputContext().expect(<span class="string">&quot;input context&quot;</span>);
+        input_context.invalidateCharacterCoordinates();
+    }
+
+    <span class="comment">// Update `state.modifiers` if `event` has something different
+    </span><span class="kw">fn </span>update_potentially_stale_modifiers(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
+        <span class="kw">let </span>event_modifiers = event_mods(event);
+        <span class="kw">if </span><span class="self">self</span>.state.modifiers != event_modifiers {
+            <span class="self">self</span>.state.modifiers = event_modifiers;
+
+            <span class="self">self</span>.queue_event(WindowEvent::ModifiersChanged(<span class="self">self</span>.state.modifiers));
+        }
+    }
+
+    <span class="kw">fn </span>mouse_click(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent, button_state: ElementState) {
+        <span class="kw">let </span>button = mouse_button(event);
+
+        <span class="self">self</span>.update_potentially_stale_modifiers(event);
+
+        <span class="self">self</span>.queue_event(WindowEvent::MouseInput {
+            device_id: DEVICE_ID,
+            state: button_state,
+            button,
+            modifiers: event_mods(event),
+        });
+    }
+
+    <span class="kw">fn </span>mouse_motion(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>NSEvent) {
         <span class="kw">let </span>window_point = event.locationInWindow();
-        <span class="kw">let </span>view_point = view.convertPoint_fromView_(window_point, nil);
-        <span class="kw">let </span>view_rect = NSView::frame(view);
+        <span class="kw">let </span>view_point = <span class="self">self</span>.convertPoint_fromView(window_point, <span class="prelude-val">None</span>);
+        <span class="kw">let </span>view_rect = <span class="self">self</span>.frame();
 
         <span class="kw">if </span>view_point.x.is_sign_negative()
             || view_point.y.is_sign_negative()
             || view_point.x &gt; view_rect.size.width
             || view_point.y &gt; view_rect.size.height
         {
-            <span class="kw">let </span>mouse_buttons_down: NSUInteger = <span class="macro">msg_send!</span>[<span class="macro">class!</span>(NSEvent), pressedMouseButtons];
+            <span class="kw">let </span>mouse_buttons_down = NSEvent::pressedMouseButtons();
             <span class="kw">if </span>mouse_buttons_down == <span class="number">0 </span>{
                 <span class="comment">// Point is outside of the client area (view) and no buttons are pressed
                 </span><span class="kw">return</span>;
@@ -2306,175 +2002,45 @@
         <span class="kw">let </span>y = view_rect.size.height <span class="kw">as </span>f64 - view_point.y <span class="kw">as </span>f64;
         <span class="kw">let </span>logical_position = LogicalPosition::new(x, y);
 
-        update_potentially_stale_modifiers(state, event);
+        <span class="self">self</span>.update_potentially_stale_modifiers(event);
 
-        <span class="kw">let </span>window_event = Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::CursorMoved {
-                device_id: DEVICE_ID,
-                position: logical_position.to_physical(state.get_scale_factor()),
-                modifiers: event_mods(event),
-            },
-        };
-
-        AppState::queue_event(EventWrapper::StaticEvent(window_event));
-    }
-}
-
-<span class="comment">// No tracing on these because that would be overly verbose
-
-</span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>mouse_moved(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    mouse_motion(this, event);
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>mouse_dragged(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    mouse_motion(this, event);
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>right_mouse_dragged(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    mouse_motion(this, event);
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>other_mouse_dragged(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    mouse_motion(this, event);
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>mouse_entered(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;mouseEntered:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="kw">let </span>enter_event = Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::CursorEntered {
-                device_id: DEVICE_ID,
-            },
-        };
-
-        AppState::queue_event(EventWrapper::StaticEvent(enter_event));
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>mouse_exited(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;mouseExited:&quot;</span>);
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="kw">let </span>window_event = Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::CursorLeft {
-                device_id: DEVICE_ID,
-            },
-        };
-
-        AppState::queue_event(EventWrapper::StaticEvent(window_event));
-    }
-}
-
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>scroll_wheel(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;scrollWheel:&quot;</span>);
-
-    mouse_motion(this, event);
-
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="kw">let </span>delta = {
-            <span class="kw">let </span>(x, y) = (event.scrollingDeltaX(), event.scrollingDeltaY());
-            <span class="kw">if </span>event.hasPreciseScrollingDeltas() == YES {
-                <span class="kw">let </span>delta = LogicalPosition::new(x, y).to_physical(state.get_scale_factor());
-                MouseScrollDelta::PixelDelta(delta)
-            } <span class="kw">else </span>{
-                MouseScrollDelta::LineDelta(x <span class="kw">as </span>f32, y <span class="kw">as </span>f32)
-            }
-        };
-
-        <span class="comment">// The &quot;momentum phase,&quot; if any, has higher priority than touch phase (the two should
-        // be mutually exclusive anyhow, which is why the API is rather incoherent). If no momentum
-        // phase is recorded (or rather, the started/ended cases of the momentum phase) then we
-        // report the touch phase.
-        </span><span class="kw">let </span>phase = <span class="kw">match </span>event.momentumPhase() {
-            NSEventPhase::NSEventPhaseMayBegin | NSEventPhase::NSEventPhaseBegan =&gt; {
-                TouchPhase::Started
-            }
-            NSEventPhase::NSEventPhaseEnded | NSEventPhase::NSEventPhaseCancelled =&gt; {
-                TouchPhase::Ended
-            }
-            <span class="kw">_ </span>=&gt; <span class="kw">match </span>event.phase() {
-                NSEventPhase::NSEventPhaseMayBegin | NSEventPhase::NSEventPhaseBegan =&gt; {
-                    TouchPhase::Started
-                }
-                NSEventPhase::NSEventPhaseEnded | NSEventPhase::NSEventPhaseCancelled =&gt; {
-                    TouchPhase::Ended
-                }
-                <span class="kw">_ </span>=&gt; TouchPhase::Moved,
-            },
-        };
-
-        <span class="kw">let </span>device_event = Event::DeviceEvent {
+        <span class="self">self</span>.queue_event(WindowEvent::CursorMoved {
             device_id: DEVICE_ID,
-            event: DeviceEvent::MouseWheel { delta },
-        };
-
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        update_potentially_stale_modifiers(state, event);
-
-        <span class="kw">let </span>window_event = Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::MouseWheel {
-                device_id: DEVICE_ID,
-                delta,
-                phase,
-                modifiers: event_mods(event),
-            },
-        };
-
-        AppState::queue_event(EventWrapper::StaticEvent(device_event));
-        AppState::queue_event(EventWrapper::StaticEvent(window_event));
+            position: logical_position.to_physical(<span class="self">self</span>.scale_factor()),
+            modifiers: event_mods(event),
+        });
     }
 }
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>pressure_change_with_event(this: <span class="kw-2">&amp;</span>Object, _sel: Sel, event: id) {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;pressureChangeWithEvent:&quot;</span>);
-
-    mouse_motion(this, event);
-
-    <span class="kw">unsafe </span>{
-        <span class="kw">let </span>state_ptr: <span class="kw-2">*mut </span>c_void = <span class="kw-2">*</span>this.get_ivar(<span class="string">&quot;winitState&quot;</span>);
-        <span class="kw">let </span>state = <span class="kw-2">&amp;mut *</span>(state_ptr <span class="kw">as </span><span class="kw-2">*mut </span>ViewState);
-
-        <span class="kw">let </span>pressure = event.pressure();
-        <span class="kw">let </span>stage = event.stage();
-
-        <span class="kw">let </span>window_event = Event::WindowEvent {
-            window_id: WindowId(get_window_id(state.ns_window)),
-            event: WindowEvent::TouchpadPressure {
-                device_id: DEVICE_ID,
-                pressure,
-                stage: stage <span class="kw">as </span>i64,
-            },
-        };
-
-        AppState::queue_event(EventWrapper::StaticEvent(window_event));
+<span class="doccomment">/// Get the mouse button from the NSEvent.
+</span><span class="kw">fn </span>mouse_button(event: <span class="kw-2">&amp;</span>NSEvent) -&gt; MouseButton {
+    <span class="comment">// The buttonNumber property only makes sense for the mouse events:
+    // NSLeftMouse.../NSRightMouse.../NSOtherMouse...
+    // For the other events, it&#39;s always set to 0.
+    </span><span class="kw">match </span>event.buttonNumber() {
+        <span class="number">0 </span>=&gt; MouseButton::Left,
+        <span class="number">1 </span>=&gt; MouseButton::Right,
+        <span class="number">2 </span>=&gt; MouseButton::Middle,
+        n =&gt; MouseButton::Other(n <span class="kw">as </span>u16),
     }
 }
 
-<span class="comment">// Allows us to receive Ctrl-Tab and Ctrl-Esc.
-// Note that this *doesn&#39;t* help with any missing Cmd inputs.
-// https://github.com/chromium/chromium/blob/a86a8a6bcfa438fa3ac2eba6f02b3ad1f8e0756f/ui/views/cocoa/bridged_content_view.mm#L816
-</span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>wants_key_down_for_event(_this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _event: id) -&gt; BOOL {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;_wantsKeyDownForEvent:&quot;</span>);
-    YES
-}
+<span class="kw">fn </span>replace_event_chars(event: <span class="kw-2">&amp;</span>NSEvent, characters: <span class="kw-2">&amp;</span>str) -&gt; Id&lt;NSEvent, Shared&gt; {
+    <span class="kw">let </span>ns_chars = NSString::from_str(characters);
+    <span class="kw">let </span>chars_ignoring_mods = event.charactersIgnoringModifiers().unwrap();
 
-<span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>accepts_first_mouse(_this: <span class="kw-2">&amp;</span>Object, _sel: Sel, _event: id) -&gt; BOOL {
-    <span class="macro">trace_scope!</span>(<span class="string">&quot;acceptsFirstMouse:&quot;</span>);
-    YES
+    NSEvent::keyEventWithType(
+        event.type_(),
+        event.locationInWindow(),
+        event.modifierFlags(),
+        event.timestamp(),
+        event.window_number(),
+        <span class="prelude-val">None</span>,
+        <span class="kw-2">&amp;</span>ns_chars,
+        <span class="kw-2">&amp;</span>chars_ignoring_mods,
+        event.is_a_repeat(),
+        event.scancode(),
+    )
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="winit" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>

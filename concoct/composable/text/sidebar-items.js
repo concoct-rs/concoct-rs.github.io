@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["text","Composable"]],"struct":[["TextStyle",""]]};
+window.SIDEBAR_ITEMS = {"fn":[["text",""]],"struct":[["TextModifier",""],["TextWidget",""]]};

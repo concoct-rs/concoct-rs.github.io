@@ -66,91 +66,73 @@
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
 <a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-<a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
-</pre><pre class="rust"><code><span class="doccomment">//! # Concoct
-//! A cross-platform UI framework.
-//! 
-//! ## Composables
-//! Composables are the foundational components of UI in concoct.
-//! They are called each time their state, or their parent&#39;s state, changes.
-//! Generic pre-made composables can be found in the [`composable`] module.
-//! 
-//! To make your own composables, use the [`#[compose]`](`compose`) macro.
-//! 
-//! ## State
-//! State can be created with the [`state`](`composable::state::state`) composable.
+</pre><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
-</span><span class="kw">use </span>skia_safe::Canvas;
-<span class="kw">use </span>std::any::Any;
-<span class="kw">use </span>taffy::{prelude::Layout, Taffy};
-<span class="kw">use </span>winit::{
-    dpi::PhysicalPosition,
-    event::{ElementState, VirtualKeyCode},
-};
+<span class="kw">pub mod </span>composer;
+<span class="kw">use </span>accesskit::Action;
+<span class="kw">pub use </span>composer::Composer;
 
 <span class="kw">pub mod </span>composable;
 
-<span class="kw">pub mod </span>composer;
-<span class="kw">pub use </span>composer::Composer;
-
-<span class="kw">pub mod </span>dimension;
-
-<span class="kw">pub mod </span>material;
-
 <span class="kw">pub mod </span>modify;
-<span class="kw">pub use </span>modify::Modifier;
+<span class="kw">pub use </span>modify::{Modifier, Modify};
 
 <span class="kw">pub mod </span>render;
-<span class="kw">pub use </span>render::run;
 
-<span class="kw">mod </span>semantics;
+<span class="kw">pub mod </span>semantics;
 <span class="kw">pub use </span>semantics::Semantics;
 
-<span class="kw">pub mod </span>test;
+<span class="kw">mod </span>tester;
+<span class="kw">use </span>skia_safe::Canvas;
+<span class="kw">use </span>taffy::style::Dimension;
+<span class="kw">pub use </span>tester::Tester;
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;macros&quot;</span>)]
-</span><span class="kw">pub use </span>concoct_macros::compose;
+<span class="kw">use </span>winit::{
+    dpi::PhysicalPosition,
+    event::{ElementState, Touch, VirtualKeyCode},
+};
 
-<span class="kw">type </span>LayoutNode = taffy::prelude::Node;
+<span class="kw">pub trait </span>Widget: Any {
+    <span class="kw">fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;mut </span>Semantics);
 
-<span class="kw">pub trait </span>Widget {
-    <span class="kw">fn </span>semantics(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        taffy: <span class="kw-2">&amp;</span>Taffy,
-        layout_id: <span class="prelude-ty">Option</span>&lt;LayoutNode&gt;,
-        semantics: <span class="kw-2">&amp;mut </span>Semantics,
-    ) -&gt; Layout;
+    <span class="kw">fn </span>semantics(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;mut </span>Semantics);
 
-    <span class="kw">fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, layout: Layout, canvas: <span class="kw-2">&amp;mut </span>Canvas);
+    <span class="kw">fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;</span>Semantics, canvas: <span class="kw-2">&amp;mut </span>Canvas);
+
+    <span class="kw">fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;mut </span>Semantics);
+
+    <span class="kw">fn </span>any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any;
+
+    <span class="kw">fn </span>any_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Any;
 }
 
 <span class="kw">pub enum </span>Event {
-    Click,
-    CursorMoved {
-        position: PhysicalPosition&lt;f64&gt;,
+    Action(Action),
+    KeyboardInput {
+        state: ElementState,
+        key_code: VirtualKeyCode,
     },
     MouseInput {
         state: ElementState,
-        position: PhysicalPosition&lt;f64&gt;,
+        cursor: PhysicalPosition&lt;f64&gt;,
     },
-    KeyboardInput {
-        state: ElementState,
-        virtual_keycode: <span class="prelude-ty">Option</span>&lt;VirtualKeyCode&gt;,
-    },
+    Touch(Touch),
 }
 
-<span class="kw">pub trait </span>Handler: Any {
-    <span class="kw">fn </span>handle(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: Event);
+<span class="kw">pub trait </span>DevicePixels {
+    <span class="kw">fn </span>dp(<span class="self">self</span>) -&gt; f32;
+}
 
-    <span class="kw">fn </span>any(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Any;
+<span class="kw">impl </span>DevicePixels <span class="kw">for </span>f32 {
+    <span class="kw">fn </span>dp(<span class="self">self</span>) -&gt; f32 {
+        Composer::with(|composer| <span class="self">self </span>* composer.borrow().scale_factor)
+    }
+}
+
+<span class="kw">impl </span>DevicePixels <span class="kw">for </span>i32 {
+    <span class="kw">fn </span>dp(<span class="self">self</span>) -&gt; f32 {
+        (<span class="self">self </span><span class="kw">as </span>f32).dp()
+    }
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="concoct" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>

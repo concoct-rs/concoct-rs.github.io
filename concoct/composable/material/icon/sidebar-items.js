@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["TYPEFACE",""]],"enum":[["Icon","Icon containing all possible icon names as enum discriminants"]],"fn":[["icon",""]]};

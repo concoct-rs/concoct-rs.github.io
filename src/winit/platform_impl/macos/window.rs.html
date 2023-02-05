@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.27.5/src/platform_impl/macos/window.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>window.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/winit-0.28.1/src/platform_impl/macos/window.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>window.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../winit/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1332,14 +1332,82 @@
 <a href="#1332" id="1332">1332</a>
 <a href="#1333" id="1333">1333</a>
 <a href="#1334" id="1334">1334</a>
-</pre><pre class="rust"><code><span class="kw">use </span>std::{
+<a href="#1335" id="1335">1335</a>
+<a href="#1336" id="1336">1336</a>
+<a href="#1337" id="1337">1337</a>
+<a href="#1338" id="1338">1338</a>
+<a href="#1339" id="1339">1339</a>
+<a href="#1340" id="1340">1340</a>
+<a href="#1341" id="1341">1341</a>
+<a href="#1342" id="1342">1342</a>
+<a href="#1343" id="1343">1343</a>
+<a href="#1344" id="1344">1344</a>
+<a href="#1345" id="1345">1345</a>
+<a href="#1346" id="1346">1346</a>
+<a href="#1347" id="1347">1347</a>
+<a href="#1348" id="1348">1348</a>
+<a href="#1349" id="1349">1349</a>
+<a href="#1350" id="1350">1350</a>
+<a href="#1351" id="1351">1351</a>
+<a href="#1352" id="1352">1352</a>
+<a href="#1353" id="1353">1353</a>
+<a href="#1354" id="1354">1354</a>
+<a href="#1355" id="1355">1355</a>
+<a href="#1356" id="1356">1356</a>
+<a href="#1357" id="1357">1357</a>
+<a href="#1358" id="1358">1358</a>
+<a href="#1359" id="1359">1359</a>
+<a href="#1360" id="1360">1360</a>
+<a href="#1361" id="1361">1361</a>
+<a href="#1362" id="1362">1362</a>
+<a href="#1363" id="1363">1363</a>
+<a href="#1364" id="1364">1364</a>
+<a href="#1365" id="1365">1365</a>
+<a href="#1366" id="1366">1366</a>
+<a href="#1367" id="1367">1367</a>
+<a href="#1368" id="1368">1368</a>
+<a href="#1369" id="1369">1369</a>
+<a href="#1370" id="1370">1370</a>
+<a href="#1371" id="1371">1371</a>
+<a href="#1372" id="1372">1372</a>
+<a href="#1373" id="1373">1373</a>
+<a href="#1374" id="1374">1374</a>
+<a href="#1375" id="1375">1375</a>
+<a href="#1376" id="1376">1376</a>
+<a href="#1377" id="1377">1377</a>
+<a href="#1378" id="1378">1378</a>
+<a href="#1379" id="1379">1379</a>
+<a href="#1380" id="1380">1380</a>
+<a href="#1381" id="1381">1381</a>
+<a href="#1382" id="1382">1382</a>
+<a href="#1383" id="1383">1383</a>
+<a href="#1384" id="1384">1384</a>
+<a href="#1385" id="1385">1385</a>
+<a href="#1386" id="1386">1386</a>
+<a href="#1387" id="1387">1387</a>
+<a href="#1388" id="1388">1388</a>
+<a href="#1389" id="1389">1389</a>
+<a href="#1390" id="1390">1390</a>
+<a href="#1391" id="1391">1391</a>
+<a href="#1392" id="1392">1392</a>
+<a href="#1393" id="1393">1393</a>
+<a href="#1394" id="1394">1394</a>
+<a href="#1395" id="1395">1395</a>
+<a href="#1396" id="1396">1396</a>
+<a href="#1397" id="1397">1397</a>
+<a href="#1398" id="1398">1398</a>
+<a href="#1399" id="1399">1399</a>
+<a href="#1400" id="1400">1400</a>
+<a href="#1401" id="1401">1401</a>
+</pre><pre class="rust"><code><span class="attr">#![allow(clippy::unnecessary_cast)]
+
+</span><span class="kw">use </span>std::{
     collections::VecDeque,
-    convert::TryInto,
     f64, ops,
     os::raw::c_void,
     sync::{
         atomic::{AtomicBool, Ordering},
-        Arc, Mutex, MutexGuard, Weak,
+        Mutex, MutexGuard,
     },
 };
 
@@ -1352,39 +1420,39 @@
         LogicalPosition, LogicalSize, PhysicalPosition, PhysicalSize, Position, Size, Size::Logical,
     },
     error::{ExternalError, NotSupportedError, OsError <span class="kw">as </span>RootOsError},
+    event::WindowEvent,
     icon::Icon,
-    monitor::{MonitorHandle <span class="kw">as </span>RootMonitorHandle, VideoMode <span class="kw">as </span>RootVideoMode},
-    platform::macos::WindowExtMacOS,
+    platform::macos::{OptionAsAlt, WindowExtMacOS},
     platform_impl::platform::{
         app_state::AppState,
+        appkit::NSWindowOrderingMode,
         ffi,
         monitor::{<span class="self">self</span>, MonitorHandle, VideoMode},
-        util::{<span class="self">self</span>, IdRef},
-        view::CursorState,
-        view::{<span class="self">self</span>, new_view},
-        window_delegate::new_delegate,
-        OsError,
+        util,
+        view::WinitView,
+        window_delegate::WinitWindowDelegate,
+        Fullscreen, OsError,
     },
     window::{
-        CursorGrabMode, CursorIcon, Fullscreen, UserAttentionType, WindowAttributes,
-        WindowId <span class="kw">as </span>RootWindowId,
+        CursorGrabMode, CursorIcon, ImePurpose, ResizeDirection, Theme, UserAttentionType,
+        WindowAttributes, WindowButtons, WindowId <span class="kw">as </span>RootWindowId, WindowLevel,
     },
 };
-<span class="kw">use </span>cocoa::{
-    appkit::{
-        <span class="self">self</span>, CGFloat, NSApp, NSApplication, NSApplicationPresentationOptions, NSColor,
-        NSRequestUserAttentionType, NSScreen, NSView, NSWindow, NSWindowButton, NSWindowStyleMask,
-    },
-    base::{id, nil},
-    foundation::{NSDictionary, NSPoint, NSRect, NSSize, NSUInteger},
+<span class="kw">use </span>core_graphics::display::{CGDisplay, CGPoint};
+<span class="kw">use </span>objc2::declare::{Ivar, IvarDrop};
+<span class="kw">use </span>objc2::foundation::{
+    is_main_thread, CGFloat, NSArray, NSCopying, NSInteger, NSObject, NSPoint, NSRect, NSSize,
+    NSString,
 };
-<span class="kw">use </span>core_graphics::display::{CGDisplay, CGDisplayMode};
-<span class="kw">use </span>objc::{
-    declare::ClassDecl,
-    rc::autoreleasepool,
-    runtime::{Class, Object, Sel, BOOL, NO, YES},
+<span class="kw">use </span>objc2::rc::{autoreleasepool, Id, Owned, Shared};
+<span class="kw">use </span>objc2::{declare_class, msg_send, msg_send_id, sel, ClassType};
+
+<span class="kw">use </span><span class="kw">super</span>::appkit::{
+    NSApp, NSAppKitVersion, NSAppearance, NSApplicationPresentationOptions, NSBackingStoreType,
+    NSColor, NSCursor, NSFilenamesPboardType, NSRequestUserAttentionType, NSResponder, NSScreen,
+    NSView, NSWindow, NSWindowButton, NSWindowLevel, NSWindowSharingType, NSWindowStyleMask,
+    NSWindowTitleVisibility,
 };
-<span class="kw">use </span>once_cell::sync::Lazy;
 
 <span class="attr">#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 </span><span class="kw">pub struct </span>WindowId(<span class="kw">pub </span>usize);
@@ -1407,12 +1475,6 @@
     }
 }
 
-<span class="comment">// Convert the `cocoa::base::id` associated with a window to a usize to use as a unique identifier
-// for the window.
-</span><span class="kw">pub fn </span>get_window_id(window_cocoa_id: id) -&gt; WindowId {
-    WindowId(window_cocoa_id <span class="kw">as </span><span class="kw-2">*const </span>Object <span class="kw">as _</span>)
-}
-
 <span class="attr">#[derive(Clone)]
 </span><span class="kw">pub struct </span>PlatformSpecificWindowBuilderAttributes {
     <span class="kw">pub </span>movable_by_window_background: bool,
@@ -1421,9 +1483,10 @@
     <span class="kw">pub </span>titlebar_hidden: bool,
     <span class="kw">pub </span>titlebar_buttons_hidden: bool,
     <span class="kw">pub </span>fullsize_content_view: bool,
-    <span class="kw">pub </span>resize_increments: <span class="prelude-ty">Option</span>&lt;LogicalSize&lt;f64&gt;&gt;,
     <span class="kw">pub </span>disallow_hidpi: bool,
     <span class="kw">pub </span>has_shadow: bool,
+    <span class="kw">pub </span>accepts_first_mouse: bool,
+    <span class="kw">pub </span>option_as_alt: OptionAsAlt,
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>PlatformSpecificWindowBuilderAttributes {
@@ -1436,208 +1499,56 @@
             titlebar_hidden: <span class="bool-val">false</span>,
             titlebar_buttons_hidden: <span class="bool-val">false</span>,
             fullsize_content_view: <span class="bool-val">false</span>,
-            resize_increments: <span class="prelude-val">None</span>,
             disallow_hidpi: <span class="bool-val">false</span>,
             has_shadow: <span class="bool-val">true</span>,
+            accepts_first_mouse: <span class="bool-val">true</span>,
+            option_as_alt: Default::default(),
         }
     }
 }
 
-<span class="kw">unsafe fn </span>create_view(
-    ns_window: id,
-    pl_attribs: <span class="kw-2">&amp;</span>PlatformSpecificWindowBuilderAttributes,
-) -&gt; <span class="prelude-ty">Option</span>&lt;(IdRef, Weak&lt;Mutex&lt;CursorState&gt;&gt;)&gt; {
-    <span class="kw">let </span>(ns_view, cursor_state) = new_view(ns_window);
-    ns_view.non_nil().map(|ns_view| {
-        <span class="comment">// The default value of `setWantsBestResolutionOpenGLSurface:` was `false` until
-        // macos 10.14 and `true` after 10.15, we should set it to `YES` or `NO` to avoid
-        // always the default system value in favour of the user&#39;s code
-        </span><span class="kw">if </span>!pl_attribs.disallow_hidpi {
-            ns_view.setWantsBestResolutionOpenGLSurface_(YES);
-        } <span class="kw">else </span>{
-            ns_view.setWantsBestResolutionOpenGLSurface_(NO);
-        }
-
-        <span class="comment">// On Mojave, views automatically become layer-backed shortly after being added to
-        // a window. Changing the layer-backedness of a view breaks the association between
-        // the view and its associated OpenGL context. To work around this, on Mojave we
-        // explicitly make the view layer-backed up front so that AppKit doesn&#39;t do it
-        // itself and break the association with its context.
-        </span><span class="kw">if </span>f64::floor(appkit::NSAppKitVersionNumber) &gt; appkit::NSAppKitVersionNumber10_12 {
-            ns_view.setWantsLayer(YES);
-        }
-
-        (ns_view, cursor_state)
-    })
-}
-
-<span class="kw">fn </span>create_window(
-    attrs: <span class="kw-2">&amp;</span>WindowAttributes,
-    pl_attrs: <span class="kw-2">&amp;</span>PlatformSpecificWindowBuilderAttributes,
-) -&gt; <span class="prelude-ty">Option</span>&lt;IdRef&gt; {
-    autoreleasepool(|| <span class="kw">unsafe </span>{
-        <span class="kw">let </span>screen = <span class="kw">match </span>attrs.fullscreen {
-            <span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="prelude-val">Some</span>(RootMonitorHandle { inner: <span class="kw-2">ref </span>monitor })))
-            | <span class="prelude-val">Some</span>(Fullscreen::Exclusive(RootVideoMode {
-                video_mode: VideoMode { <span class="kw-2">ref </span>monitor, .. },
-            })) =&gt; {
-                <span class="kw">let </span>monitor_screen = monitor.ns_screen();
-                <span class="prelude-val">Some</span>(monitor_screen.unwrap_or_else(|| appkit::NSScreen::mainScreen(nil)))
-            }
-            <span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="prelude-val">None</span>)) =&gt; <span class="prelude-val">Some</span>(appkit::NSScreen::mainScreen(nil)),
-            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
-        };
-        <span class="kw">let </span>frame = <span class="kw">match </span>screen {
-            <span class="prelude-val">Some</span>(screen) =&gt; NSScreen::frame(screen),
-            <span class="prelude-val">None </span>=&gt; {
-                <span class="kw">let </span>screen = NSScreen::mainScreen(nil);
-                <span class="kw">let </span>scale_factor = NSScreen::backingScaleFactor(screen) <span class="kw">as </span>f64;
-                <span class="kw">let </span>(width, height) = <span class="kw">match </span>attrs.inner_size {
-                    <span class="prelude-val">Some</span>(size) =&gt; {
-                        <span class="kw">let </span>logical = size.to_logical(scale_factor);
-                        (logical.width, logical.height)
-                    }
-                    <span class="prelude-val">None </span>=&gt; (<span class="number">800.0</span>, <span class="number">600.0</span>),
-                };
-                <span class="kw">let </span>(left, bottom) = <span class="kw">match </span>attrs.position {
-                    <span class="prelude-val">Some</span>(position) =&gt; {
-                        <span class="kw">let </span>logical = util::window_position(position.to_logical(scale_factor));
-                        <span class="comment">// macOS wants the position of the bottom left corner,
-                        // but caller is setting the position of top left corner
-                        </span>(logical.x, logical.y - height)
-                    }
-                    <span class="comment">// This value is ignored by calling win.center() below
-                    </span><span class="prelude-val">None </span>=&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>),
-                };
-                NSRect::new(NSPoint::new(left, bottom), NSSize::new(width, height))
-            }
-        };
-
-        <span class="kw">let </span><span class="kw-2">mut </span>masks = <span class="kw">if </span>(!attrs.decorations &amp;&amp; screen.is_none()) || pl_attrs.titlebar_hidden {
-            <span class="comment">// Resizable UnownedWindow without a titlebar or borders
-            // if decorations is set to false, ignore pl_attrs
-            //
-            // if the titlebar is hidden, ignore other pl_attrs
-            </span>NSWindowStyleMask::NSBorderlessWindowMask
-                | NSWindowStyleMask::NSResizableWindowMask
-                | NSWindowStyleMask::NSMiniaturizableWindowMask
-        } <span class="kw">else </span>{
-            <span class="comment">// default case, resizable window with titlebar and titlebar buttons
-            </span>NSWindowStyleMask::NSClosableWindowMask
-                | NSWindowStyleMask::NSMiniaturizableWindowMask
-                | NSWindowStyleMask::NSResizableWindowMask
-                | NSWindowStyleMask::NSTitledWindowMask
-        };
-
-        <span class="kw">if </span>!attrs.resizable {
-            masks &amp;= !NSWindowStyleMask::NSResizableWindowMask;
-        }
-
-        <span class="kw">if </span>pl_attrs.fullsize_content_view {
-            masks |= NSWindowStyleMask::NSFullSizeContentViewWindowMask;
-        }
-
-        <span class="kw">let </span>ns_window: id = <span class="macro">msg_send!</span>[WINDOW_CLASS.<span class="number">0</span>, alloc];
-        <span class="kw">let </span>ns_window = IdRef::new(ns_window.initWithContentRect_styleMask_backing_defer_(
-            frame,
-            masks,
-            appkit::NSBackingStoreBuffered,
-            NO,
-        ));
-
-        ns_window.non_nil().map(|ns_window| {
-            <span class="kw">let </span>title = util::ns_string_id_ref(<span class="kw-2">&amp;</span>attrs.title);
-            ns_window.setReleasedWhenClosed_(NO);
-            ns_window.setTitle_(<span class="kw-2">*</span>title);
-            ns_window.setAcceptsMouseMovedEvents_(YES);
-
-            <span class="kw">if </span>pl_attrs.titlebar_transparent {
-                ns_window.setTitlebarAppearsTransparent_(YES);
-            }
-            <span class="kw">if </span>pl_attrs.title_hidden {
-                ns_window.setTitleVisibility_(appkit::NSWindowTitleVisibility::NSWindowTitleHidden);
-            }
-            <span class="kw">if </span>pl_attrs.titlebar_buttons_hidden {
-                <span class="kw">for </span>titlebar_button <span class="kw">in </span><span class="kw-2">&amp;</span>[
-                    NSWindowButton::NSWindowFullScreenButton,
-                    NSWindowButton::NSWindowMiniaturizeButton,
-                    NSWindowButton::NSWindowCloseButton,
-                    NSWindowButton::NSWindowZoomButton,
-                ] {
-                    <span class="kw">let </span>button = ns_window.standardWindowButton_(<span class="kw-2">*</span>titlebar_button);
-                    <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[button, setHidden: YES];
-                }
-            }
-            <span class="kw">if </span>pl_attrs.movable_by_window_background {
-                ns_window.setMovableByWindowBackground_(YES);
-            }
-
-            <span class="kw">if </span>attrs.always_on_top {
-                <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[
-                    <span class="kw-2">*</span>ns_window,
-                    setLevel: ffi::NSWindowLevel::NSFloatingWindowLevel
-                ];
-            }
-
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(increments) = pl_attrs.resize_increments {
-                <span class="kw">let </span>(x, y) = (increments.width, increments.height);
-                <span class="kw">if </span>x &gt;= <span class="number">1.0 </span>&amp;&amp; y &gt;= <span class="number">1.0 </span>{
-                    <span class="kw">let </span>size = NSSize::new(x <span class="kw">as </span>CGFloat, y <span class="kw">as </span>CGFloat);
-                    ns_window.setResizeIncrements_(size);
-                }
-            }
-
-            <span class="kw">if </span>!pl_attrs.has_shadow {
-                ns_window.setHasShadow_(NO);
-            }
-            <span class="kw">if </span>attrs.position.is_none() {
-                ns_window.center();
-            }
-            ns_window
-        })
-    })
-}
-
-<span class="kw">struct </span>WindowClass(<span class="kw-2">*const </span>Class);
-<span class="kw">unsafe impl </span>Send <span class="kw">for </span>WindowClass {}
-<span class="kw">unsafe impl </span>Sync <span class="kw">for </span>WindowClass {}
-
-<span class="kw">static </span>WINDOW_CLASS: Lazy&lt;WindowClass&gt; = Lazy::new(|| <span class="kw">unsafe </span>{
-    <span class="kw">let </span>window_superclass = <span class="macro">class!</span>(NSWindow);
-    <span class="kw">let </span><span class="kw-2">mut </span>decl = ClassDecl::new(<span class="string">&quot;WinitWindow&quot;</span>, window_superclass).unwrap();
-
-    <span class="kw">pub extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>can_become_main_window(<span class="kw">_</span>: <span class="kw-2">&amp;</span>Object, <span class="kw">_</span>: Sel) -&gt; BOOL {
-        <span class="macro">trace_scope!</span>(<span class="string">&quot;canBecomeMainWindow&quot;</span>);
-        YES
+<span class="macro">declare_class!</span>(
+    <span class="attr">#[derive(Debug)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>WinitWindow {
+        <span class="comment">// TODO: Fix unnecessary boxing here
+        // SAFETY: These are initialized in WinitWindow::new, right after it is created.
+        </span>shared_state: IvarDrop&lt;Box&lt;Mutex&lt;SharedState&gt;&gt;&gt;,
+        decorations: IvarDrop&lt;Box&lt;AtomicBool&gt;&gt;,
     }
 
-    <span class="kw">pub extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>can_become_key_window(<span class="kw">_</span>: <span class="kw-2">&amp;</span>Object, <span class="kw">_</span>: Sel) -&gt; BOOL {
-        <span class="macro">trace_scope!</span>(<span class="string">&quot;canBecomeKeyWindow&quot;</span>);
-        YES
+    <span class="kw">unsafe impl </span>ClassType <span class="kw">for </span>WinitWindow {
+        <span class="attr">#[inherits(NSResponder, NSObject)]
+        </span><span class="kw">type </span>Super = NSWindow;
     }
 
-    decl.add_method(
-        <span class="macro">sel!</span>(canBecomeMainWindow),
-        can_become_main_window <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel) -&gt; BOOL,
-    );
-    decl.add_method(
-        <span class="macro">sel!</span>(canBecomeKeyWindow),
-        can_become_key_window <span class="kw">as extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">&amp;</span>Object, Sel) -&gt; BOOL,
-    );
-    WindowClass(decl.register())
-});
+    <span class="kw">unsafe impl </span>WinitWindow {
+        <span class="attr">#[sel(canBecomeMainWindow)]
+        </span><span class="kw">fn </span>can_become_main_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;canBecomeMainWindow&quot;</span>);
+            <span class="bool-val">true
+        </span>}
 
-<span class="attr">#[derive(Default)]
+        <span class="attr">#[sel(canBecomeKeyWindow)]
+        </span><span class="kw">fn </span>can_become_key_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+            <span class="macro">trace_scope!</span>(<span class="string">&quot;canBecomeKeyWindow&quot;</span>);
+            <span class="bool-val">true
+        </span>}
+    }
+);
+
+<span class="attr">#[derive(Debug, Default)]
 </span><span class="kw">pub struct </span>SharedState {
     <span class="kw">pub </span>resizable: bool,
-    <span class="kw">pub </span>fullscreen: <span class="prelude-ty">Option</span>&lt;Fullscreen&gt;,
+    <span class="doccomment">/// This field tracks the current fullscreen state of the window
+    /// (as seen by `WindowDelegate`).
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) fullscreen: <span class="prelude-ty">Option</span>&lt;Fullscreen&gt;,
     <span class="comment">// This is true between windowWillEnterFullScreen and windowDidEnterFullScreen
     // or windowWillExitFullScreen and windowDidExitFullScreen.
     // We must not toggle fullscreen when this is true.
     </span><span class="kw">pub </span>in_fullscreen_transition: bool,
     <span class="comment">// If it is attempted to toggle fullscreen when in_fullscreen_transition is true,
     // Set target_fullscreen and do after fullscreen transition is end.
-    </span><span class="kw">pub </span>target_fullscreen: <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Option</span>&lt;Fullscreen&gt;&gt;,
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) target_fullscreen: <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Option</span>&lt;Fullscreen&gt;&gt;,
     <span class="kw">pub </span>maximized: bool,
     <span class="kw">pub </span>standard_frame: <span class="prelude-ty">Option</span>&lt;NSRect&gt;,
     is_simple_fullscreen: bool,
@@ -1648,30 +1559,16 @@
     /// bar in exclusive fullscreen but want to restore the original options when
     /// transitioning back to borderless fullscreen.
     </span>save_presentation_opts: <span class="prelude-ty">Option</span>&lt;NSApplicationPresentationOptions&gt;,
-    <span class="kw">pub </span>saved_desktop_display_mode: <span class="prelude-ty">Option</span>&lt;(CGDisplay, CGDisplayMode)&gt;,
+    <span class="kw">pub </span>current_theme: <span class="prelude-ty">Option</span>&lt;Theme&gt;,
+
+    <span class="doccomment">/// The state of the `Option` as `Alt`.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) option_as_alt: OptionAsAlt,
 }
 
 <span class="kw">impl </span>SharedState {
     <span class="kw">pub fn </span>saved_standard_frame(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NSRect {
         <span class="self">self</span>.standard_frame
             .unwrap_or_else(|| NSRect::new(NSPoint::new(<span class="number">50.0</span>, <span class="number">50.0</span>), NSSize::new(<span class="number">800.0</span>, <span class="number">600.0</span>)))
-    }
-}
-
-<span class="kw">impl </span>From&lt;WindowAttributes&gt; <span class="kw">for </span>SharedState {
-    <span class="kw">fn </span>from(attribs: WindowAttributes) -&gt; <span class="self">Self </span>{
-        SharedState {
-            resizable: attribs.resizable,
-            <span class="comment">// This fullscreen field tracks the current state of the window
-            // (as seen by `WindowDelegate`), and since the window hasn&#39;t
-            // actually been fullscreened yet, we can&#39;t set it yet. This is
-            // necessary for state transitions to work right, since otherwise
-            // the initial value and the first `set_fullscreen` call would be
-            // identical, resulting in a no-op.
-            </span>fullscreen: <span class="prelude-val">None</span>,
-            maximized: attribs.maximized,
-            ..Default::default()
-        }
     }
 }
 
@@ -1682,7 +1579,7 @@
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; SharedStateMutexGuard&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="attr">#[inline]
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(guard: MutexGuard&lt;<span class="lifetime">&#39;a</span>, SharedState&gt;, called_from_fn: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">fn </span>new(guard: MutexGuard&lt;<span class="lifetime">&#39;a</span>, SharedState&gt;, called_from_fn: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; <span class="self">Self </span>{
         <span class="macro">trace!</span>(<span class="string">&quot;Locked shared state in `{}`&quot;</span>, called_from_fn);
         <span class="self">Self </span>{
             guard,
@@ -1713,109 +1610,295 @@
     }
 }
 
-<span class="kw">pub struct </span>UnownedWindow {
-    <span class="kw">pub </span>ns_window: IdRef, <span class="comment">// never changes
-    </span><span class="kw">pub </span>ns_view: IdRef,   <span class="comment">// never changes
-    </span>shared_state: Arc&lt;Mutex&lt;SharedState&gt;&gt;,
-    decorations: AtomicBool,
-    cursor_state: Weak&lt;Mutex&lt;CursorState&gt;&gt;,
-    <span class="kw">pub </span>inner_rect: <span class="prelude-ty">Option</span>&lt;PhysicalSize&lt;u32&gt;&gt;,
-}
+<span class="kw">impl </span>WinitWindow {
+    <span class="attr">#[allow(clippy::type_complexity)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
+        attrs: WindowAttributes,
+        pl_attrs: PlatformSpecificWindowBuilderAttributes,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Id&lt;<span class="self">Self</span>, Shared&gt;, Id&lt;WinitWindowDelegate, Shared&gt;), RootOsError&gt; {
+        <span class="macro">trace_scope!</span>(<span class="string">&quot;WinitWindow::new&quot;</span>);
 
-<span class="kw">unsafe impl </span>Send <span class="kw">for </span>UnownedWindow {}
-<span class="kw">unsafe impl </span>Sync <span class="kw">for </span>UnownedWindow {}
-
-<span class="kw">impl </span>UnownedWindow {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
-        <span class="kw-2">mut </span>win_attribs: WindowAttributes,
-        pl_attribs: PlatformSpecificWindowBuilderAttributes,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Arc&lt;<span class="self">Self</span>&gt;, IdRef), RootOsError&gt; {
-        <span class="kw">unsafe </span>{
-            <span class="kw">let </span>is_main_thread: BOOL = <span class="macro">msg_send!</span>(<span class="macro">class!</span>(NSThread), isMainThread);
-            <span class="kw">if </span>is_main_thread == NO {
-                <span class="macro">panic!</span>(<span class="string">&quot;Windows can only be created on the main thread on macOS&quot;</span>);
-            }
+        <span class="kw">if </span>!is_main_thread() {
+            <span class="macro">panic!</span>(<span class="string">&quot;Windows can only be created on the main thread on macOS&quot;</span>);
         }
-        <span class="macro">trace!</span>(<span class="string">&quot;Creating new window&quot;</span>);
 
-        <span class="kw">let </span>ns_window = create_window(<span class="kw-2">&amp;</span>win_attribs, <span class="kw-2">&amp;</span>pl_attribs)
-            .ok_or_else(|| <span class="macro">os_error!</span>(OsError::CreationError(<span class="string">&quot;Couldn&#39;t create `NSWindow`&quot;</span>)))<span class="question-mark">?</span>;
+        <span class="kw">let </span>this = autoreleasepool(|<span class="kw">_</span>| {
+            <span class="kw">let </span>screen = <span class="kw">match </span>attrs.fullscreen.clone().map(Into::into) {
+                <span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="prelude-val">Some</span>(monitor)))
+                | <span class="prelude-val">Some</span>(Fullscreen::Exclusive(VideoMode { monitor, .. })) =&gt; {
+                    monitor.ns_screen().or_else(NSScreen::main)
+                }
+                <span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="prelude-val">None</span>)) =&gt; NSScreen::main(),
+                <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
+            };
+            <span class="kw">let </span>frame = <span class="kw">match </span><span class="kw-2">&amp;</span>screen {
+                <span class="prelude-val">Some</span>(screen) =&gt; screen.frame(),
+                <span class="prelude-val">None </span>=&gt; {
+                    <span class="kw">let </span>scale_factor = NSScreen::main()
+                        .map(|screen| screen.backingScaleFactor() <span class="kw">as </span>f64)
+                        .unwrap_or(<span class="number">1.0</span>);
+                    <span class="kw">let </span>(width, height) = <span class="kw">match </span>attrs.inner_size {
+                        <span class="prelude-val">Some</span>(size) =&gt; {
+                            <span class="kw">let </span>logical = size.to_logical(scale_factor);
+                            (logical.width, logical.height)
+                        }
+                        <span class="prelude-val">None </span>=&gt; (<span class="number">800.0</span>, <span class="number">600.0</span>),
+                    };
+                    <span class="kw">let </span>(left, bottom) = <span class="kw">match </span>attrs.position {
+                        <span class="prelude-val">Some</span>(position) =&gt; {
+                            <span class="kw">let </span>logical = util::window_position(position.to_logical(scale_factor));
+                            <span class="comment">// macOS wants the position of the bottom left corner,
+                            // but caller is setting the position of top left corner
+                            </span>(logical.x, logical.y - height)
+                        }
+                        <span class="comment">// This value is ignored by calling win.center() below
+                        </span><span class="prelude-val">None </span>=&gt; (<span class="number">0.0</span>, <span class="number">0.0</span>),
+                    };
+                    NSRect::new(NSPoint::new(left, bottom), NSSize::new(width, height))
+                }
+            };
 
-        <span class="kw">let </span>(ns_view, cursor_state) = <span class="kw">unsafe </span>{ create_view(<span class="kw-2">*</span>ns_window, <span class="kw-2">&amp;</span>pl_attribs) }
-            .ok_or_else(|| <span class="macro">os_error!</span>(OsError::CreationError(<span class="string">&quot;Couldn&#39;t create `NSView`&quot;</span>)))<span class="question-mark">?</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>masks = <span class="kw">if </span>(!attrs.decorations &amp;&amp; screen.is_none()) || pl_attrs.titlebar_hidden
+            {
+                <span class="comment">// Resizable without a titlebar or borders
+                // if decorations is set to false, ignore pl_attrs
+                //
+                // if the titlebar is hidden, ignore other pl_attrs
+                </span>NSWindowStyleMask::NSBorderlessWindowMask
+                    | NSWindowStyleMask::NSResizableWindowMask
+                    | NSWindowStyleMask::NSMiniaturizableWindowMask
+            } <span class="kw">else </span>{
+                <span class="comment">// default case, resizable window with titlebar and titlebar buttons
+                </span>NSWindowStyleMask::NSClosableWindowMask
+                    | NSWindowStyleMask::NSMiniaturizableWindowMask
+                    | NSWindowStyleMask::NSResizableWindowMask
+                    | NSWindowStyleMask::NSTitledWindowMask
+            };
+
+            <span class="kw">if </span>!attrs.resizable {
+                masks &amp;= !NSWindowStyleMask::NSResizableWindowMask;
+            }
+
+            <span class="kw">if </span>!attrs.enabled_buttons.contains(WindowButtons::MINIMIZE) {
+                masks &amp;= !NSWindowStyleMask::NSMiniaturizableWindowMask;
+            }
+
+            <span class="kw">if </span>!attrs.enabled_buttons.contains(WindowButtons::CLOSE) {
+                masks &amp;= !NSWindowStyleMask::NSClosableWindowMask;
+            }
+
+            <span class="kw">if </span>pl_attrs.fullsize_content_view {
+                masks |= NSWindowStyleMask::NSFullSizeContentViewWindowMask;
+            }
+
+            <span class="kw">let </span>this: <span class="prelude-ty">Option</span>&lt;Id&lt;<span class="self">Self</span>, Owned&gt;&gt; = <span class="kw">unsafe </span>{
+                <span class="macro">msg_send_id!</span>[
+                    <span class="macro">msg_send_id!</span>[WinitWindow::class(), alloc],
+                    initWithContentRect: frame,
+                    styleMask: masks,
+                    backing: NSBackingStoreType::NSBackingStoreBuffered,
+                    defer: <span class="bool-val">false</span>,
+                ]
+            };
+
+            this.map(|<span class="kw-2">mut </span>this| {
+                <span class="comment">// Properly initialize the window&#39;s variables
+                //
+                // Ideally this should be done in an `init` method,
+                // but for convenience we do it here instead.
+                </span><span class="kw">let </span>state = SharedState {
+                    resizable: attrs.resizable,
+                    maximized: attrs.maximized,
+                    ..Default::default()
+                };
+                Ivar::write(<span class="kw-2">&amp;mut </span>this.shared_state, Box::new(Mutex::new(state)));
+                Ivar::write(
+                    <span class="kw-2">&amp;mut </span>this.decorations,
+                    Box::new(AtomicBool::new(attrs.decorations)),
+                );
+
+                this.setReleasedWhenClosed(<span class="bool-val">false</span>);
+                this.setTitle(<span class="kw-2">&amp;</span>NSString::from_str(<span class="kw-2">&amp;</span>attrs.title));
+                this.setAcceptsMouseMovedEvents(<span class="bool-val">true</span>);
+
+                <span class="kw">if </span>attrs.content_protected {
+                    this.setSharingType(NSWindowSharingType::NSWindowSharingNone);
+                }
+
+                <span class="kw">if </span>pl_attrs.titlebar_transparent {
+                    this.setTitlebarAppearsTransparent(<span class="bool-val">true</span>);
+                }
+                <span class="kw">if </span>pl_attrs.title_hidden {
+                    this.setTitleVisibility(NSWindowTitleVisibility::Hidden);
+                }
+                <span class="kw">if </span>pl_attrs.titlebar_buttons_hidden {
+                    <span class="kw">for </span>titlebar_button <span class="kw">in </span><span class="kw-2">&amp;</span>[
+                        <span class="attr">#[allow(deprecated)]
+                        </span>NSWindowButton::FullScreen,
+                        NSWindowButton::Miniaturize,
+                        NSWindowButton::Close,
+                        NSWindowButton::Zoom,
+                    ] {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(button) = this.standardWindowButton(<span class="kw-2">*</span>titlebar_button) {
+                            button.setHidden(<span class="bool-val">true</span>);
+                        }
+                    }
+                }
+                <span class="kw">if </span>pl_attrs.movable_by_window_background {
+                    this.setMovableByWindowBackground(<span class="bool-val">true</span>);
+                }
+
+                <span class="kw">if </span>!attrs.enabled_buttons.contains(WindowButtons::MAXIMIZE) {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(button) = this.standardWindowButton(NSWindowButton::Zoom) {
+                        button.setEnabled(<span class="bool-val">false</span>);
+                    }
+                }
+
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(increments) = attrs.resize_increments {
+                    <span class="kw">let </span>increments = increments.to_logical(this.scale_factor());
+                    <span class="kw">let </span>(w, h) = (increments.width, increments.height);
+                    <span class="kw">if </span>w &gt;= <span class="number">1.0 </span>&amp;&amp; h &gt;= <span class="number">1.0 </span>{
+                        <span class="kw">let </span>size = NSSize::new(w, h);
+                        <span class="comment">// It was concluded (#2411) that there is never a use-case for
+                        // &quot;outer&quot; resize increments, hence we set &quot;inner&quot; ones here.
+                        // (&quot;outer&quot; in macOS being just resizeIncrements, and &quot;inner&quot; - contentResizeIncrements)
+                        // This is consistent with X11 size hints behavior
+                        </span>this.setContentResizeIncrements(size);
+                    }
+                }
+
+                <span class="kw">if </span>!pl_attrs.has_shadow {
+                    this.setHasShadow(<span class="bool-val">false</span>);
+                }
+                <span class="kw">if </span>attrs.position.is_none() {
+                    this.center();
+                }
+
+                this.set_option_as_alt(pl_attrs.option_as_alt);
+
+                Id::into_shared(this)
+            })
+        })
+        .ok_or_else(|| <span class="macro">os_error!</span>(OsError::CreationError(<span class="string">&quot;Couldn&#39;t create `NSWindow`&quot;</span>)))<span class="question-mark">?</span>;
+
+        <span class="kw">match </span>attrs.parent_window {
+            <span class="prelude-val">Some</span>(RawWindowHandle::AppKit(handle)) =&gt; {
+                <span class="comment">// SAFETY: Caller ensures the pointer is valid or NULL
+                </span><span class="kw">let </span>parent: Id&lt;NSWindow, Shared&gt; =
+                    <span class="kw">match unsafe </span>{ Id::retain(handle.ns_window.cast()) } {
+                        <span class="prelude-val">Some</span>(window) =&gt; window,
+                        <span class="prelude-val">None </span>=&gt; {
+                            <span class="comment">// SAFETY: Caller ensures the pointer is valid or NULL
+                            </span><span class="kw">let </span>parent_view: Id&lt;NSView, Shared&gt; =
+                                <span class="kw">match unsafe </span>{ Id::retain(handle.ns_view.cast()) } {
+                                    <span class="prelude-val">Some</span>(view) =&gt; view,
+                                    <span class="prelude-val">None </span>=&gt; {
+                                        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">os_error!</span>(OsError::CreationError(
+                                            <span class="string">&quot;raw window handle should be non-empty&quot;
+                                        </span>)))
+                                    }
+                                };
+                            parent_view.window().ok_or_else(|| {
+                                <span class="macro">os_error!</span>(OsError::CreationError(
+                                    <span class="string">&quot;parent view should be installed in a window&quot;
+                                </span>))
+                            })<span class="question-mark">?
+                        </span>}
+                    };
+                <span class="comment">// SAFETY: We know that there are no parent -&gt; child -&gt; parent cycles since the only place in `winit`
+                // where we allow making a window a child window is right here, just after it&#39;s been created.
+                </span><span class="kw">unsafe </span>{ parent.addChildWindow(<span class="kw-2">&amp;</span>this, NSWindowOrderingMode::NSWindowAbove) };
+            }
+            <span class="prelude-val">Some</span>(raw) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;Invalid raw window handle {raw:?} on macOS&quot;</span>),
+            <span class="prelude-val">None </span>=&gt; (),
+        }
+
+        <span class="kw">let </span>view = WinitView::new(<span class="kw-2">&amp;</span>this, pl_attrs.accepts_first_mouse);
+
+        <span class="comment">// The default value of `setWantsBestResolutionOpenGLSurface:` was `false` until
+        // macos 10.14 and `true` after 10.15, we should set it to `YES` or `NO` to avoid
+        // always the default system value in favour of the user&#39;s code
+        </span>view.setWantsBestResolutionOpenGLSurface(!pl_attrs.disallow_hidpi);
+
+        <span class="comment">// On Mojave, views automatically become layer-backed shortly after being added to
+        // a window. Changing the layer-backedness of a view breaks the association between
+        // the view and its associated OpenGL context. To work around this, on Mojave we
+        // explicitly make the view layer-backed up front so that AppKit doesn&#39;t do it
+        // itself and break the association with its context.
+        </span><span class="kw">if </span>NSAppKitVersion::current().floor() &gt; NSAppKitVersion::NSAppKitVersionNumber10_12 {
+            view.setWantsLayer(<span class="bool-val">true</span>);
+        }
 
         <span class="comment">// Configure the new view as the &quot;key view&quot; for the window
-        </span><span class="kw">unsafe </span>{
-            ns_window.setContentView_(<span class="kw-2">*</span>ns_view);
-            ns_window.setInitialFirstResponder_(<span class="kw-2">*</span>ns_view);
+        </span>this.setContentView(<span class="kw-2">&amp;</span>view);
+        this.setInitialFirstResponder(<span class="kw-2">&amp;</span>view);
+
+        <span class="kw">if </span>attrs.transparent {
+            this.setOpaque(<span class="bool-val">false</span>);
+            this.setBackgroundColor(<span class="kw-2">&amp;</span>NSColor::clear());
         }
 
-        <span class="kw">let </span>scale_factor = <span class="kw">unsafe </span>{ NSWindow::backingScaleFactor(<span class="kw-2">*</span>ns_window) <span class="kw">as </span>f64 };
-
-        <span class="kw">unsafe </span>{
-            <span class="kw">if </span>win_attribs.transparent {
-                ns_window.setOpaque_(NO);
-                ns_window.setBackgroundColor_(NSColor::clearColor(nil));
-            }
-
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(dim) = win_attribs.min_inner_size {
-                <span class="kw">let </span>logical_dim = dim.to_logical(scale_factor);
-                set_min_inner_size(<span class="kw-2">*</span>ns_window, logical_dim);
-            }
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(dim) = win_attribs.max_inner_size {
-                <span class="kw">let </span>logical_dim = dim.to_logical(scale_factor);
-                set_max_inner_size(<span class="kw-2">*</span>ns_window, logical_dim);
-            }
-
-            <span class="kw">use </span>cocoa::foundation::NSArray;
-            <span class="comment">// register for drag and drop operations.
-            </span><span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[
-                <span class="kw-2">*</span>ns_window,
-                registerForDraggedTypes:
-                    NSArray::arrayWithObject(nil, appkit::NSFilenamesPboardType)
-            ];
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(dim) = attrs.min_inner_size {
+            this.set_min_inner_size(<span class="prelude-val">Some</span>(dim));
+        }
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(dim) = attrs.max_inner_size {
+            this.set_max_inner_size(<span class="prelude-val">Some</span>(dim));
         }
 
-        <span class="comment">// Since `win_attribs` is put into a mutex below, we&#39;ll just copy these
-        // attributes now instead of bothering to lock it later.
-        // Also, `SharedState` doesn&#39;t carry `fullscreen` over; it&#39;s set
-        // indirectly by us calling `set_fullscreen` below, causing handlers in
-        // `WindowDelegate` to update the state.
-        </span><span class="kw">let </span>fullscreen = win_attribs.fullscreen.take();
-        <span class="kw">let </span>maximized = win_attribs.maximized;
-        <span class="kw">let </span>visible = win_attribs.visible;
-        <span class="kw">let </span>decorations = win_attribs.decorations;
-        <span class="kw">let </span>inner_rect = win_attribs
-            .inner_size
-            .map(|size| size.to_physical(scale_factor));
+        this.set_window_level(attrs.window_level);
 
-        <span class="kw">let </span>window = Arc::new(UnownedWindow {
-            ns_view,
-            ns_window,
-            shared_state: Arc::new(Mutex::new(win_attribs.into())),
-            decorations: AtomicBool::new(decorations),
-            cursor_state,
-            inner_rect,
-        });
+        <span class="comment">// register for drag and drop operations.
+        </span>this.registerForDraggedTypes(<span class="kw-2">&amp;</span>NSArray::from_slice(<span class="kw-2">&amp;</span>[
+            <span class="kw">unsafe </span>{ NSFilenamesPboardType }.copy()
+        ]));
 
-        <span class="kw">let </span>delegate = new_delegate(<span class="kw-2">&amp;</span>window, fullscreen.is_some());
+        <span class="kw">match </span>attrs.preferred_theme {
+            <span class="prelude-val">Some</span>(theme) =&gt; {
+                set_ns_theme(<span class="prelude-val">Some</span>(theme));
+                <span class="kw">let </span><span class="kw-2">mut </span>state = this.lock_shared_state(<span class="string">&quot;WinitWindow::new&quot;</span>);
+                state.current_theme = <span class="prelude-val">Some</span>(theme);
+            }
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>state = this.lock_shared_state(<span class="string">&quot;WinitWindow::new&quot;</span>);
+                state.current_theme = <span class="prelude-val">Some</span>(get_ns_theme());
+            }
+        }
+
+        <span class="kw">let </span>delegate = WinitWindowDelegate::new(<span class="kw-2">&amp;</span>this, attrs.fullscreen.is_some());
 
         <span class="comment">// Set fullscreen mode after we setup everything
-        </span>window.set_fullscreen(fullscreen);
+        </span>this.set_fullscreen(attrs.fullscreen.map(Into::into));
 
         <span class="comment">// Setting the window as key has to happen *after* we set the fullscreen
         // state, since otherwise we&#39;ll briefly see the window at normal size
         // before it transitions.
-        </span><span class="kw">if </span>visible {
-            <span class="comment">// Tightly linked with `app_state::window_activation_hack`
-            </span><span class="kw">unsafe </span>{ window.ns_window.makeKeyAndOrderFront_(nil) };
+        </span><span class="kw">if </span>attrs.visible {
+            <span class="kw">if </span>attrs.active {
+                <span class="comment">// Tightly linked with `app_state::window_activation_hack`
+                </span>this.makeKeyAndOrderFront(<span class="prelude-val">None</span>);
+            } <span class="kw">else </span>{
+                this.orderFront(<span class="prelude-val">None</span>);
+            }
         }
 
-        <span class="kw">if </span>maximized {
-            window.set_maximized(maximized);
+        <span class="kw">if </span>attrs.maximized {
+            this.set_maximized(attrs.maximized);
         }
-        <span class="macro">trace!</span>(<span class="string">&quot;Done unowned window::new&quot;</span>);
-        <span class="prelude-val">Ok</span>((window, delegate))
+
+        delegate.queue_event(WindowEvent::Focused(<span class="bool-val">false</span>));
+
+        <span class="prelude-val">Ok</span>((this, delegate))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>retain(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Id&lt;WinitWindow, Shared&gt; {
+        <span class="comment">// SAFETY: The pointer is valid, and the window is always `Shared`
+        // TODO(madsmtm): Remove the need for unsafety here
+        </span><span class="kw">unsafe </span>{ Id::retain(<span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span><span class="self">Self </span><span class="kw">as </span><span class="kw-2">*mut </span><span class="self">Self</span>).unwrap() }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>view(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Id&lt;WinitView, Shared&gt; {
+        <span class="comment">// SAFETY: The view inside WinitWindow is always `WinitView`
+        </span><span class="kw">unsafe </span>{ Id::cast(<span class="self">self</span>.contentView()) }
     }
 
     <span class="attr">#[track_caller]
@@ -1826,35 +1909,32 @@
         SharedStateMutexGuard::new(<span class="self">self</span>.shared_state.lock().unwrap(), called_from_fn)
     }
 
-    <span class="kw">fn </span>set_style_mask_async(<span class="kw-2">&amp;</span><span class="self">self</span>, mask: NSWindowStyleMask) {
-        <span class="kw">unsafe </span>{ util::set_style_mask_async(<span class="kw-2">*</span><span class="self">self</span>.ns_window, <span class="kw-2">*</span><span class="self">self</span>.ns_view, mask) };
-    }
-
     <span class="kw">fn </span>set_style_mask_sync(<span class="kw-2">&amp;</span><span class="self">self</span>, mask: NSWindowStyleMask) {
-        <span class="kw">unsafe </span>{ util::set_style_mask_sync(<span class="kw-2">*</span><span class="self">self</span>.ns_window, <span class="kw-2">*</span><span class="self">self</span>.ns_view, mask) };
+        util::set_style_mask_sync(<span class="self">self</span>, mask);
     }
 
     <span class="kw">pub fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WindowId {
-        get_window_id(<span class="kw-2">*</span><span class="self">self</span>.ns_window)
+        WindowId(<span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span><span class="self">Self </span><span class="kw">as </span>usize)
     }
 
     <span class="kw">pub fn </span>set_title(<span class="kw-2">&amp;</span><span class="self">self</span>, title: <span class="kw-2">&amp;</span>str) {
-        <span class="kw">unsafe </span>{
-            util::set_title_async(<span class="kw-2">*</span><span class="self">self</span>.ns_window, title.to_string());
-        }
+        util::set_title_sync(<span class="self">self</span>, title);
+    }
+
+    <span class="kw">pub fn </span>set_transparent(<span class="kw-2">&amp;</span><span class="self">self</span>, transparent: bool) {
+        <span class="self">self</span>.setOpaque(!transparent)
     }
 
     <span class="kw">pub fn </span>set_visible(<span class="kw-2">&amp;</span><span class="self">self</span>, visible: bool) {
         <span class="kw">match </span>visible {
-            <span class="bool-val">true </span>=&gt; <span class="kw">unsafe </span>{ util::make_key_and_order_front_async(<span class="kw-2">*</span><span class="self">self</span>.ns_window) },
-            <span class="bool-val">false </span>=&gt; <span class="kw">unsafe </span>{ util::order_out_async(<span class="kw-2">*</span><span class="self">self</span>.ns_window) },
+            <span class="bool-val">true </span>=&gt; util::make_key_and_order_front_sync(<span class="self">self</span>),
+            <span class="bool-val">false </span>=&gt; util::order_out_sync(<span class="self">self</span>),
         }
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>is_visible(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
-        <span class="kw">let </span>is_visible: BOOL = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window, isVisible] };
-        <span class="prelude-val">Some</span>(is_visible == YES)
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.isVisible())
     }
 
     <span class="kw">pub fn </span>request_redraw(<span class="kw-2">&amp;</span><span class="self">self</span>) {
@@ -1862,7 +1942,7 @@
     }
 
     <span class="kw">pub fn </span>outer_position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;PhysicalPosition&lt;i32&gt;, NotSupportedError&gt; {
-        <span class="kw">let </span>frame_rect = <span class="kw">unsafe </span>{ NSWindow::frame(<span class="kw-2">*</span><span class="self">self</span>.ns_window) };
+        <span class="kw">let </span>frame_rect = <span class="self">self</span>.frame();
         <span class="kw">let </span>position = LogicalPosition::new(
             frame_rect.origin.x <span class="kw">as </span>f64,
             util::bottom_left_to_top_left(frame_rect),
@@ -1872,9 +1952,7 @@
     }
 
     <span class="kw">pub fn </span>inner_position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;PhysicalPosition&lt;i32&gt;, NotSupportedError&gt; {
-        <span class="kw">let </span>content_rect = <span class="kw">unsafe </span>{
-            NSWindow::contentRectForFrameRect_(<span class="kw-2">*</span><span class="self">self</span>.ns_window, NSWindow::frame(<span class="kw-2">*</span><span class="self">self</span>.ns_window))
-        };
+        <span class="kw">let </span>content_rect = <span class="self">self</span>.contentRectForFrameRect(<span class="self">self</span>.frame());
         <span class="kw">let </span>position = LogicalPosition::new(
             content_rect.origin.x <span class="kw">as </span>f64,
             util::bottom_left_to_top_left(content_rect),
@@ -1886,57 +1964,108 @@
     <span class="kw">pub fn </span>set_outer_position(<span class="kw-2">&amp;</span><span class="self">self</span>, position: Position) {
         <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
         <span class="kw">let </span>position = position.to_logical(scale_factor);
-        <span class="kw">unsafe </span>{
-            util::set_frame_top_left_point_async(<span class="kw-2">*</span><span class="self">self</span>.ns_window, util::window_position(position));
-        }
+        util::set_frame_top_left_point_sync(<span class="self">self</span>, util::window_position(position));
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>inner_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PhysicalSize&lt;u32&gt; {
-        <span class="kw">let </span>view_frame = <span class="kw">unsafe </span>{ NSView::frame(<span class="kw-2">*</span><span class="self">self</span>.ns_view) };
-        <span class="kw">let </span>logical: LogicalSize&lt;f64&gt; =
-            (view_frame.size.width <span class="kw">as </span>f64, view_frame.size.height <span class="kw">as </span>f64).into();
+        <span class="kw">let </span>frame = <span class="self">self</span>.contentView().frame();
+        <span class="kw">let </span>logical: LogicalSize&lt;f64&gt; = (frame.size.width <span class="kw">as </span>f64, frame.size.height <span class="kw">as </span>f64).into();
         <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
         logical.to_physical(scale_factor)
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>outer_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PhysicalSize&lt;u32&gt; {
-        <span class="kw">let </span>view_frame = <span class="kw">unsafe </span>{ NSWindow::frame(<span class="kw-2">*</span><span class="self">self</span>.ns_window) };
-        <span class="kw">let </span>logical: LogicalSize&lt;f64&gt; =
-            (view_frame.size.width <span class="kw">as </span>f64, view_frame.size.height <span class="kw">as </span>f64).into();
+        <span class="kw">let </span>frame = <span class="self">self</span>.frame();
+        <span class="kw">let </span>logical: LogicalSize&lt;f64&gt; = (frame.size.width <span class="kw">as </span>f64, frame.size.height <span class="kw">as </span>f64).into();
         <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
         logical.to_physical(scale_factor)
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_inner_size(<span class="kw-2">&amp;</span><span class="self">self</span>, size: Size) {
-        <span class="kw">unsafe </span>{
-            <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
-            util::set_content_size_async(<span class="kw-2">*</span><span class="self">self</span>.ns_window, size.to_logical(scale_factor));
-        }
+        <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
+        util::set_content_size_sync(<span class="self">self</span>, size.to_logical(scale_factor));
     }
 
     <span class="kw">pub fn </span>set_min_inner_size(<span class="kw-2">&amp;</span><span class="self">self</span>, dimensions: <span class="prelude-ty">Option</span>&lt;Size&gt;) {
-        <span class="kw">unsafe </span>{
-            <span class="kw">let </span>dimensions = dimensions.unwrap_or(Logical(LogicalSize {
-                width: <span class="number">0.0</span>,
-                height: <span class="number">0.0</span>,
-            }));
-            <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
-            set_min_inner_size(<span class="kw-2">*</span><span class="self">self</span>.ns_window, dimensions.to_logical(scale_factor));
+        <span class="kw">let </span>dimensions = dimensions.unwrap_or(Logical(LogicalSize {
+            width: <span class="number">0.0</span>,
+            height: <span class="number">0.0</span>,
+        }));
+        <span class="kw">let </span>min_size = dimensions.to_logical::&lt;CGFloat&gt;(<span class="self">self</span>.scale_factor());
+
+        <span class="kw">let </span><span class="kw-2">mut </span>current_rect = <span class="self">self</span>.frame();
+        <span class="kw">let </span>content_rect = <span class="self">self</span>.contentRectForFrameRect(current_rect);
+        <span class="comment">// Convert from client area size to window size
+        </span><span class="kw">let </span>min_size = NSSize::new(
+            min_size.width + (current_rect.size.width - content_rect.size.width), <span class="comment">// this tends to be 0
+            </span>min_size.height + (current_rect.size.height - content_rect.size.height),
+        );
+        <span class="self">self</span>.setMinSize(min_size);
+        <span class="comment">// If necessary, resize the window to match constraint
+        </span><span class="kw">if </span>current_rect.size.width &lt; min_size.width {
+            current_rect.size.width = min_size.width;
+            <span class="self">self</span>.setFrame_display(current_rect, <span class="bool-val">false</span>)
+        }
+        <span class="kw">if </span>current_rect.size.height &lt; min_size.height {
+            <span class="comment">// The origin point of a rectangle is at its bottom left in Cocoa.
+            // To ensure the window&#39;s top-left point remains the same:
+            </span>current_rect.origin.y += current_rect.size.height - min_size.height;
+            current_rect.size.height = min_size.height;
+            <span class="self">self</span>.setFrame_display(current_rect, <span class="bool-val">false</span>)
         }
     }
 
     <span class="kw">pub fn </span>set_max_inner_size(<span class="kw-2">&amp;</span><span class="self">self</span>, dimensions: <span class="prelude-ty">Option</span>&lt;Size&gt;) {
-        <span class="kw">unsafe </span>{
-            <span class="kw">let </span>dimensions = dimensions.unwrap_or(Logical(LogicalSize {
-                width: std::f32::MAX <span class="kw">as </span>f64,
-                height: std::f32::MAX <span class="kw">as </span>f64,
-            }));
-            <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
-            set_max_inner_size(<span class="kw-2">*</span><span class="self">self</span>.ns_window, dimensions.to_logical(scale_factor));
+        <span class="kw">let </span>dimensions = dimensions.unwrap_or(Logical(LogicalSize {
+            width: std::f32::MAX <span class="kw">as </span>f64,
+            height: std::f32::MAX <span class="kw">as </span>f64,
+        }));
+        <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
+        <span class="kw">let </span>max_size = dimensions.to_logical::&lt;CGFloat&gt;(scale_factor);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>current_rect = <span class="self">self</span>.frame();
+        <span class="kw">let </span>content_rect = <span class="self">self</span>.contentRectForFrameRect(current_rect);
+        <span class="comment">// Convert from client area size to window size
+        </span><span class="kw">let </span>max_size = NSSize::new(
+            max_size.width + (current_rect.size.width - content_rect.size.width), <span class="comment">// this tends to be 0
+            </span>max_size.height + (current_rect.size.height - content_rect.size.height),
+        );
+        <span class="self">self</span>.setMaxSize(max_size);
+        <span class="comment">// If necessary, resize the window to match constraint
+        </span><span class="kw">if </span>current_rect.size.width &gt; max_size.width {
+            current_rect.size.width = max_size.width;
+            <span class="self">self</span>.setFrame_display(current_rect, <span class="bool-val">false</span>)
         }
+        <span class="kw">if </span>current_rect.size.height &gt; max_size.height {
+            <span class="comment">// The origin point of a rectangle is at its bottom left in Cocoa.
+            // To ensure the window&#39;s top-left point remains the same:
+            </span>current_rect.origin.y += current_rect.size.height - max_size.height;
+            current_rect.size.height = max_size.height;
+            <span class="self">self</span>.setFrame_display(current_rect, <span class="bool-val">false</span>)
+        }
+    }
+
+    <span class="kw">pub fn </span>resize_increments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;PhysicalSize&lt;u32&gt;&gt; {
+        <span class="kw">let </span>increments = <span class="self">self</span>.contentResizeIncrements();
+        <span class="kw">let </span>(w, h) = (increments.width, increments.height);
+        <span class="kw">if </span>w &gt; <span class="number">1.0 </span>|| h &gt; <span class="number">1.0 </span>{
+            <span class="prelude-val">Some</span>(LogicalSize::new(w, h).to_physical(<span class="self">self</span>.scale_factor()))
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
+    }
+
+    <span class="kw">pub fn </span>set_resize_increments(<span class="kw-2">&amp;</span><span class="self">self</span>, increments: <span class="prelude-ty">Option</span>&lt;Size&gt;) {
+        <span class="kw">let </span>size = increments
+            .map(|increments| {
+                <span class="kw">let </span>logical = increments.to_logical::&lt;f64&gt;(<span class="self">self</span>.scale_factor());
+                NSSize::new(logical.width.max(<span class="number">1.0</span>), logical.height.max(<span class="number">1.0</span>))
+            })
+            .unwrap_or_else(|| NSSize::new(<span class="number">1.0</span>, <span class="number">1.0</span>));
+        <span class="self">self</span>.setContentResizeIncrements(size);
     }
 
     <span class="attr">#[inline]
@@ -1947,32 +2076,75 @@
             shared_state_lock.fullscreen.is_some()
         };
         <span class="kw">if </span>!fullscreen {
-            <span class="kw">let </span><span class="kw-2">mut </span>mask = <span class="kw">unsafe </span>{ <span class="self">self</span>.ns_window.styleMask() };
+            <span class="kw">let </span><span class="kw-2">mut </span>mask = <span class="self">self</span>.styleMask();
             <span class="kw">if </span>resizable {
                 mask |= NSWindowStyleMask::NSResizableWindowMask;
             } <span class="kw">else </span>{
                 mask &amp;= !NSWindowStyleMask::NSResizableWindowMask;
             }
-            <span class="self">self</span>.set_style_mask_async(mask);
-        } <span class="comment">// Otherwise, we don&#39;t change the mask until we exit fullscreen.
+            <span class="self">self</span>.set_style_mask_sync(mask);
+        }
+        <span class="comment">// Otherwise, we don&#39;t change the mask until we exit fullscreen.
     </span>}
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>is_resizable(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="kw">let </span>is_resizable: BOOL = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window, isResizable] };
-        is_resizable == YES
+        <span class="self">self</span>.isResizable()
     }
 
-    <span class="kw">pub fn </span>set_cursor_icon(<span class="kw-2">&amp;</span><span class="self">self</span>, cursor: CursorIcon) {
-        <span class="kw">let </span>cursor = util::Cursor::from(cursor);
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(cursor_access) = <span class="self">self</span>.cursor_state.upgrade() {
-            cursor_access.lock().unwrap().cursor = cursor;
+    <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>set_enabled_buttons(<span class="kw-2">&amp;</span><span class="self">self</span>, buttons: WindowButtons) {
+        <span class="kw">let </span><span class="kw-2">mut </span>mask = <span class="self">self</span>.styleMask();
+
+        <span class="kw">if </span>buttons.contains(WindowButtons::CLOSE) {
+            mask |= NSWindowStyleMask::NSClosableWindowMask;
+        } <span class="kw">else </span>{
+            mask &amp;= !NSWindowStyleMask::NSClosableWindowMask;
         }
-        <span class="kw">unsafe </span>{
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                invalidateCursorRectsForView:<span class="kw-2">*</span><span class="self">self</span>.ns_view
-            ];
+
+        <span class="kw">if </span>buttons.contains(WindowButtons::MINIMIZE) {
+            mask |= NSWindowStyleMask::NSMiniaturizableWindowMask;
+        } <span class="kw">else </span>{
+            mask &amp;= !NSWindowStyleMask::NSMiniaturizableWindowMask;
         }
+
+        <span class="comment">// This must happen before the button&#39;s &quot;enabled&quot; status has been set,
+        // hence we do it synchronously.
+        </span><span class="self">self</span>.set_style_mask_sync(mask);
+
+        <span class="comment">// We edit the button directly instead of using `NSResizableWindowMask`,
+        // since that mask also affect the resizability of the window (which is
+        // controllable by other means in `winit`).
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(button) = <span class="self">self</span>.standardWindowButton(NSWindowButton::Zoom) {
+            button.setEnabled(buttons.contains(WindowButtons::MAXIMIZE));
+        }
+    }
+
+    <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>enabled_buttons(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WindowButtons {
+        <span class="kw">let </span><span class="kw-2">mut </span>buttons = WindowButtons::empty();
+        <span class="kw">if </span><span class="self">self</span>.isMiniaturizable() {
+            buttons |= WindowButtons::MINIMIZE;
+        }
+        <span class="kw">if </span><span class="self">self
+            </span>.standardWindowButton(NSWindowButton::Zoom)
+            .map(|b| b.isEnabled())
+            .unwrap_or(<span class="bool-val">true</span>)
+        {
+            buttons |= WindowButtons::MAXIMIZE;
+        }
+        <span class="kw">if </span><span class="self">self</span>.hasCloseBox() {
+            buttons |= WindowButtons::CLOSE;
+        }
+        buttons
+    }
+
+    <span class="kw">pub fn </span>set_cursor_icon(<span class="kw-2">&amp;</span><span class="self">self</span>, icon: CursorIcon) {
+        <span class="kw">let </span>view = <span class="self">self</span>.view();
+        <span class="kw">let </span><span class="kw-2">mut </span>cursor_state = view.state.cursor_state.lock().unwrap();
+        cursor_state.cursor = NSCursor::from_icon(icon);
+        drop(cursor_state);
+        <span class="self">self</span>.invalidateCursorRectsForView(<span class="kw-2">&amp;</span>view);
     }
 
     <span class="attr">#[inline]
@@ -1992,23 +2164,18 @@
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_cursor_visible(<span class="kw-2">&amp;</span><span class="self">self</span>, visible: bool) {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(cursor_access) = <span class="self">self</span>.cursor_state.upgrade() {
-            <span class="kw">let </span><span class="kw-2">mut </span>cursor_state = cursor_access.lock().unwrap();
-            <span class="kw">if </span>visible != cursor_state.visible {
-                cursor_state.visible = visible;
-                drop(cursor_state);
-                <span class="kw">unsafe </span>{
-                    <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                        invalidateCursorRectsForView:<span class="kw-2">*</span><span class="self">self</span>.ns_view
-                    ];
-                }
-            }
+        <span class="kw">let </span>view = <span class="self">self</span>.view();
+        <span class="kw">let </span><span class="kw-2">mut </span>cursor_state = view.state.cursor_state.lock().unwrap();
+        <span class="kw">if </span>visible != cursor_state.visible {
+            cursor_state.visible = visible;
+            drop(cursor_state);
+            <span class="self">self</span>.invalidateCursorRectsForView(<span class="kw-2">&amp;</span>view);
         }
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>scale_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
-        <span class="kw">unsafe </span>{ NSWindow::backingScaleFactor(<span class="kw-2">*</span><span class="self">self</span>.ns_window) <span class="kw">as _ </span>}
+        <span class="self">self</span>.backingScaleFactor() <span class="kw">as </span>f64
     }
 
     <span class="attr">#[inline]
@@ -2017,7 +2184,7 @@
         <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
         <span class="kw">let </span>window_position = physical_window_position.to_logical::&lt;CGFloat&gt;(scale_factor);
         <span class="kw">let </span>logical_cursor_position = cursor_position.to_logical::&lt;CGFloat&gt;(scale_factor);
-        <span class="kw">let </span>point = appkit::CGPoint {
+        <span class="kw">let </span>point = CGPoint {
             x: logical_cursor_position.x + window_position.x,
             y: logical_cursor_position.y + window_position.y,
         };
@@ -2031,27 +2198,26 @@
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>drag_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ExternalError&gt; {
-        <span class="kw">unsafe </span>{
-            <span class="kw">let </span>event: id = <span class="macro">msg_send!</span>[NSApp(), currentEvent];
-            <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window, performWindowDragWithEvent: event];
-        }
-
+        <span class="kw">let </span>event = NSApp().currentEvent();
+        <span class="self">self</span>.performWindowDragWithEvent(event.as_deref());
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>set_cursor_hittest(<span class="kw-2">&amp;</span><span class="self">self</span>, hittest: bool) -&gt; <span class="prelude-ty">Result</span>&lt;(), ExternalError&gt; {
-        <span class="kw">unsafe </span>{
-            util::set_ignore_mouse_events(<span class="kw-2">*</span><span class="self">self</span>.ns_window, !hittest);
-        }
+    </span><span class="kw">pub fn </span>drag_resize_window(<span class="kw-2">&amp;</span><span class="self">self</span>, _direction: ResizeDirection) -&gt; <span class="prelude-ty">Result</span>&lt;(), ExternalError&gt; {
+        <span class="prelude-val">Err</span>(ExternalError::NotSupported(NotSupportedError::new()))
+    }
 
+    <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>set_cursor_hittest(<span class="kw-2">&amp;</span><span class="self">self</span>, hittest: bool) -&gt; <span class="prelude-ty">Result</span>&lt;(), ExternalError&gt; {
+        util::set_ignore_mouse_events_sync(<span class="self">self</span>, !hittest);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_zoomed(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="comment">// because `isZoomed` doesn&#39;t work if the window&#39;s borderless,
         // we make it resizable temporalily.
-        </span><span class="kw">let </span>curr_mask = <span class="kw">unsafe </span>{ <span class="self">self</span>.ns_window.styleMask() };
+        </span><span class="kw">let </span>curr_mask = <span class="self">self</span>.styleMask();
 
         <span class="kw">let </span>required =
             NSWindowStyleMask::NSTitledWindowMask | NSWindowStyleMask::NSResizableWindowMask;
@@ -2060,21 +2226,21 @@
             <span class="self">self</span>.set_style_mask_sync(required);
         }
 
-        <span class="kw">let </span>is_zoomed: BOOL = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window, isZoomed] };
+        <span class="kw">let </span>is_zoomed = <span class="self">self</span>.isZoomed();
 
         <span class="comment">// Roll back temp styles
         </span><span class="kw">if </span>needs_temp_mask {
-            <span class="self">self</span>.set_style_mask_async(curr_mask);
+            <span class="self">self</span>.set_style_mask_sync(curr_mask);
         }
 
-        is_zoomed != NO
+        is_zoomed
     }
 
     <span class="kw">fn </span>saved_style(<span class="kw-2">&amp;</span><span class="self">self</span>, shared_state: <span class="kw-2">&amp;mut </span>SharedState) -&gt; NSWindowStyleMask {
         <span class="kw">let </span>base_mask = shared_state
             .saved_style
             .take()
-            .unwrap_or_else(|| <span class="kw">unsafe </span>{ <span class="self">self</span>.ns_window.styleMask() });
+            .unwrap_or_else(|| <span class="self">self</span>.styleMask());
         <span class="kw">if </span>shared_state.resizable {
             base_mask | NSWindowStyleMask::NSResizableWindowMask
         } <span class="kw">else </span>{
@@ -2091,31 +2257,31 @@
         shared_state_lock.fullscreen = <span class="prelude-val">None</span>;
 
         <span class="kw">let </span>maximized = shared_state_lock.maximized;
-        <span class="kw">let </span>mask = <span class="self">self</span>.saved_style(<span class="kw-2">&amp;mut *</span>shared_state_lock);
+        <span class="kw">let </span>mask = <span class="self">self</span>.saved_style(<span class="kw-2">&amp;mut </span>shared_state_lock);
 
         drop(shared_state_lock);
 
-        <span class="self">self</span>.set_style_mask_async(mask);
+        <span class="self">self</span>.set_style_mask_sync(mask);
         <span class="self">self</span>.set_maximized(maximized);
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_minimized(<span class="kw-2">&amp;</span><span class="self">self</span>, minimized: bool) {
-        <span class="kw">let </span>is_minimized: BOOL = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window, isMiniaturized] };
-        <span class="kw">let </span>is_minimized: bool = is_minimized == YES;
+        <span class="kw">let </span>is_minimized = <span class="self">self</span>.isMiniaturized();
         <span class="kw">if </span>is_minimized == minimized {
             <span class="kw">return</span>;
         }
 
         <span class="kw">if </span>minimized {
-            <span class="kw">unsafe </span>{
-                NSWindow::miniaturize_(<span class="kw-2">*</span><span class="self">self</span>.ns_window, <span class="kw-2">*</span><span class="self">self</span>.ns_window);
-            }
+            <span class="self">self</span>.miniaturize(<span class="prelude-val">Some</span>(<span class="self">self</span>));
         } <span class="kw">else </span>{
-            <span class="kw">unsafe </span>{
-                NSWindow::deminiaturize_(<span class="kw-2">*</span><span class="self">self</span>.ns_window, <span class="kw-2">*</span><span class="self">self</span>.ns_window);
-            }
+            <span class="self">self</span>.deminiaturize(<span class="prelude-val">Some</span>(<span class="self">self</span>));
         }
+    }
+
+    <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>is_minimized(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.isMiniaturized())
     }
 
     <span class="attr">#[inline]
@@ -2124,18 +2290,11 @@
         <span class="kw">if </span>is_zoomed == maximized {
             <span class="kw">return</span>;
         };
-        <span class="kw">unsafe </span>{
-            util::set_maximized_async(
-                <span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                is_zoomed,
-                maximized,
-                Arc::downgrade(<span class="kw-2">&amp;</span><span class="self">self</span>.shared_state),
-            );
-        }
+        util::set_maximized_sync(<span class="self">self</span>, is_zoomed, maximized);
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Fullscreen&gt; {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Fullscreen&gt; {
         <span class="kw">let </span>shared_state_lock = <span class="self">self</span>.lock_shared_state(<span class="string">&quot;fullscreen&quot;</span>);
         shared_state_lock.fullscreen.clone()
     }
@@ -2146,7 +2305,7 @@
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: <span class="prelude-ty">Option</span>&lt;Fullscreen&gt;) {
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: <span class="prelude-ty">Option</span>&lt;Fullscreen&gt;) {
         <span class="kw">let </span><span class="kw-2">mut </span>shared_state_lock = <span class="self">self</span>.lock_shared_state(<span class="string">&quot;set_fullscreen&quot;</span>);
         <span class="kw">if </span>shared_state_lock.is_simple_fullscreen {
             <span class="kw">return</span>;
@@ -2168,28 +2327,26 @@
         // does not take a screen parameter, but uses the current screen)
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>fullscreen) = fullscreen {
             <span class="kw">let </span>new_screen = <span class="kw">match </span>fullscreen {
-                Fullscreen::Borderless(borderless) =&gt; {
-                    <span class="kw">let </span>RootMonitorHandle { inner: monitor } = borderless
-                        .clone()
-                        .unwrap_or_else(|| <span class="self">self</span>.current_monitor_inner());
-                    monitor
+                Fullscreen::Borderless(<span class="prelude-val">Some</span>(monitor)) =&gt; monitor.clone(),
+                Fullscreen::Borderless(<span class="prelude-val">None</span>) =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(monitor) = <span class="self">self</span>.current_monitor_inner() {
+                        monitor
+                    } <span class="kw">else </span>{
+                        <span class="kw">return</span>;
+                    }
                 }
-                Fullscreen::Exclusive(RootVideoMode {
-                    video_mode: VideoMode { <span class="kw-2">ref </span>monitor, .. },
-                }) =&gt; monitor.clone(),
+                Fullscreen::Exclusive(video_mode) =&gt; video_mode.monitor(),
             }
             .ns_screen()
             .unwrap();
 
-            <span class="kw">unsafe </span>{
-                <span class="kw">let </span>old_screen = NSWindow::screen(<span class="kw-2">*</span><span class="self">self</span>.ns_window);
-                <span class="kw">if </span>old_screen != new_screen {
-                    <span class="kw">let </span><span class="kw-2">mut </span>screen_frame: NSRect = <span class="macro">msg_send!</span>[new_screen, frame];
-                    <span class="comment">// The coordinate system here has its origin at bottom-left
-                    // and Y goes up
-                    </span>screen_frame.origin.y += screen_frame.size.height;
-                    util::set_frame_top_left_point_async(<span class="kw-2">*</span><span class="self">self</span>.ns_window, screen_frame.origin);
-                }
+            <span class="kw">let </span>old_screen = <span class="self">self</span>.screen().unwrap();
+            <span class="kw">if </span>old_screen != new_screen {
+                <span class="kw">let </span><span class="kw-2">mut </span>screen_frame = new_screen.frame();
+                <span class="comment">// The coordinate system here has its origin at bottom-left
+                // and Y goes up
+                </span>screen_frame.origin.y += screen_frame.size.height;
+                util::set_frame_top_left_point_sync(<span class="self">self</span>, screen_frame.origin);
             }
         }
 
@@ -2206,16 +2363,14 @@
             // parameter, which is not consistent with the docs saying that it
             // takes a `NSDictionary`..
 
-            </span><span class="kw">let </span>display_id = video_mode.monitor().inner.native_identifier();
+            </span><span class="kw">let </span>display_id = video_mode.monitor().native_identifier();
 
             <span class="kw">let </span><span class="kw-2">mut </span>fade_token = ffi::kCGDisplayFadeReservationInvalidToken;
 
             <span class="kw">if </span><span class="macro">matches!</span>(old_fullscreen, <span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="kw">_</span>))) {
-                <span class="kw">unsafe </span>{
-                    <span class="kw">let </span>app = NSApp();
-                    <span class="kw">let </span><span class="kw-2">mut </span>shared_state_lock = <span class="self">self</span>.lock_shared_state(<span class="string">&quot;set_fullscreen&quot;</span>);
-                    shared_state_lock.save_presentation_opts = <span class="prelude-val">Some</span>(app.presentationOptions_());
-                }
+                <span class="kw">let </span>app = NSApp();
+                <span class="kw">let </span><span class="kw-2">mut </span>shared_state_lock = <span class="self">self</span>.lock_shared_state(<span class="string">&quot;set_fullscreen&quot;</span>);
+                shared_state_lock.save_presentation_opts = <span class="prelude-val">Some</span>(app.presentationOptions());
             }
 
             <span class="kw">unsafe </span>{
@@ -2242,7 +2397,7 @@
             <span class="kw">unsafe </span>{
                 <span class="kw">let </span>result = ffi::CGDisplaySetDisplayMode(
                     display_id,
-                    video_mode.video_mode.native_mode.<span class="number">0</span>,
+                    video_mode.native_mode.<span class="number">0</span>,
                     std::ptr::null(),
                 );
                 <span class="macro">assert!</span>(result == ffi::kCGErrorSuccess, <span class="string">&quot;failed to set video mode&quot;</span>);
@@ -2265,38 +2420,24 @@
             }
         }
 
-        <span class="kw">let </span><span class="kw-2">mut </span>shared_state_lock = <span class="self">self</span>.lock_shared_state(<span class="string">&quot;set_fullscreen&quot;</span>);
-        shared_state_lock.fullscreen = fullscreen.clone();
+        <span class="self">self</span>.lock_shared_state(<span class="string">&quot;set_fullscreen&quot;</span>).fullscreen = fullscreen.clone();
 
         <span class="kw">match </span>(<span class="kw-2">&amp;</span>old_fullscreen, <span class="kw-2">&amp;</span>fullscreen) {
-            (<span class="kw-2">&amp;</span><span class="prelude-val">None</span>, <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="kw">_</span>)) =&gt; <span class="kw">unsafe </span>{
-                util::toggle_full_screen_async(
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_view,
-                    old_fullscreen.is_none(),
-                    Arc::downgrade(<span class="kw-2">&amp;</span><span class="self">self</span>.shared_state),
-                );
-            },
-            (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="kw">_</span>)), <span class="kw-2">&amp;</span><span class="prelude-val">None</span>) =&gt; <span class="kw">unsafe </span>{
+            (<span class="kw-2">&amp;</span><span class="prelude-val">None</span>, <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="kw">_</span>)) =&gt; {
+                util::toggle_full_screen_sync(<span class="self">self</span>, old_fullscreen.is_none());
+            }
+            (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="kw">_</span>)), <span class="kw-2">&amp;</span><span class="prelude-val">None</span>) =&gt; {
                 <span class="comment">// State is restored by `window_did_exit_fullscreen`
-                </span>util::toggle_full_screen_async(
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_view,
-                    old_fullscreen.is_none(),
-                    Arc::downgrade(<span class="kw-2">&amp;</span><span class="self">self</span>.shared_state),
-                );
-            },
-            (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Exclusive(RootVideoMode { <span class="kw-2">ref </span>video_mode })), <span class="kw-2">&amp;</span><span class="prelude-val">None</span>) =&gt; <span class="kw">unsafe </span>{
-                util::restore_display_mode_async(video_mode.monitor().inner.native_identifier());
+                </span>util::toggle_full_screen_sync(<span class="self">self</span>, old_fullscreen.is_none());
+            }
+            (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Exclusive(<span class="kw-2">ref </span>video_mode)), <span class="kw-2">&amp;</span><span class="prelude-val">None</span>) =&gt; {
+                <span class="kw">unsafe </span>{
+                    util::restore_display_mode_sync(video_mode.monitor().native_identifier())
+                };
                 <span class="comment">// Rest of the state is restored by `window_did_exit_fullscreen`
-                </span>util::toggle_full_screen_async(
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_view,
-                    old_fullscreen.is_none(),
-                    Arc::downgrade(<span class="kw-2">&amp;</span><span class="self">self</span>.shared_state),
-                );
-            },
-            (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="kw">_</span>)), <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Exclusive(<span class="kw">_</span>))) =&gt; <span class="kw">unsafe </span>{
+                </span>util::toggle_full_screen_sync(<span class="self">self</span>, old_fullscreen.is_none());
+            }
+            (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="kw">_</span>)), <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Exclusive(<span class="kw">_</span>))) =&gt; {
                 <span class="comment">// If we&#39;re already in fullscreen mode, calling
                 // `CGDisplayCapture` will place the shielding window on top of
                 // our window, which results in a black display and is not what
@@ -2306,37 +2447,38 @@
                 // that the menu bar is disabled. This is done in the window
                 // delegate in `window:willUseFullScreenPresentationOptions:`.
                 </span><span class="kw">let </span>app = NSApp();
-                shared_state_lock.save_presentation_opts = <span class="prelude-val">Some</span>(app.presentationOptions_());
+                <span class="self">self</span>.lock_shared_state(<span class="string">&quot;set_fullscreen&quot;</span>)
+                    .save_presentation_opts = <span class="prelude-val">Some</span>(app.presentationOptions());
 
                 <span class="kw">let </span>presentation_options =
                     NSApplicationPresentationOptions::NSApplicationPresentationFullScreen
                         | NSApplicationPresentationOptions::NSApplicationPresentationHideDock
                         | NSApplicationPresentationOptions::NSApplicationPresentationHideMenuBar;
-                app.setPresentationOptions_(presentation_options);
+                app.setPresentationOptions(presentation_options);
 
-                <span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window, setLevel: ffi::CGShieldingWindowLevel() + <span class="number">1</span>];
-            },
-            (
-                <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Exclusive(RootVideoMode { <span class="kw-2">ref </span>video_mode })),
-                <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="kw">_</span>)),
-            ) =&gt; <span class="kw">unsafe </span>{
-                <span class="kw">let </span>presentation_options =
-                    shared_state_lock.save_presentation_opts.unwrap_or_else(|| {
+                <span class="kw">let </span>window_level =
+                    NSWindowLevel(<span class="kw">unsafe </span>{ ffi::CGShieldingWindowLevel() } <span class="kw">as </span>NSInteger + <span class="number">1</span>);
+                <span class="self">self</span>.setLevel(window_level);
+            }
+            (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Exclusive(<span class="kw-2">ref </span>video_mode)), <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(Fullscreen::Borderless(<span class="kw">_</span>))) =&gt; {
+                <span class="kw">let </span>presentation_options = <span class="self">self
+                    </span>.lock_shared_state(<span class="string">&quot;set_fullscreen&quot;</span>)
+                    .save_presentation_opts
+                    .unwrap_or_else(|| {
                         NSApplicationPresentationOptions::NSApplicationPresentationFullScreen
                         | NSApplicationPresentationOptions::NSApplicationPresentationAutoHideDock
                         | NSApplicationPresentationOptions::NSApplicationPresentationAutoHideMenuBar
                     });
-                NSApp().setPresentationOptions_(presentation_options);
+                NSApp().setPresentationOptions(presentation_options);
 
-                util::restore_display_mode_async(video_mode.monitor().inner.native_identifier());
+                <span class="kw">unsafe </span>{
+                    util::restore_display_mode_sync(video_mode.monitor().native_identifier())
+                };
 
                 <span class="comment">// Restore the normal window level following the Borderless fullscreen
                 // `CGShieldingWindowLevel() + 1` hack.
-                </span><span class="kw">let _</span>: () = <span class="macro">msg_send!</span>[
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                    setLevel: ffi::NSWindowLevel::NSNormalWindowLevel
-                ];
-            },
+                </span><span class="self">self</span>.setLevel(NSWindowLevel::Normal);
+            }
             <span class="kw">_ </span>=&gt; {}
         };
     }
@@ -2375,7 +2517,7 @@
                 }
                 new_mask
             };
-            <span class="self">self</span>.set_style_mask_async(new_mask);
+            <span class="self">self</span>.set_style_mask_sync(new_mask);
         }
     }
 
@@ -2385,13 +2527,13 @@
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>set_always_on_top(<span class="kw-2">&amp;</span><span class="self">self</span>, always_on_top: bool) {
-        <span class="kw">let </span>level = <span class="kw">if </span>always_on_top {
-            ffi::NSWindowLevel::NSFloatingWindowLevel
-        } <span class="kw">else </span>{
-            ffi::NSWindowLevel::NSNormalWindowLevel
+    </span><span class="kw">pub fn </span>set_window_level(<span class="kw-2">&amp;</span><span class="self">self</span>, level: WindowLevel) {
+        <span class="kw">let </span>level = <span class="kw">match </span>level {
+            WindowLevel::AlwaysOnTop =&gt; NSWindowLevel::Floating,
+            WindowLevel::AlwaysOnBottom =&gt; NSWindowLevel::BELOW_NORMAL,
+            WindowLevel::Normal =&gt; NSWindowLevel::Normal,
         };
-        <span class="kw">unsafe </span>{ util::set_level_async(<span class="kw-2">*</span><span class="self">self</span>.ns_window, level) };
+        util::set_level_sync(<span class="self">self</span>, level);
     }
 
     <span class="attr">#[inline]
@@ -2410,28 +2552,27 @@
     </span><span class="kw">pub fn </span>set_ime_position(<span class="kw-2">&amp;</span><span class="self">self</span>, spot: Position) {
         <span class="kw">let </span>scale_factor = <span class="self">self</span>.scale_factor();
         <span class="kw">let </span>logical_spot = spot.to_logical(scale_factor);
-        <span class="kw">unsafe </span>{ view::set_ime_position(<span class="kw-2">*</span><span class="self">self</span>.ns_view, logical_spot) };
+        <span class="comment">// TODO(madsmtm): Remove the need for this
+        </span><span class="kw">unsafe </span>{ Id::from_shared(<span class="self">self</span>.view()) }.set_ime_position(logical_spot);
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_ime_allowed(<span class="kw-2">&amp;</span><span class="self">self</span>, allowed: bool) {
-        <span class="kw">unsafe </span>{
-            view::set_ime_allowed(<span class="kw-2">*</span><span class="self">self</span>.ns_view, allowed);
-        }
+        <span class="comment">// TODO(madsmtm): Remove the need for this
+        </span><span class="kw">unsafe </span>{ Id::from_shared(<span class="self">self</span>.view()) }.set_ime_allowed(allowed);
     }
 
     <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>set_ime_purpose(<span class="kw-2">&amp;</span><span class="self">self</span>, _purpose: ImePurpose) {}
+
+    <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>focus_window(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let </span>is_minimized: BOOL = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window, isMiniaturized] };
-        <span class="kw">let </span>is_minimized = is_minimized == YES;
-        <span class="kw">let </span>is_visible: BOOL = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window, isVisible] };
-        <span class="kw">let </span>is_visible = is_visible == YES;
+        <span class="kw">let </span>is_minimized = <span class="self">self</span>.isMiniaturized();
+        <span class="kw">let </span>is_visible = <span class="self">self</span>.isVisible();
 
         <span class="kw">if </span>!is_minimized &amp;&amp; is_visible {
-            <span class="kw">unsafe </span>{
-                NSApp().activateIgnoringOtherApps_(YES);
-                util::make_key_and_order_front_async(<span class="kw-2">*</span><span class="self">self</span>.ns_window);
-            }
+            NSApp().activateIgnoringOtherApps(<span class="bool-val">true</span>);
+            util::make_key_and_order_front_sync(<span class="self">self</span>);
         }
     }
 
@@ -2441,31 +2582,21 @@
             UserAttentionType::Critical =&gt; NSRequestUserAttentionType::NSCriticalRequest,
             UserAttentionType::Informational =&gt; NSRequestUserAttentionType::NSInformationalRequest,
         });
-        <span class="kw">unsafe </span>{
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(ty) = ns_request_type {
-                NSApp().requestUserAttention_(ty);
-            }
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(ty) = ns_request_type {
+            NSApp().requestUserAttention(ty);
         }
     }
 
     <span class="attr">#[inline]
     </span><span class="comment">// Allow directly accessing the current monitor internally without unwrapping.
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>current_monitor_inner(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RootMonitorHandle {
-        <span class="kw">unsafe </span>{
-            <span class="kw">let </span>screen: id = <span class="macro">msg_send!</span>[<span class="kw-2">*</span><span class="self">self</span>.ns_window, screen];
-            <span class="kw">let </span>desc = NSScreen::deviceDescription(screen);
-            <span class="kw">let </span>key = util::ns_string_id_ref(<span class="string">&quot;NSScreenNumber&quot;</span>);
-            <span class="kw">let </span>value = NSDictionary::valueForKey_(desc, <span class="kw-2">*</span>key);
-            <span class="kw">let </span>display_id: NSUInteger = <span class="macro">msg_send!</span>[value, unsignedIntegerValue];
-            RootMonitorHandle {
-                inner: MonitorHandle::new(display_id.try_into().unwrap()),
-            }
-        }
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>current_monitor_inner(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;MonitorHandle&gt; {
+        <span class="kw">let </span>display_id = <span class="self">self</span>.screen()<span class="question-mark">?</span>.display_id();
+        <span class="prelude-val">Some</span>(MonitorHandle::new(display_id))
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>current_monitor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;RootMonitorHandle&gt; {
-        <span class="prelude-val">Some</span>(<span class="self">self</span>.current_monitor_inner())
+    </span><span class="kw">pub fn </span>current_monitor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;MonitorHandle&gt; {
+        <span class="self">self</span>.current_monitor_inner()
     }
 
     <span class="attr">#[inline]
@@ -2474,16 +2605,16 @@
     }
 
     <span class="attr">#[inline]
-    </span><span class="kw">pub fn </span>primary_monitor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;RootMonitorHandle&gt; {
+    </span><span class="kw">pub fn </span>primary_monitor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;MonitorHandle&gt; {
         <span class="kw">let </span>monitor = monitor::primary_monitor();
-        <span class="prelude-val">Some</span>(RootMonitorHandle { inner: monitor })
+        <span class="prelude-val">Some</span>(monitor)
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>raw_window_handle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RawWindowHandle {
         <span class="kw">let </span><span class="kw-2">mut </span>window_handle = AppKitWindowHandle::empty();
-        window_handle.ns_window = <span class="kw-2">*</span><span class="self">self</span>.ns_window <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>;
-        window_handle.ns_view = <span class="kw-2">*</span><span class="self">self</span>.ns_view <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>;
+        window_handle.ns_window = <span class="self">self</span>.ns_window();
+        window_handle.ns_view = <span class="self">self</span>.ns_view();
         RawWindowHandle::AppKit(window_handle)
     }
 
@@ -2491,179 +2622,182 @@
     </span><span class="kw">pub fn </span>raw_display_handle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RawDisplayHandle {
         RawDisplayHandle::AppKit(AppKitDisplayHandle::empty())
     }
+
+    <span class="kw">fn </span>toggle_style_mask(<span class="kw-2">&amp;</span><span class="self">self</span>, mask: NSWindowStyleMask, on: bool) {
+        <span class="kw">let </span>current_style_mask = <span class="self">self</span>.styleMask();
+        <span class="kw">if </span>on {
+            util::set_style_mask_sync(<span class="self">self</span>, current_style_mask | mask);
+        } <span class="kw">else </span>{
+            util::set_style_mask_sync(<span class="self">self</span>, current_style_mask &amp; (!mask));
+        }
+    }
+
+    <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>theme(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Theme&gt; {
+        <span class="self">self</span>.lock_shared_state(<span class="string">&quot;theme&quot;</span>).current_theme
+    }
+
+    <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>has_focus(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.isKeyWindow()
+    }
+
+    <span class="kw">pub fn </span>set_theme(<span class="kw-2">&amp;</span><span class="self">self</span>, theme: <span class="prelude-ty">Option</span>&lt;Theme&gt;) {
+        set_ns_theme(theme);
+        <span class="self">self</span>.lock_shared_state(<span class="string">&quot;set_theme&quot;</span>).current_theme = theme.or_else(|| <span class="prelude-val">Some</span>(get_ns_theme()));
+    }
+
+    <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>set_content_protected(<span class="kw-2">&amp;</span><span class="self">self</span>, protected: bool) {
+        <span class="self">self</span>.setSharingType(<span class="kw">if </span>protected {
+            NSWindowSharingType::NSWindowSharingNone
+        } <span class="kw">else </span>{
+            NSWindowSharingType::NSWindowSharingReadOnly
+        })
+    }
+
+    <span class="kw">pub fn </span>title(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+        <span class="self">self</span>.title_().to_string()
+    }
 }
 
-<span class="kw">impl </span>WindowExtMacOS <span class="kw">for </span>UnownedWindow {
+<span class="kw">impl </span>WindowExtMacOS <span class="kw">for </span>WinitWindow {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>ns_window(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>c_void {
-        <span class="kw-2">*</span><span class="self">self</span>.ns_window <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_
+        <span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span><span class="self">Self </span><span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_
     </span>}
 
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>ns_view(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>c_void {
-        <span class="kw-2">*</span><span class="self">self</span>.ns_view <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_
+        Id::as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>.contentView()) <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_
     </span>}
 
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>simple_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="kw">let </span>shared_state_lock = <span class="self">self</span>.shared_state.lock().unwrap();
-        shared_state_lock.is_simple_fullscreen
+        <span class="self">self</span>.lock_shared_state(<span class="string">&quot;simple_fullscreen&quot;</span>)
+            .is_simple_fullscreen
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>set_simple_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: bool) -&gt; bool {
-        <span class="kw">let </span><span class="kw-2">mut </span>shared_state_lock = <span class="self">self</span>.shared_state.lock().unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>shared_state_lock = <span class="self">self</span>.lock_shared_state(<span class="string">&quot;set_simple_fullscreen&quot;</span>);
 
-        <span class="kw">unsafe </span>{
-            <span class="kw">let </span>app = NSApp();
-            <span class="kw">let </span>is_native_fullscreen = shared_state_lock.fullscreen.is_some();
-            <span class="kw">let </span>is_simple_fullscreen = shared_state_lock.is_simple_fullscreen;
+        <span class="kw">let </span>app = NSApp();
+        <span class="kw">let </span>is_native_fullscreen = shared_state_lock.fullscreen.is_some();
+        <span class="kw">let </span>is_simple_fullscreen = shared_state_lock.is_simple_fullscreen;
 
-            <span class="comment">// Do nothing if native fullscreen is active.
-            </span><span class="kw">if </span>is_native_fullscreen
-                || (fullscreen &amp;&amp; is_simple_fullscreen)
-                || (!fullscreen &amp;&amp; !is_simple_fullscreen)
-            {
-                <span class="kw">return </span><span class="bool-val">false</span>;
+        <span class="comment">// Do nothing if native fullscreen is active.
+        </span><span class="kw">if </span>is_native_fullscreen
+            || (fullscreen &amp;&amp; is_simple_fullscreen)
+            || (!fullscreen &amp;&amp; !is_simple_fullscreen)
+        {
+            <span class="kw">return </span><span class="bool-val">false</span>;
+        }
+
+        <span class="kw">if </span>fullscreen {
+            <span class="comment">// Remember the original window&#39;s settings
+            // Exclude title bar
+            </span>shared_state_lock.standard_frame = <span class="prelude-val">Some</span>(<span class="self">self</span>.contentRectForFrameRect(<span class="self">self</span>.frame()));
+            shared_state_lock.saved_style = <span class="prelude-val">Some</span>(<span class="self">self</span>.styleMask());
+            shared_state_lock.save_presentation_opts = <span class="prelude-val">Some</span>(app.presentationOptions());
+
+            <span class="comment">// Tell our window&#39;s state that we&#39;re in fullscreen
+            </span>shared_state_lock.is_simple_fullscreen = <span class="bool-val">true</span>;
+
+            <span class="comment">// Simulate pre-Lion fullscreen by hiding the dock and menu bar
+            </span><span class="kw">let </span>presentation_options =
+                NSApplicationPresentationOptions::NSApplicationPresentationAutoHideDock
+                    | NSApplicationPresentationOptions::NSApplicationPresentationAutoHideMenuBar;
+            app.setPresentationOptions(presentation_options);
+
+            <span class="comment">// Hide the titlebar
+            </span><span class="self">self</span>.toggle_style_mask(NSWindowStyleMask::NSTitledWindowMask, <span class="bool-val">false</span>);
+
+            <span class="comment">// Set the window frame to the screen frame size
+            </span><span class="kw">let </span>screen = <span class="self">self</span>.screen().expect(<span class="string">&quot;expected screen to be available&quot;</span>);
+            <span class="self">self</span>.setFrame_display(screen.frame(), <span class="bool-val">true</span>);
+
+            <span class="comment">// Fullscreen windows can&#39;t be resized, minimized, or moved
+            </span><span class="self">self</span>.toggle_style_mask(NSWindowStyleMask::NSMiniaturizableWindowMask, <span class="bool-val">false</span>);
+            <span class="self">self</span>.toggle_style_mask(NSWindowStyleMask::NSResizableWindowMask, <span class="bool-val">false</span>);
+            <span class="self">self</span>.setMovable(<span class="bool-val">false</span>);
+
+            <span class="bool-val">true
+        </span>} <span class="kw">else </span>{
+            <span class="kw">let </span>new_mask = <span class="self">self</span>.saved_style(<span class="kw-2">&amp;mut </span>shared_state_lock);
+            <span class="self">self</span>.set_style_mask_sync(new_mask);
+            shared_state_lock.is_simple_fullscreen = <span class="bool-val">false</span>;
+
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(presentation_opts) = shared_state_lock.save_presentation_opts {
+                app.setPresentationOptions(presentation_opts);
             }
 
-            <span class="kw">if </span>fullscreen {
-                <span class="comment">// Remember the original window&#39;s settings
-                // Exclude title bar
-                </span>shared_state_lock.standard_frame = <span class="prelude-val">Some</span>(NSWindow::contentRectForFrameRect_(
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                    NSWindow::frame(<span class="kw-2">*</span><span class="self">self</span>.ns_window),
-                ));
-                shared_state_lock.saved_style = <span class="prelude-val">Some</span>(<span class="self">self</span>.ns_window.styleMask());
-                shared_state_lock.save_presentation_opts = <span class="prelude-val">Some</span>(app.presentationOptions_());
+            <span class="kw">let </span>frame = shared_state_lock.saved_standard_frame();
+            <span class="self">self</span>.setFrame_display(frame, <span class="bool-val">true</span>);
+            <span class="self">self</span>.setMovable(<span class="bool-val">true</span>);
 
-                <span class="comment">// Tell our window&#39;s state that we&#39;re in fullscreen
-                </span>shared_state_lock.is_simple_fullscreen = <span class="bool-val">true</span>;
-
-                <span class="comment">// Simulate pre-Lion fullscreen by hiding the dock and menu bar
-                </span><span class="kw">let </span>presentation_options =
-                    NSApplicationPresentationOptions::NSApplicationPresentationAutoHideDock |
-                    NSApplicationPresentationOptions::NSApplicationPresentationAutoHideMenuBar;
-                app.setPresentationOptions_(presentation_options);
-
-                <span class="comment">// Hide the titlebar
-                </span>util::toggle_style_mask(
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_view,
-                    NSWindowStyleMask::NSTitledWindowMask,
-                    <span class="bool-val">false</span>,
-                );
-
-                <span class="comment">// Set the window frame to the screen frame size
-                </span><span class="kw">let </span>screen = <span class="self">self</span>.ns_window.screen();
-                <span class="kw">let </span>screen_frame = NSScreen::frame(screen);
-                NSWindow::setFrame_display_(<span class="kw-2">*</span><span class="self">self</span>.ns_window, screen_frame, YES);
-
-                <span class="comment">// Fullscreen windows can&#39;t be resized, minimized, or moved
-                </span>util::toggle_style_mask(
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_view,
-                    NSWindowStyleMask::NSMiniaturizableWindowMask,
-                    <span class="bool-val">false</span>,
-                );
-                util::toggle_style_mask(
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_window,
-                    <span class="kw-2">*</span><span class="self">self</span>.ns_view,
-                    NSWindowStyleMask::NSResizableWindowMask,
-                    <span class="bool-val">false</span>,
-                );
-                NSWindow::setMovable_(<span class="kw-2">*</span><span class="self">self</span>.ns_window, NO);
-
-                <span class="bool-val">true
-            </span>} <span class="kw">else </span>{
-                <span class="kw">let </span>new_mask = <span class="self">self</span>.saved_style(<span class="kw-2">&amp;mut *</span>shared_state_lock);
-                <span class="self">self</span>.set_style_mask_async(new_mask);
-                shared_state_lock.is_simple_fullscreen = <span class="bool-val">false</span>;
-
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(presentation_opts) = shared_state_lock.save_presentation_opts {
-                    app.setPresentationOptions_(presentation_opts);
-                }
-
-                <span class="kw">let </span>frame = shared_state_lock.saved_standard_frame();
-                NSWindow::setFrame_display_(<span class="kw-2">*</span><span class="self">self</span>.ns_window, frame, YES);
-                NSWindow::setMovable_(<span class="kw-2">*</span><span class="self">self</span>.ns_window, YES);
-
-                <span class="bool-val">true
-            </span>}
-        }
+            <span class="bool-val">true
+        </span>}
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>has_shadow(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="kw">unsafe </span>{ <span class="self">self</span>.ns_window.hasShadow() == YES }
+        <span class="self">self</span>.hasShadow()
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>set_has_shadow(<span class="kw-2">&amp;</span><span class="self">self</span>, has_shadow: bool) {
-        <span class="kw">unsafe </span>{
-            <span class="self">self</span>.ns_window
-                .setHasShadow_(<span class="kw">if </span>has_shadow { YES } <span class="kw">else </span>{ NO })
-        }
+        <span class="self">self</span>.setHasShadow(has_shadow)
+    }
+
+    <span class="kw">fn </span>is_document_edited(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.isDocumentEdited()
+    }
+
+    <span class="kw">fn </span>set_document_edited(<span class="kw-2">&amp;</span><span class="self">self</span>, edited: bool) {
+        <span class="self">self</span>.setDocumentEdited(edited)
+    }
+
+    <span class="kw">fn </span>set_option_as_alt(<span class="kw-2">&amp;</span><span class="self">self</span>, option_as_alt: OptionAsAlt) {
+        <span class="kw">let </span><span class="kw-2">mut </span>shared_state_lock = <span class="self">self</span>.shared_state.lock().unwrap();
+        shared_state_lock.option_as_alt = option_as_alt;
+    }
+
+    <span class="kw">fn </span>option_as_alt(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; OptionAsAlt {
+        <span class="kw">let </span>shared_state_lock = <span class="self">self</span>.shared_state.lock().unwrap();
+        shared_state_lock.option_as_alt
     }
 }
 
-<span class="kw">impl </span>Drop <span class="kw">for </span>UnownedWindow {
-    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="macro">trace!</span>(<span class="string">&quot;Dropping `UnownedWindow` ({:?})&quot;</span>, <span class="self">self </span><span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>);
-        <span class="comment">// Close the window if it has not yet been closed.
-        </span><span class="kw">if </span><span class="kw-2">*</span><span class="self">self</span>.ns_window != nil {
-            <span class="kw">unsafe </span>{ util::close_async(<span class="self">self</span>.ns_window.clone()) };
-        }
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>get_ns_theme() -&gt; Theme {
+    <span class="kw">let </span>app = NSApp();
+    <span class="kw">let </span>has_theme: bool = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw-2">&amp;</span>app, respondsToSelector: <span class="macro">sel!</span>(effectiveAppearance)] };
+    <span class="kw">if </span>!has_theme {
+        <span class="kw">return </span>Theme::Light;
+    }
+    <span class="kw">let </span>appearance = app.effectiveAppearance();
+    <span class="kw">let </span>name = appearance.bestMatchFromAppearancesWithNames(<span class="kw-2">&amp;</span>NSArray::from_slice(<span class="kw-2">&amp;</span>[
+        NSString::from_str(<span class="string">&quot;NSAppearanceNameAqua&quot;</span>),
+        NSString::from_str(<span class="string">&quot;NSAppearanceNameDarkAqua&quot;</span>),
+    ]));
+    <span class="kw">match </span><span class="kw-2">&amp;*</span>name.to_string() {
+        <span class="string">&quot;NSAppearanceNameDarkAqua&quot; </span>=&gt; Theme::Dark,
+        <span class="kw">_ </span>=&gt; Theme::Light,
     }
 }
 
-<span class="kw">unsafe fn </span>set_min_inner_size&lt;V: NSWindow + Copy&gt;(window: V, <span class="kw-2">mut </span>min_size: LogicalSize&lt;f64&gt;) {
-    <span class="kw">let </span><span class="kw-2">mut </span>current_rect = NSWindow::frame(window);
-    <span class="kw">let </span>content_rect = NSWindow::contentRectForFrameRect_(window, NSWindow::frame(window));
-    <span class="comment">// Convert from client area size to window size
-    </span>min_size.width += (current_rect.size.width - content_rect.size.width) <span class="kw">as </span>f64; <span class="comment">// this tends to be 0
-    </span>min_size.height += (current_rect.size.height - content_rect.size.height) <span class="kw">as </span>f64;
-    <span class="kw">let </span>min_size = NSSize {
-        width: min_size.width <span class="kw">as </span>CGFloat,
-        height: min_size.height <span class="kw">as </span>CGFloat,
-    };
-    window.setMinSize_(min_size);
-    <span class="comment">// If necessary, resize the window to match constraint
-    </span><span class="kw">if </span>current_rect.size.width &lt; min_size.width {
-        current_rect.size.width = min_size.width;
-        window.setFrame_display_(current_rect, NO)
-    }
-    <span class="kw">if </span>current_rect.size.height &lt; min_size.height {
-        <span class="comment">// The origin point of a rectangle is at its bottom left in Cocoa.
-        // To ensure the window&#39;s top-left point remains the same:
-        </span>current_rect.origin.y += current_rect.size.height - min_size.height;
-        current_rect.size.height = min_size.height;
-        window.setFrame_display_(current_rect, NO)
-    }
-}
-
-<span class="kw">unsafe fn </span>set_max_inner_size&lt;V: NSWindow + Copy&gt;(window: V, <span class="kw-2">mut </span>max_size: LogicalSize&lt;f64&gt;) {
-    <span class="kw">let </span><span class="kw-2">mut </span>current_rect = NSWindow::frame(window);
-    <span class="kw">let </span>content_rect = NSWindow::contentRectForFrameRect_(window, NSWindow::frame(window));
-    <span class="comment">// Convert from client area size to window size
-    </span>max_size.width += (current_rect.size.width - content_rect.size.width) <span class="kw">as </span>f64; <span class="comment">// this tends to be 0
-    </span>max_size.height += (current_rect.size.height - content_rect.size.height) <span class="kw">as </span>f64;
-    <span class="kw">let </span>max_size = NSSize {
-        width: max_size.width <span class="kw">as </span>CGFloat,
-        height: max_size.height <span class="kw">as </span>CGFloat,
-    };
-    window.setMaxSize_(max_size);
-    <span class="comment">// If necessary, resize the window to match constraint
-    </span><span class="kw">if </span>current_rect.size.width &gt; max_size.width {
-        current_rect.size.width = max_size.width;
-        window.setFrame_display_(current_rect, NO)
-    }
-    <span class="kw">if </span>current_rect.size.height &gt; max_size.height {
-        <span class="comment">// The origin point of a rectangle is at its bottom left in Cocoa.
-        // To ensure the window&#39;s top-left point remains the same:
-        </span>current_rect.origin.y += current_rect.size.height - max_size.height;
-        current_rect.size.height = max_size.height;
-        window.setFrame_display_(current_rect, NO)
+<span class="kw">fn </span>set_ns_theme(theme: <span class="prelude-ty">Option</span>&lt;Theme&gt;) {
+    <span class="kw">let </span>app = NSApp();
+    <span class="kw">let </span>has_theme: bool = <span class="kw">unsafe </span>{ <span class="macro">msg_send!</span>[<span class="kw-2">&amp;</span>app, respondsToSelector: <span class="macro">sel!</span>(effectiveAppearance)] };
+    <span class="kw">if </span>has_theme {
+        <span class="kw">let </span>appearance = theme.map(|t| {
+            <span class="kw">let </span>name = <span class="kw">match </span>t {
+                Theme::Dark =&gt; NSString::from_str(<span class="string">&quot;NSAppearanceNameDarkAqua&quot;</span>),
+                Theme::Light =&gt; NSString::from_str(<span class="string">&quot;NSAppearanceNameAqua&quot;</span>),
+            };
+            NSAppearance::appearanceNamed(<span class="kw-2">&amp;</span>name)
+        });
+        app.setAppearance(appearance.as_ref().map(|a| a.as_ref()));
     }
 }
 </code></pre></div>

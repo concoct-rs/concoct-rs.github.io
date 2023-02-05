@@ -14,39 +14,19 @@
 <a href="#14" id="14">14</a>
 <a href="#15" id="15">15</a>
 <a href="#16" id="16">16</a>
-<a href="#17" id="17">17</a>
-<a href="#18" id="18">18</a>
-<a href="#19" id="19">19</a>
-<a href="#20" id="20">20</a>
-<a href="#21" id="21">21</a>
-<a href="#22" id="22">22</a>
-<a href="#23" id="23">23</a>
-<a href="#24" id="24">24</a>
-<a href="#25" id="25">25</a>
-<a href="#26" id="26">26</a>
-</pre><pre class="rust"><code><span class="doccomment">//! Generic composable functions
+</pre><pre class="rust"><code><span class="kw">pub mod </span>container;
+<span class="kw">pub use </span>container::{column, container, row};
 
-</span><span class="kw">pub mod </span>animated;
-<span class="kw">pub use </span>animated::animated;
+<span class="kw">pub mod </span>material;
 
-<span class="kw">mod </span>container;
-<span class="kw">pub use </span>container::container;
-
-<span class="attr">#[cfg(feature = <span class="string">&quot;tokio&quot;</span>)]
-</span><span class="kw">mod </span>future;
-<span class="attr">#[cfg(feature = <span class="string">&quot;tokio&quot;</span>)]
-</span><span class="kw">pub use </span>future::future;
-
-<span class="kw">mod </span>group;
-<span class="kw">pub use </span>group::group;
+<span class="kw">mod </span>remember;
+<span class="kw">pub use </span>remember::remember;
 
 <span class="kw">pub mod </span>state;
 <span class="kw">pub use </span>state::state;
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;tokio&quot;</span>)]
-</span><span class="kw">mod </span>stream;
-<span class="attr">#[cfg(feature = <span class="string">&quot;tokio&quot;</span>)]
-</span><span class="kw">pub use </span>stream::stream;
+<span class="kw">mod </span>stream;
+<span class="kw">pub use </span>stream::stream;
 
 <span class="kw">pub mod </span>text;
 <span class="kw">pub use </span>text::text;

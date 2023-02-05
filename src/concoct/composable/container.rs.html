@@ -166,255 +166,173 @@
 <a href="#166" id="166">166</a>
 <a href="#167" id="167">167</a>
 <a href="#168" id="168">168</a>
-<a href="#169" id="169">169</a>
-<a href="#170" id="170">170</a>
-<a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a>
-<a href="#173" id="173">173</a>
-<a href="#174" id="174">174</a>
-<a href="#175" id="175">175</a>
-<a href="#176" id="176">176</a>
-<a href="#177" id="177">177</a>
-<a href="#178" id="178">178</a>
-<a href="#179" id="179">179</a>
-<a href="#180" id="180">180</a>
-<a href="#181" id="181">181</a>
-<a href="#182" id="182">182</a>
-<a href="#183" id="183">183</a>
-<a href="#184" id="184">184</a>
-<a href="#185" id="185">185</a>
-<a href="#186" id="186">186</a>
-<a href="#187" id="187">187</a>
-<a href="#188" id="188">188</a>
-<a href="#189" id="189">189</a>
-<a href="#190" id="190">190</a>
-<a href="#191" id="191">191</a>
-<a href="#192" id="192">192</a>
-<a href="#193" id="193">193</a>
-<a href="#194" id="194">194</a>
-<a href="#195" id="195">195</a>
-<a href="#196" id="196">196</a>
-<a href="#197" id="197">197</a>
-<a href="#198" id="198">198</a>
-<a href="#199" id="199">199</a>
-<a href="#200" id="200">200</a>
-<a href="#201" id="201">201</a>
-<a href="#202" id="202">202</a>
-<a href="#203" id="203">203</a>
-<a href="#204" id="204">204</a>
-<a href="#205" id="205">205</a>
-<a href="#206" id="206">206</a>
-<a href="#207" id="207">207</a>
-<a href="#208" id="208">208</a>
-<a href="#209" id="209">209</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::group;
-<span class="kw">use crate</span>::{
-    composer::BuildKind, modify::Modify, Composer, LayoutNode, Modifier, Semantics, Widget,
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    composer::{Composer, Id, WidgetNode},
+    modify::container::ContainerModifier,
+    semantics::LayoutNode,
+    Modifier, Modify, Semantics, Widget,
 };
-<span class="kw">use </span>accesskit::{DefaultActionVerb, Node, Role};
-<span class="kw">use </span>skia_safe::{Canvas, Point};
-<span class="kw">use </span>std::{mem::replace, panic::Location};
-<span class="kw">use </span>taffy::{prelude::Layout, style::Style, Taffy};
+<span class="kw">use </span>accesskit::{kurbo::Rect, Node, NodeId, Role};
+<span class="kw">use </span>skia_safe::Canvas;
+<span class="kw">use </span>std::{any, panic::Location};
+<span class="kw">use </span>taffy::style::FlexDirection;
 
 <span class="attr">#[track_caller]
-</span><span class="kw">pub fn </span>container&lt;M&gt;(<span class="kw-2">mut </span>modifier: Modifier&lt;Style, M&gt;, f: <span class="kw">impl </span>FnMut() + <span class="lifetime">&#39;static</span>)
-<span class="kw">where
-    </span>M: Modify&lt;Style&gt; + <span class="lifetime">&#39;static</span>,
-{
+</span><span class="kw">pub fn </span>row(modifier: <span class="kw">impl </span>Modify&lt;ContainerModifier&gt; + <span class="lifetime">&#39;static</span>, composable: <span class="kw">impl </span>FnMut() + <span class="lifetime">&#39;static</span>) {
+    container(
+        Modifier::default()
+            .role(Role::Row)
+            .flex_direction(FlexDirection::Row)
+            .chain(modifier),
+        composable,
+    )
+}
+
+<span class="attr">#[track_caller]
+</span><span class="kw">pub fn </span>column(
+    modifier: <span class="kw">impl </span>Modify&lt;ContainerModifier&gt; + <span class="lifetime">&#39;static</span>,
+    composable: <span class="kw">impl </span>FnMut() + <span class="lifetime">&#39;static</span>,
+) {
+    container(
+        Modifier::default()
+            .role(Role::Column)
+            .flex_direction(FlexDirection::Column)
+            .chain(modifier),
+        composable,
+    )
+}
+
+<span class="attr">#[track_caller]
+</span><span class="kw">pub fn </span>container(
+    <span class="kw-2">mut </span>modifier: <span class="kw">impl </span>Modify&lt;ContainerModifier&gt; + <span class="lifetime">&#39;static</span>,
+    <span class="kw-2">mut </span>composable: <span class="kw">impl </span>FnMut() + <span class="lifetime">&#39;static</span>,
+) {
+    <span class="kw">let </span><span class="kw-2">mut </span>container_modifier = ContainerModifier::default();
+    modifier.modify(<span class="kw-2">&amp;mut </span>container_modifier);
+
     <span class="kw">let </span>location = Location::caller();
     Composer::with(|composer| {
+        <span class="kw">let </span>cx = composer.borrow();
+        <span class="kw">let </span>id = cx.id(location);
+        drop(cx);
+
+        <span class="kw">let </span>(children, removed) = Composer::group(<span class="kw-2">&amp;</span>id, <span class="kw-2">&amp;mut </span>composable);
+
         <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = cx.widgets.get_mut(<span class="kw-2">&amp;</span>id) {
+            <span class="kw">let </span>widget: <span class="kw-2">&amp;mut </span>ContainerWidget = node.as_mut();
+            widget.modifier = container_modifier;
+            widget.removed = removed;
+            widget.children = children.clone();
+            node.children = <span class="prelude-val">Some</span>(children);
 
-        <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
-        modifier.modify.modify(<span class="kw-2">&amp;mut </span>style);
-
-        <span class="kw">match </span>cx.build_kind {
-            BuildKind::Build =&gt; {
-                <span class="kw">let </span>layout_id = cx.taffy.new_leaf(style).unwrap();
-
-                <span class="kw">let </span>widget_index = cx.widget_index;
-                cx.widget_index += <span class="number">1</span>;
-                cx.widgets.insert(
-                    widget_index,
-                    (
-                        <span class="prelude-val">Some</span>(layout_id),
-                        Box::new(ContainerStart {
-                            modifier: Box::new(modifier.modify),
-                        }),
-                    ),
-                );
-
-                <span class="kw">let </span>parent_children = replace(<span class="kw-2">&amp;mut </span>cx.children, Vec::new());
-
-                drop(cx);
-                group(f, location);
-                <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-
-                <span class="kw">let </span>children = replace(<span class="kw-2">&amp;mut </span>cx.children, parent_children);
-                cx.taffy.set_children(layout_id, <span class="kw-2">&amp;</span>children).unwrap();
-
-                cx.children.push(layout_id);
-
-                <span class="kw">let </span>widget_index = cx.widget_index;
-                cx.widgets
-                    .insert(widget_index, (<span class="prelude-val">None</span>, Box::new(ContainerEnd {})));
-                cx.widget_index += <span class="number">1</span>;
-            }
-            BuildKind::Rebuild =&gt; {
-                <span class="kw">let </span>id = cx.id(location, <span class="prelude-val">None</span>);
-                <span class="kw">let </span>idx = cx.index;
-
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = cx.nodes.get_mut(idx) {
-                    <span class="kw">if </span>node.id == id {
-                        <span class="kw">let </span>layout_id = cx.widgets[cx.widget_index].<span class="number">0</span>.unwrap();
-                        cx.widget_index += <span class="number">1</span>;
-                        <span class="kw">let </span>parent_children = replace(<span class="kw-2">&amp;mut </span>cx.children, Vec::new());
-
-                        drop(cx);
-
-                        group(f, location);
-
-                        <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-
-                        <span class="kw">let </span>children = replace(<span class="kw-2">&amp;mut </span>cx.children, parent_children);
-                        cx.taffy.set_children(layout_id, <span class="kw-2">&amp;</span>children).unwrap();
-                        cx.taffy.set_style(layout_id, style).unwrap();
-
-                        cx.children.push(layout_id);
-                        cx.widget_index += <span class="number">1</span>;
-                    } <span class="kw">else </span>{
-                        <span class="kw">let </span>layout_id = cx.taffy.new_leaf(style).unwrap();
-
-                        <span class="kw">let </span>widget_index = cx.widget_index;
-                        cx.widget_index += <span class="number">1</span>;
-                        cx.widgets.insert(
-                            widget_index,
-                            (
-                                <span class="prelude-val">Some</span>(layout_id),
-                                Box::new(ContainerStart {
-                                    modifier: Box::new(modifier.modify),
-                                }),
-                            ),
-                        );
-
-                        <span class="kw">let </span>parent_children = replace(<span class="kw-2">&amp;mut </span>cx.children, Vec::new());
-
-                        drop(cx);
-                        group(f, location);
-                        <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-
-                        <span class="kw">let </span>children = replace(<span class="kw-2">&amp;mut </span>cx.children, parent_children);
-                        cx.taffy.set_children(layout_id, <span class="kw-2">&amp;</span>children).unwrap();
-
-                        cx.children.push(layout_id);
-
-                        <span class="kw">let </span>widget_index = cx.widget_index;
-                        cx.widgets
-                            .insert(widget_index, (<span class="prelude-val">None</span>, Box::new(ContainerEnd {})));
-                        cx.widget_index += <span class="number">1</span>;
-                    }
-                } <span class="kw">else </span>{
-                    <span class="kw">let </span>layout_id = cx.taffy.new_leaf(style).unwrap();
-
-                    <span class="kw">let </span>widget_index = cx.widget_index;
-                    cx.widget_index += <span class="number">1</span>;
-                    cx.widgets.insert(
-                        widget_index,
-                        (
-                            <span class="prelude-val">Some</span>(layout_id),
-                            Box::new(ContainerStart {
-                                modifier: Box::new(modifier.modify),
-                            }),
-                        ),
-                    );
-
-                    <span class="kw">let </span>parent_children = replace(<span class="kw-2">&amp;mut </span>cx.children, Vec::new());
-
-                    drop(cx);
-                    group(f, location);
-                    <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-
-                    <span class="kw">let </span>children = replace(<span class="kw-2">&amp;mut </span>cx.children, parent_children);
-                    cx.taffy.set_children(layout_id, <span class="kw-2">&amp;</span>children).unwrap();
-
-                    cx.children.push(layout_id);
-
-                    <span class="kw">let </span>widget_index = cx.widget_index;
-                    cx.widgets
-                        .insert(widget_index, (<span class="prelude-val">None</span>, Box::new(ContainerEnd {})));
-                    cx.widget_index += <span class="number">1</span>;
-                }
-            }
+            cx.children.push(id);
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>widget = ContainerWidget {
+                modifier: container_modifier,
+                node_id: <span class="prelude-val">None</span>,
+                modify: Box::new(modifier),
+                f: <span class="prelude-val">Some</span>(Box::new(composable)),
+                removed: <span class="prelude-val">None</span>,
+                layout_id: <span class="prelude-val">None</span>,
+                children: children.clone(),
+            };
+            cx.insert(id, widget, <span class="prelude-val">Some</span>(children));
         }
     })
 }
 
-<span class="kw">pub struct </span>ContainerStart {
-    modifier: Box&lt;<span class="kw">dyn </span>Modify&lt;Style&gt;&gt;,
+<span class="kw">pub struct </span>ContainerWidget {
+    modifier: ContainerModifier,
+    node_id: <span class="prelude-ty">Option</span>&lt;NodeId&gt;,
+    <span class="kw">pub </span>modify: Box&lt;<span class="kw">dyn </span>Modify&lt;ContainerModifier&gt;&gt;,
+    <span class="kw">pub </span>f: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut()&gt;&gt;,
+    removed: <span class="prelude-ty">Option</span>&lt;Vec&lt;WidgetNode&gt;&gt;,
+    <span class="kw">pub </span>layout_id: <span class="prelude-ty">Option</span>&lt;LayoutNode&gt;,
+    <span class="kw">pub </span>children: Vec&lt;Id&gt;,
 }
 
-<span class="kw">impl </span>Widget <span class="kw">for </span>ContainerStart {
-    <span class="kw">fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, layout: Layout, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
-        <span class="self">self</span>.modifier.paint(<span class="kw-2">&amp;</span>layout, canvas)
-    }
+<span class="kw">impl </span>Widget <span class="kw">for </span>ContainerWidget {
+    <span class="kw">fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;mut </span>Semantics) {
+        <span class="kw">let </span>layout_children = semantics.layout_children.pop().unwrap();
 
-    <span class="kw">fn </span>semantics(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        taffy: <span class="kw-2">&amp;</span>Taffy,
-        layout_id: <span class="prelude-ty">Option</span>&lt;LayoutNode&gt;,
-        semantics: <span class="kw-2">&amp;mut </span>Semantics,
-    ) -&gt; Layout {
-        <span class="kw">let </span>layout_id = layout_id.unwrap();
-        <span class="kw">let </span>layout = semantics.layout(taffy, layout_id);
-
-        semantics
-            .points
-            .push(Point::new(layout.location.x, layout.location.y));
-
-        <span class="kw">if </span>!semantics.node_ids.contains_key(<span class="kw-2">&amp;</span>layout_id) {
-            <span class="kw">let </span>node_id = semantics.node_id();
-
-            <span class="kw">let </span><span class="kw-2">mut </span>node = Node {
-                clickable: <span class="bool-val">true</span>,
-                role: Role::Button,
-                default_action_verb: <span class="prelude-val">Some</span>(DefaultActionVerb::Click),
-                name: <span class="prelude-val">Some</span>(<span class="string">&quot;Row&quot;</span>.into()),
-                bounds: <span class="prelude-val">Some</span>(kurbo::Rect::new(
-                    layout.location.x <span class="kw">as _</span>,
-                    layout.location.y <span class="kw">as _</span>,
-                    (layout.location.x + layout.size.width) <span class="kw">as _</span>,
-                    (layout.location.y + layout.size.height) <span class="kw">as _</span>,
-                )),
-                ..Default::default()
-            };
-
-            <span class="self">self</span>.modifier.semantics(
-                node_id,
-                <span class="kw-2">&amp;mut </span>node,
-                <span class="kw-2">&amp;</span>layout,
-                <span class="kw-2">&amp;mut </span>semantics.handlers,
-                <span class="kw-2">&amp;mut </span>semantics.test_tags,
-            );
-
-            semantics.push(node_id, node);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(layout_id) = <span class="self">self</span>.layout_id {
+            semantics
+                .taffy
+                .set_children(layout_id, <span class="kw-2">&amp;</span>layout_children)
+                .unwrap();
+            semantics
+                .layout_children
+                .last_mut()
+                .unwrap()
+                .push(layout_id);
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>layout_id =
+                semantics.insert_layout_with_children(<span class="self">self</span>.modifier.style, <span class="kw-2">&amp;</span>layout_children);
+            <span class="self">self</span>.layout_id = <span class="prelude-val">Some</span>(layout_id);
         }
-        layout
-    }
-}
-
-<span class="kw">pub struct </span>ContainerEnd {}
-
-<span class="kw">impl </span>Widget <span class="kw">for </span>ContainerEnd {
-    <span class="kw">fn </span>semantics(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        _taffy: <span class="kw-2">&amp;</span>Taffy,
-        _layout_id: <span class="prelude-ty">Option</span>&lt;LayoutNode&gt;,
-        _semantics: <span class="kw-2">&amp;mut </span>Semantics,
-    ) -&gt; Layout {
-        Layout::new()
     }
 
-    <span class="kw">fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _point: Layout, _canvas: <span class="kw-2">&amp;mut </span>Canvas) {}
+    <span class="kw">fn </span>semantics(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;mut </span>Semantics) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(removed) = <span class="kw-2">&amp;mut </span><span class="self">self</span>.removed {
+            <span class="kw">for </span>child <span class="kw">in </span>removed {
+                child.widget.remove(semantics);
+            }
+        }
+
+        <span class="kw">let </span>layout = semantics.layout(<span class="self">self</span>.layout_id.unwrap());
+        <span class="kw">let </span>bounds = Rect::new(
+            layout.location.x <span class="kw">as _</span>,
+            layout.location.y <span class="kw">as _</span>,
+            (layout.location.x + layout.size.width) <span class="kw">as _</span>,
+            (layout.location.y + layout.size.height) <span class="kw">as _</span>,
+        );
+        <span class="kw">let </span>node = Node {
+            role: <span class="self">self</span>.modifier.role,
+            bounds: <span class="prelude-val">Some</span>(bounds),
+            ..Node::default()
+        };
+
+        <span class="kw">let </span>id = <span class="kw">if let </span><span class="prelude-val">Some</span>(node_id) = <span class="self">self</span>.node_id {
+            semantics.end_group_update(node_id, node);
+            node_id
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>id = semantics.end_group_with_node(node, <span class="self">self</span>.modifier.merge_descendants);
+            <span class="self">self</span>.node_id = <span class="prelude-val">Some</span>(id);
+            id
+        };
+
+        <span class="self">self</span>.modify.semantics(id, semantics);
+    }
+
+    <span class="kw">fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _semantics: <span class="kw-2">&amp;</span>Semantics, _canvas: <span class="kw-2">&amp;mut </span>Canvas) {}
+
+    <span class="kw">fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;mut </span>Semantics) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(node_id) = <span class="self">self</span>.node_id {
+            semantics.remove(node_id);
+
+            Composer::with(|composer| {
+                <span class="kw">for </span>child_id <span class="kw">in </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.children {
+                    <span class="kw">let </span><span class="kw-2">mut </span>node = {
+                        <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
+                        cx.widgets.remove(<span class="kw-2">&amp;</span>child_id).unwrap()
+                    };
+
+                    node.widget.remove(semantics);
+                }
+            });
+
+            <span class="self">self</span>.modify.remove(node_id, semantics)
+        }
+    }
+
+    <span class="kw">fn </span>any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>any::Any {
+        <span class="self">self
+    </span>}
+
+    <span class="kw">fn </span>any_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>any::Any {
+        <span class="self">self
+    </span>}
 }
 </code></pre></div>
 </section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="concoct" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>

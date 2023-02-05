@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["clickable",""],["selectable",""]],"struct":[["BackgroundColor",""],["Chain",""],["FlexGrow",""],["FontFamily",""],["FontSize",""],["Gap",""],["Key",""],["Modifier",""],["Position",""],["TestTag",""]],"trait":[["Modify",""]]};
+window.SIDEBAR_ITEMS = {"mod":[["container",""],["keyboard_input",""]],"struct":[["BackgroundColor",""],["Chain",""],["Clickable",""],["FlexBasis",""],["FlexGrow",""],["FlexShrink",""],["FontSize",""],["Gap",""],["Margin",""],["Modifier",""],["Padding",""]],"trait":[["Modify",""]]};

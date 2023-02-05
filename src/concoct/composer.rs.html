@@ -197,84 +197,267 @@
 <a href="#197" id="197">197</a>
 <a href="#198" id="198">198</a>
 <a href="#199" id="199">199</a>
-</pre><pre class="rust"><code><span class="doccomment">//! The composer runtime enviornment
-
-</span><span class="kw">use crate</span>::{render::UserEvent, LayoutNode, Widget};
-<span class="kw">use </span>gapbuf::GapBuffer;
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
+<a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
+<a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{composable::container::ContainerWidget, Semantics, Widget};
+<span class="kw">use </span>skia_safe::{Canvas, Point};
 <span class="kw">use </span>slotmap::{DefaultKey, SlotMap};
 <span class="kw">use </span>std::{
-    any::Any,
     cell::RefCell,
     collections::{HashMap, HashSet},
-    fmt,
+    fmt, mem,
     panic::Location,
 };
-<span class="kw">use </span>taffy::Taffy;
-<span class="kw">use </span>winit::event_loop::EventLoopProxy;
 
-<span class="attr">#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+<span class="attr">#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 </span><span class="kw">pub struct </span>IdSegment {
-    <span class="kw">pub </span>location: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Location&lt;<span class="lifetime">&#39;static</span>&gt;,
-    <span class="kw">pub </span>key: <span class="prelude-ty">Option</span>&lt;u64&gt;,
+    key: <span class="prelude-ty">Option</span>&lt;u64&gt;,
+    location: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Location&lt;<span class="lifetime">&#39;static</span>&gt;,
 }
 
 <span class="attr">#[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
 </span><span class="kw">pub struct </span>Id {
-    <span class="kw">pub </span>path: Vec&lt;IdSegment&gt;,
+    path: Vec&lt;IdSegment&gt;,
 }
 
-<span class="kw">pub enum </span>NodeKind {
-    Child {
-        data: Box&lt;<span class="kw">dyn </span>Any&gt;,
-    },
-    Group {
-        f: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut()&gt;&gt;,
-        len: usize,
-        widget_index: usize,
-    },
+<span class="kw">pub struct </span>WidgetNode {
+    <span class="kw">pub </span>widget: Box&lt;<span class="kw">dyn </span>Widget&gt;,
+    <span class="kw">pub </span>children: <span class="prelude-ty">Option</span>&lt;Vec&lt;Id&gt;&gt;,
 }
 
-<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>NodeKind {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::Child { .. } =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Child&quot;</span>),
-            <span class="self">Self</span>::Group { .. } =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Group&quot;</span>),
-        }
+<span class="kw">impl</span>&lt;T&gt; AsRef&lt;T&gt; <span class="kw">for </span>WidgetNode
+<span class="kw">where
+    </span>T: <span class="lifetime">&#39;static</span>,
+{
+    <span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
+        <span class="self">self</span>.widget.any().downcast_ref().unwrap()
     }
 }
 
-<span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>Node {
-    <span class="kw">pub </span>id: Id,
-    <span class="kw">pub </span>kind: NodeKind,
-    <span class="kw">pub </span>widgets_len: usize,
+<span class="kw">impl</span>&lt;T&gt; AsMut&lt;T&gt; <span class="kw">for </span>WidgetNode
+<span class="kw">where
+    </span>T: <span class="lifetime">&#39;static</span>,
+{
+    <span class="kw">fn </span>as_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>T {
+        <span class="self">self</span>.widget.any_mut().downcast_mut().unwrap()
+    }
 }
 
-<span class="attr">#[derive(Clone, Copy, Debug, Default)]
-</span><span class="kw">pub enum </span>BuildKind {
-    <span class="attr">#[default]
-    </span>Build,
-    Rebuild,
+<span class="kw">pub trait </span>Visitor {
+    <span class="kw">fn </span>visit_child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, widget: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>Widget&gt;);
+
+    <span class="kw">fn </span>visit_group(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="kw-2">&amp;mut </span>WidgetNode);
+
+    <span class="kw">fn </span>visit_group_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, widget: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>Widget&gt;);
 }
 
 <span class="attr">#[derive(Default)]
 </span><span class="kw">pub struct </span>Composer {
-    <span class="kw">pub </span>nodes: GapBuffer&lt;Node&gt;,
-    <span class="kw">pub </span>groups: HashMap&lt;Id, usize&gt;,
-    <span class="kw">pub </span>states: SlotMap&lt;DefaultKey, (Id, Id, usize)&gt;,
-    <span class="kw">pub </span>widgets: GapBuffer&lt;(<span class="prelude-ty">Option</span>&lt;LayoutNode&gt;, Box&lt;<span class="kw">dyn </span>Widget&gt;)&gt;,
-    <span class="kw">pub </span>set_states: HashSet&lt;DefaultKey&gt;,
+    <span class="kw">pub </span>widgets: HashMap&lt;Id, WidgetNode&gt;,
+    <span class="kw">pub </span>children: Vec&lt;Id&gt;,
     <span class="kw">pub </span>current_group_id: Id,
-    <span class="kw">pub </span>index: usize,
-    <span class="kw">pub </span>widget_index: usize,
-    <span class="kw">pub </span>build_kind: BuildKind,
-    <span class="kw">pub </span>taffy: Taffy,
-    <span class="kw">pub </span>children: Vec&lt;LayoutNode&gt;,
+    <span class="kw">pub </span>states: SlotMap&lt;DefaultKey, Id&gt;,
+    <span class="kw">pub </span>changed: HashSet&lt;(DefaultKey, Id)&gt;,
     <span class="kw">pub </span>scale_factor: f32,
-    <span class="kw">pub </span>is_recompose_requested: bool,
-    <span class="kw">pub </span>proxy: <span class="prelude-ty">Option</span>&lt;EventLoopProxy&lt;UserEvent&gt;&gt;,
-    <span class="attr">#[cfg(feature = <span class="string">&quot;tokio&quot;</span>)]
-    </span><span class="kw">pub </span>tasks: HashMap&lt;tokio::task::Id, Box&lt;<span class="kw">dyn </span>FnMut(Box&lt;<span class="kw">dyn </span>Any&gt;)&gt;&gt;,
 }
 
 <span class="kw">impl </span>Composer {
@@ -287,113 +470,332 @@
         COMPOSER.try_with(f).unwrap()
     }
 
-    <span class="kw">pub fn </span>request_recompose() {
-        <span class="self">Self</span>::with(|composer| {
-            composer.borrow_mut().is_recompose_requested = <span class="bool-val">true</span>;
-        })
-    }
-
-    <span class="attr">#[track_caller]
-    </span><span class="kw">pub fn </span>recompose() {
-        <span class="self">Self</span>::with(|composer| {
-            <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(idx) = cx
-                .set_states
-                .iter()
-                .map(|key| {
-                    <span class="kw">let </span>(group_id, _state_id, <span class="kw">_</span>) = cx.states.get(<span class="kw-2">*</span>key).unwrap();
-                    <span class="kw-2">*</span>cx.groups.get(group_id).unwrap()
-                })
-                .min()
-            {
-                <span class="kw">let </span>(<span class="kw-2">mut </span>func, widget_index) = <span class="kw">if let </span>NodeKind::Group {
-                    f, widget_index, ..
-                } = <span class="kw-2">&amp;mut </span>cx.nodes[idx].kind
-                {
-                    (f.take().unwrap(), widget_index)
-                } <span class="kw">else </span>{
-                    <span class="macro">todo!</span>()
-                };
-
-                cx.widget_index = <span class="kw-2">*</span>widget_index;
-                cx.build_kind = BuildKind::Rebuild;
-                cx.index = idx + <span class="number">1</span>;
-                cx.children = Vec::new();
-                cx.current_group_id = cx.nodes[idx].id.clone();
-
-                drop(cx);
-                func();
-
-                <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
-                <span class="kw">if let </span>NodeKind::Group { f, .. } = <span class="kw-2">&amp;mut </span>cx.nodes[idx].kind {
-                    <span class="kw-2">*</span>f = <span class="prelude-val">Some</span>(func);
-                } <span class="kw">else </span>{
-                    <span class="macro">todo!</span>()
-                }
-            }
-        })
-    }
-
-    <span class="kw">pub fn </span>id(<span class="kw-2">&amp;mut </span><span class="self">self</span>, location: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Location&lt;<span class="lifetime">&#39;static</span>&gt;, key: <span class="prelude-ty">Option</span>&lt;u64&gt;) -&gt; Id {
+    <span class="kw">pub fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>, location: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Location&lt;<span class="lifetime">&#39;static</span>&gt;) -&gt; Id {
+        <span class="kw">let </span>id_segment = IdSegment {
+            key: <span class="prelude-val">None</span>,
+            location,
+        };
         <span class="kw">let </span><span class="kw-2">mut </span>path = <span class="self">self</span>.current_group_id.path.clone();
-        path.push(IdSegment { location, key });
-
+        path.push(id_segment);
         Id { path }
     }
 
     <span class="attr">#[track_caller]
-    </span><span class="kw">pub fn </span>node_with_key(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        kind: NodeKind,
-        key: <span class="prelude-ty">Option</span>&lt;u64&gt;,
-        widgets_len: usize,
-    ) -&gt; (Id, usize) {
-        <span class="self">self</span>.node_with_location(kind, key, widgets_len, Location::caller())
+    </span><span class="kw">pub fn </span>get&lt;W&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>Id) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>W&gt;
+    <span class="kw">where
+        </span>W: Widget + <span class="lifetime">&#39;static</span>,
+    {
+        <span class="self">self</span>.widgets
+            .get(id)
+            .map(|widget| widget.widget.any().downcast_ref().unwrap())
     }
 
-    <span class="kw">pub fn </span>node_with_location(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        kind: NodeKind,
-        key: <span class="prelude-ty">Option</span>&lt;u64&gt;,
-        widgets_len: usize,
-        location: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Location&lt;<span class="lifetime">&#39;static</span>&gt;,
-    ) -&gt; (Id, usize) {
-        <span class="kw">let </span>id = <span class="self">self</span>.id(location, key);
-
-        <span class="self">self</span>.node(id.clone(), kind, widgets_len);
-
-        <span class="kw">let </span>idx = <span class="self">self</span>.index;
-        <span class="self">self</span>.index += <span class="number">1</span>;
-
-        (id, idx)
+    <span class="attr">#[track_caller]
+    </span><span class="kw">pub fn </span>get_mut&lt;W&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>Id) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>W&gt;
+    <span class="kw">where
+        </span>W: Widget + <span class="lifetime">&#39;static</span>,
+    {
+        <span class="self">self</span>.widgets
+            .get_mut(id)
+            .map(|widget| widget.widget.any_mut().downcast_mut().unwrap())
     }
 
-    <span class="kw">pub fn </span>node(<span class="kw-2">&amp;mut </span><span class="self">self</span>, id: Id, kind: NodeKind, widgets_len: usize) {
-        <span class="kw">let </span>node = Node {
+    <span class="attr">#[track_caller]
+    </span><span class="kw">pub fn </span>get_node_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>Id) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>WidgetNode&gt; {
+        <span class="self">self</span>.widgets.get_mut(id)
+    }
+
+    <span class="attr">#[track_caller]
+    </span><span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, id: Id, widget: <span class="kw">impl </span>Widget + <span class="lifetime">&#39;static</span>, children: <span class="prelude-ty">Option</span>&lt;Vec&lt;Id&gt;&gt;) {
+        <span class="self">self</span>.children.push(id.clone());
+        <span class="self">self</span>.widgets.insert(
             id,
-            kind,
-            widgets_len,
-        };
+            WidgetNode {
+                widget: Box::new(widget),
+                children,
+            },
+        );
+    }
 
-        <span class="kw">if </span><span class="self">self</span>.index &gt; <span class="self">self</span>.nodes.len() {
-            <span class="self">self</span>.nodes.push_back(node);
-        } <span class="kw">else </span>{
-            <span class="self">self</span>.nodes.set_gap(<span class="self">self</span>.index);
-            <span class="self">self</span>.nodes.insert(<span class="self">self</span>.index, node);
+    <span class="kw">pub fn </span>group(id: <span class="kw-2">&amp;</span>Id, f: <span class="kw">impl </span>FnOnce()) -&gt; (Vec&lt;Id&gt;, <span class="prelude-ty">Option</span>&lt;Vec&lt;WidgetNode&gt;&gt;) {
+        Composer::with(|composer| {
+            <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
+            <span class="kw">let </span>parent_children = mem::take(<span class="kw-2">&amp;mut </span>cx.children);
+            <span class="kw">let </span>parent_group_id = mem::replace(<span class="kw-2">&amp;mut </span>cx.current_group_id, id.clone());
+            drop(cx);
 
-            <span class="kw">for </span>idx <span class="kw">in </span><span class="self">self</span>.groups.values_mut() {
-                <span class="kw">if </span><span class="kw-2">*</span>idx &gt; <span class="self">self</span>.index {
-                    <span class="kw-2">*</span>idx += <span class="number">1</span>;
+            f();
+
+            <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
+            cx.current_group_id = parent_group_id;
+            <span class="kw">let </span>children = mem::replace(<span class="kw-2">&amp;mut </span>cx.children, parent_children);
+
+            <span class="kw">let </span>removed_ids = <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = cx.widgets.get(<span class="kw-2">&amp;</span>id) {
+                <span class="kw">let </span>removed: Vec&lt;<span class="kw">_</span>&gt; = node
+                    .children
+                    .as_ref()
+                    .unwrap()
+                    .iter()
+                    .filter(|id| !children.contains(id))
+                    .cloned()
+                    .collect();
+
+                <span class="prelude-val">Some</span>(removed)
+            } <span class="kw">else </span>{
+                <span class="prelude-val">None
+            </span>};
+            <span class="kw">let </span>removed = removed_ids.map(|removed| {
+                removed
+                    .iter()
+                    .map(|id| cx.widgets.remove(id).unwrap())
+                    .collect()
+            });
+            (children, removed)
+        })
+    }
+
+    <span class="kw">pub fn </span>visit(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>visitor: <span class="kw">impl </span>Visitor) {
+        <span class="kw">enum </span>Item {
+            Group(Id),
+            GroupStart(Id),
+            Child(Id),
+        }
+
+        <span class="kw">let </span><span class="kw-2">mut </span>items: Vec&lt;<span class="kw">_</span>&gt; = <span class="self">self
+            </span>.children
+            .iter()
+            .map(|id| Item::Child(id.clone()))
+            .collect();
+
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(item) = items.pop() {
+            <span class="kw">match </span>item {
+                Item::GroupStart(id) =&gt; {
+                    <span class="kw">let </span>node = <span class="self">self</span>.widgets.get_mut(<span class="kw-2">&amp;</span>id).unwrap();
+                    visitor.visit_group(node);
                 }
-            }
+                Item::Group(id) =&gt; {
+                    <span class="kw">let </span>node = <span class="self">self</span>.widgets.get_mut(<span class="kw-2">&amp;</span>id).unwrap();
+                    visitor.visit_group_end(<span class="kw-2">&amp;mut </span>node.widget)
+                }
+                Item::Child(id) =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(node) = <span class="self">self</span>.widgets.get_mut(<span class="kw-2">&amp;</span>id) {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(children) = <span class="kw-2">&amp;</span>node.children {
+                            items.push(Item::Group(id.clone()));
 
-            <span class="kw">for </span>(<span class="kw">_</span>, <span class="kw">_</span>, idx) <span class="kw">in </span><span class="self">self</span>.states.values_mut() {
-                <span class="kw">if </span><span class="kw-2">*</span>idx &gt; <span class="self">self</span>.index {
-                    <span class="kw-2">*</span>idx += <span class="number">1</span>;
+                            <span class="kw">for </span>child <span class="kw">in </span>children
+                                .iter()
+                                .rev()
+                                .map(|id| Item::Child(id.clone()))
+                                .clone()
+                            {
+                                items.push(child);
+                            }
+
+                            items.push(Item::GroupStart(id.clone()));
+                        } <span class="kw">else </span>{
+                            visitor.visit_child(<span class="kw-2">&amp;mut </span>node.widget);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    <span class="kw">pub fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;mut </span>Semantics) {
+        semantics.layout_children = <span class="macro">vec!</span>[Vec::new(), Vec::new()];
+
+        <span class="kw">let </span>visitor = LayoutVisitor::new(semantics);
+        <span class="self">self</span>.visit(visitor);
+    }
+
+    <span class="kw">pub fn </span>semantics(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;mut </span>Semantics) {
+        semantics.points = <span class="macro">vec!</span>[Point::new(<span class="number">0.</span>, <span class="number">0.</span>)];
+
+        <span class="kw">let </span>visitor = SemanticsVisitor::new(semantics);
+        <span class="self">self</span>.visit(visitor);
+    }
+
+    <span class="kw">pub fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, semantics: <span class="kw-2">&amp;mut </span>Semantics, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+        semantics.points = <span class="macro">vec!</span>[Point::new(<span class="number">0.</span>, <span class="number">0.</span>)];
+
+        <span class="kw">let </span>visitor = PaintVisitor::new(semantics, canvas);
+        <span class="self">self</span>.visit(visitor);
+    }
+
+    <span class="kw">pub fn </span>recompose(semantics: <span class="kw-2">&amp;mut </span>Semantics) {
+        <span class="self">Self</span>::with(|composer| {
+            <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
+            <span class="kw">if let </span><span class="prelude-val">Some</span>((_key, parent_id)) = cx
+                .changed
+                .iter()
+                .min_by_key(|(_key, id)| id.path.len())
+                .cloned()
+            {
+                <span class="kw">let </span>container: <span class="kw-2">&amp;mut </span>ContainerWidget = cx.get_mut(<span class="kw-2">&amp;</span>parent_id).unwrap();
+                <span class="kw">let </span><span class="kw-2">mut </span>f = container.f.take().unwrap();
+                cx.current_group_id = parent_id.clone();
+                drop(cx);
+
+                <span class="kw">let </span>(children, removed) = <span class="self">Self</span>::group(<span class="kw-2">&amp;</span>parent_id, <span class="kw-2">&amp;mut </span>f);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>removed) = removed {
+                    <span class="kw">for </span>node <span class="kw">in </span><span class="kw-2">&amp;mut </span>removed {
+                        node.widget.remove(semantics);
+                    }
+                }
+
+                <span class="kw">let </span><span class="kw-2">mut </span>cx = composer.borrow_mut();
+                <span class="kw">let </span>node = cx.get_node_mut(<span class="kw-2">&amp;</span>parent_id).unwrap();
+                node.children = <span class="prelude-val">Some</span>(children);
+
+                <span class="kw">let </span>container: <span class="kw-2">&amp;mut </span>ContainerWidget = node.as_mut();
+                container.f = <span class="prelude-val">Some</span>(f);
+
+                <span class="kw">let </span>layout_id = container.layout_id.unwrap();
+                <span class="kw">let </span><span class="kw-2">mut </span>layout_children = semantics.layout_children.pop().unwrap();
+                layout_children.reverse();
+                semantics
+                    .taffy
+                    .set_children(layout_id, <span class="kw-2">&amp;</span>layout_children)
+                    .unwrap();
+            }
+        });
+    }
+}
+
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Composer {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        f.debug_struct(<span class="string">&quot;Composer&quot;</span>)
+            .field(
+                <span class="string">&quot;widgets&quot;</span>,
+                <span class="kw-2">&amp;</span>Wrap {
+                    children: <span class="kw-2">&amp;</span><span class="self">self</span>.children,
+                    composer: <span class="self">self</span>,
+                },
+            )
+            .finish()
+    }
+}
+
+<span class="kw">struct </span>Wrap&lt;<span class="lifetime">&#39;a</span>&gt; {
+    children: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Id],
+    composer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Composer,
+}
+
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Wrap&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        <span class="kw">for </span>id <span class="kw">in </span><span class="self">self</span>.children {
+            <span class="kw">let </span>widget = <span class="kw-2">&amp;</span><span class="self">self</span>.composer.widgets[id];
+
+            <span class="kw">let </span><span class="kw-2">mut </span>debug_struct = f.debug_struct(<span class="string">&quot;Widget&quot;</span>);
+            debug_struct.field(<span class="string">&quot;id&quot;</span>, id);
+
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>children) = widget.children {
+                debug_struct.field(
+                    <span class="string">&quot;children&quot;</span>,
+                    <span class="kw-2">&amp;</span>[Wrap {
+                        children,
+                        composer: <span class="self">self</span>.composer,
+                    }],
+                );
+            }
+
+            debug_struct.finish()<span class="question-mark">?</span>;
+        }
+
+        <span class="prelude-val">Ok</span>(())
+    }
+}
+
+<span class="kw">pub struct </span>LayoutVisitor&lt;<span class="lifetime">&#39;a</span>&gt; {
+    semantics: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Semantics,
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LayoutVisitor&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>new(semantics: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Semantics) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ semantics }
+    }
+}
+
+<span class="kw">impl </span>Visitor <span class="kw">for </span>LayoutVisitor&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>visit_child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, widget: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>Widget&gt;) {
+        widget.layout(<span class="self">self</span>.semantics);
+    }
+
+    <span class="kw">fn </span>visit_group(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _node: <span class="kw-2">&amp;mut </span>WidgetNode) {
+        <span class="self">self</span>.semantics.layout_children.push(Vec::new());
+    }
+
+    <span class="kw">fn </span>visit_group_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, widget: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>Widget&gt;) {
+        widget.layout(<span class="self">self</span>.semantics);
+    }
+}
+
+<span class="kw">pub struct </span>SemanticsVisitor&lt;<span class="lifetime">&#39;a</span>&gt; {
+    semantics: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Semantics,
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; SemanticsVisitor&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>new(semantics: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Semantics) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ semantics }
+    }
+}
+
+<span class="kw">impl </span>Visitor <span class="kw">for </span>SemanticsVisitor&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>visit_child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, widget: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>Widget&gt;) {
+        widget.semantics(<span class="self">self</span>.semantics);
+    }
+
+    <span class="kw">fn </span>visit_group(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="kw-2">&amp;mut </span>WidgetNode) {
+        <span class="kw">let </span>widget: <span class="kw-2">&amp;</span>ContainerWidget = node.as_ref();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(layout_id) = widget.layout_id {
+            <span class="kw">let </span>layout = <span class="self">self</span>.semantics.layout(layout_id);
+            <span class="self">self</span>.semantics
+                .points
+                .push(Point::new(layout.location.x, layout.location.y));
+        }
+
+        <span class="self">self</span>.semantics.layout_children.push(Vec::new());
+        <span class="self">self</span>.semantics.start_group()
+    }
+
+    <span class="kw">fn </span>visit_group_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, widget: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>Widget&gt;) {
+        <span class="self">self</span>.semantics.points.pop().unwrap();
+        widget.semantics(<span class="self">self</span>.semantics);
+    }
+}
+
+<span class="kw">pub struct </span>PaintVisitor&lt;<span class="lifetime">&#39;a</span>&gt; {
+    semantics: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Semantics,
+    canvas: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Canvas,
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; PaintVisitor&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>new(semantics: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Semantics, canvas: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Canvas) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ semantics, canvas }
+    }
+}
+
+<span class="kw">impl </span>Visitor <span class="kw">for </span>PaintVisitor&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>visit_child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, widget: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>Widget&gt;) {
+        widget.paint(<span class="self">self</span>.semantics, <span class="self">self</span>.canvas);
+    }
+
+    <span class="kw">fn </span>visit_group(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: <span class="kw-2">&amp;mut </span>WidgetNode) {
+        <span class="kw">let </span>widget: <span class="kw-2">&amp;mut </span>ContainerWidget = node.as_mut();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(layout_id) = widget.layout_id {
+            <span class="kw">let </span>layout = <span class="self">self</span>.semantics.layout(layout_id);
+
+            widget.modify.paint(<span class="kw-2">&amp;</span>layout, <span class="self">self</span>.canvas);
+
+            <span class="self">self</span>.semantics
+                .points
+                .push(Point::new(layout.location.x, layout.location.y));
+        }
+    }
+
+    <span class="kw">fn </span>visit_group_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, widget: <span class="kw-2">&amp;mut </span>Box&lt;<span class="kw">dyn </span>Widget&gt;) {
+        <span class="self">self</span>.semantics.points.pop().unwrap();
+        widget.paint(<span class="self">self</span>.semantics, <span class="self">self</span>.canvas);
     }
 }
 </code></pre></div>
