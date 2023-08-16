@@ -323,7 +323,6 @@
 <a href="#323" id="323">323</a>
 <a href="#324" id="324">324</a>
 <a href="#325" id="325">325</a>
-<a href="#326" id="326">326</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::view::{BuildContext, LayoutContext, View};
 <span class="kw">use </span>accesskit::Point;
 <span class="kw">use </span>gl::types::<span class="kw-2">*</span>;
@@ -369,7 +368,6 @@
     <span class="kw">pub fn </span>run&lt;A, V&gt;(<span class="self">self</span>, <span class="kw-2">mut </span>view: <span class="kw">impl </span>FnMut() -&gt; V + <span class="lifetime">&#39;static</span>)
     <span class="kw">where
         </span>V: View&lt;(), A&gt; + <span class="lifetime">&#39;static</span>,
-        V::State: <span class="lifetime">&#39;static</span>,
     {
         <span class="kw">let </span>el = EventLoopBuilder::with_user_event().build();
 
@@ -545,7 +543,7 @@
             next_id: NonZeroU128::MIN,
             unused_ids: Vec::new(),
         };
-        <span class="kw">let </span>(view_id, _view_state) = tree.build(<span class="kw-2">&amp;mut </span>build_cx);
+        <span class="kw">let </span>view_id = tree.build(<span class="kw-2">&amp;mut </span>build_cx);
 
         el.run(<span class="kw">move </span>|event, <span class="kw">_</span>, control_flow| {
             <span class="kw">let </span>frame_start = Instant::now();

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["view"]};
+window.SIDEBAR_ITEMS = {"enum":["Event"],"mod":["view"],"struct":["Renderer"]};
