@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/taffy-0.2.2/src/resolve.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>resolve.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../taffy/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/index.crates.io-6f17d22bba15001f/taffy-0.3.12/src/resolve.rs`."><title>resolve.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taffy" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (eb088b8b9 2023-08-05)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../taffy/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -359,45 +359,10 @@
 <a href="#359" id="359">359</a>
 <a href="#360" id="360">360</a>
 <a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
-<a href="#365" id="365">365</a>
-<a href="#366" id="366">366</a>
-<a href="#367" id="367">367</a>
-<a href="#368" id="368">368</a>
-<a href="#369" id="369">369</a>
-<a href="#370" id="370">370</a>
-<a href="#371" id="371">371</a>
-<a href="#372" id="372">372</a>
-<a href="#373" id="373">373</a>
-<a href="#374" id="374">374</a>
-<a href="#375" id="375">375</a>
-<a href="#376" id="376">376</a>
-<a href="#377" id="377">377</a>
-<a href="#378" id="378">378</a>
-<a href="#379" id="379">379</a>
-<a href="#380" id="380">380</a>
-<a href="#381" id="381">381</a>
-<a href="#382" id="382">382</a>
-<a href="#383" id="383">383</a>
-<a href="#384" id="384">384</a>
-<a href="#385" id="385">385</a>
-<a href="#386" id="386">386</a>
-<a href="#387" id="387">387</a>
-</pre><pre class="rust"><code><span class="doccomment">//! Helper trait to calculate dimensions during layout resolution
+</pre></div><pre class="rust"><code><span class="doccomment">//! Helper trait to calculate dimensions during layout resolution
 
-</span><span class="kw">use </span><span class="kw">crate</span>::prelude::{Dimension, Rect, Size};
-
-<span class="doccomment">/// Trait to encapsulate behaviour where we need to resolve from a
-/// potentially context-dependent size or dimension into
-/// a context-independent size or dimension.
-///
-/// Will return a default value if it unable to resolve.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>ResolveOrDefault&lt;TContext, TOutput&gt; {
-    <span class="doccomment">/// Resolve a dimension that might be dependent on a context, with a default fallback value
-    </span><span class="kw">fn </span>resolve_or_default(<span class="self">self</span>, context: TContext) -&gt; TOutput;
-}
+</span><span class="kw">use </span><span class="kw">crate</span>::prelude::{Dimension, LengthPercentage, LengthPercentageAuto, Rect, Size};
+<span class="kw">use </span><span class="kw">crate</span>::style_helpers::TaffyZero;
 
 <span class="doccomment">/// Trait to encapsulate behaviour where we need to resolve from a
 /// potentially context-dependent size or dimension into
@@ -409,6 +374,39 @@
     </span><span class="kw">fn </span>maybe_resolve(<span class="self">self</span>, context: In) -&gt; Out;
 }
 
+<span class="doccomment">/// Trait to encapsulate behaviour where we need to resolve from a
+/// potentially context-dependent size or dimension into
+/// a context-independent size or dimension.
+///
+/// Will return a default value if it unable to resolve.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>ResolveOrZero&lt;TContext, TOutput: TaffyZero&gt; {
+    <span class="doccomment">/// Resolve a dimension that might be dependent on a context, with a default fallback value
+    </span><span class="kw">fn </span>resolve_or_zero(<span class="self">self</span>, context: TContext) -&gt; TOutput;
+}
+
+<span class="kw">impl </span>MaybeResolve&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="prelude-ty">Option</span>&lt;f32&gt;&gt; <span class="kw">for </span>LengthPercentage {
+    <span class="doccomment">/// Converts the given [`LengthPercentage`] into a concrete value of points
+    /// Can return `None`
+    </span><span class="kw">fn </span>maybe_resolve(<span class="self">self</span>, context: <span class="prelude-ty">Option</span>&lt;f32&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            LengthPercentage::Points(points) =&gt; <span class="prelude-val">Some</span>(points),
+            LengthPercentage::Percent(percent) =&gt; context.map(|dim| dim * percent),
+        }
+    }
+}
+
+<span class="kw">impl </span>MaybeResolve&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="prelude-ty">Option</span>&lt;f32&gt;&gt; <span class="kw">for </span>LengthPercentageAuto {
+    <span class="doccomment">/// Converts the given [`LengthPercentageAuto`] into a concrete value of points
+    /// Can return `None`
+    </span><span class="kw">fn </span>maybe_resolve(<span class="self">self</span>, context: <span class="prelude-ty">Option</span>&lt;f32&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            LengthPercentageAuto::Points(points) =&gt; <span class="prelude-val">Some</span>(points),
+            LengthPercentageAuto::Percent(percent) =&gt; context.map(|dim| dim * percent),
+            LengthPercentageAuto::Auto =&gt; <span class="prelude-val">None</span>,
+        }
+    }
+}
+
 <span class="kw">impl </span>MaybeResolve&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="prelude-ty">Option</span>&lt;f32&gt;&gt; <span class="kw">for </span>Dimension {
     <span class="doccomment">/// Converts the given [`Dimension`] into a concrete value of points
     ///
@@ -416,24 +414,19 @@
     </span><span class="kw">fn </span>maybe_resolve(<span class="self">self</span>, context: <span class="prelude-ty">Option</span>&lt;f32&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             Dimension::Points(points) =&gt; <span class="prelude-val">Some</span>(points),
-            <span class="comment">// parent_dim * percent
-            </span>Dimension::Percent(percent) =&gt; context.map(|dim| dim * percent),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+            Dimension::Percent(percent) =&gt; context.map(|dim| dim * percent),
+            Dimension::Auto =&gt; <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="kw">impl </span>MaybeResolve&lt;f32, <span class="prelude-ty">Option</span>&lt;f32&gt;&gt; <span class="kw">for </span>Dimension {
-    <span class="doccomment">/// Converts the given [`Dimension`] into a concrete value of points
-    ///
+<span class="comment">// Generic implementation of MaybeResolve for f32 context where MaybeResolve is implemented
+// for Option&lt;f32&gt; context
+</span><span class="kw">impl</span>&lt;T: MaybeResolve&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="prelude-ty">Option</span>&lt;f32&gt;&gt;&gt; MaybeResolve&lt;f32, <span class="prelude-ty">Option</span>&lt;f32&gt;&gt; <span class="kw">for </span>T {
+    <span class="doccomment">/// Converts the given MaybeResolve value into a concrete value of points
     /// Can return `None`
     </span><span class="kw">fn </span>maybe_resolve(<span class="self">self</span>, context: f32) -&gt; <span class="prelude-ty">Option</span>&lt;f32&gt; {
-        <span class="kw">match </span><span class="self">self </span>{
-            Dimension::Points(points) =&gt; <span class="prelude-val">Some</span>(points),
-            <span class="comment">// parent_dim * percent
-            </span>Dimension::Percent(percent) =&gt; <span class="prelude-val">Some</span>(context * percent),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-        }
+        <span class="self">self</span>.maybe_resolve(<span class="prelude-val">Some</span>(context))
     }
 }
 
@@ -445,40 +438,57 @@
     }
 }
 
-<span class="kw">impl </span>ResolveOrDefault&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, f32&gt; <span class="kw">for </span>Dimension {
+<span class="kw">impl </span>ResolveOrZero&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, f32&gt; <span class="kw">for </span>LengthPercentage {
     <span class="doccomment">/// Will return a default value of result is evaluated to `None`
-    </span><span class="kw">fn </span>resolve_or_default(<span class="self">self</span>, context: <span class="prelude-ty">Option</span>&lt;f32&gt;) -&gt; f32 {
+    </span><span class="kw">fn </span>resolve_or_zero(<span class="self">self</span>, context: <span class="prelude-ty">Option</span>&lt;f32&gt;) -&gt; f32 {
         <span class="self">self</span>.maybe_resolve(context).unwrap_or(<span class="number">0.0</span>)
     }
 }
 
-<span class="kw">impl </span>ResolveOrDefault&lt;Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;, Size&lt;f32&gt;&gt; <span class="kw">for </span>Size&lt;Dimension&gt; {
-    <span class="kw">fn </span>resolve_or_default(<span class="self">self</span>, context: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;) -&gt; Size&lt;f32&gt; {
-        Size {
-            width: <span class="self">self</span>.width.resolve_or_default(context.width),
-            height: <span class="self">self</span>.height.resolve_or_default(context.height),
+<span class="kw">impl </span>ResolveOrZero&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, f32&gt; <span class="kw">for </span>LengthPercentageAuto {
+    <span class="doccomment">/// Will return a default value of result is evaluated to `None`
+    </span><span class="kw">fn </span>resolve_or_zero(<span class="self">self</span>, context: <span class="prelude-ty">Option</span>&lt;f32&gt;) -&gt; f32 {
+        <span class="self">self</span>.maybe_resolve(context).unwrap_or(<span class="number">0.0</span>)
+    }
+}
+
+<span class="kw">impl </span>ResolveOrZero&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, f32&gt; <span class="kw">for </span>Dimension {
+    <span class="doccomment">/// Will return a default value of result is evaluated to `None`
+    </span><span class="kw">fn </span>resolve_or_zero(<span class="self">self</span>, context: <span class="prelude-ty">Option</span>&lt;f32&gt;) -&gt; f32 {
+        <span class="self">self</span>.maybe_resolve(context).unwrap_or(<span class="number">0.0</span>)
+    }
+}
+
+<span class="comment">// Generic ResolveOrZero for Size
+</span><span class="kw">impl</span>&lt;In, Out: TaffyZero, T: ResolveOrZero&lt;In, Out&gt;&gt; ResolveOrZero&lt;Size&lt;In&gt;, Size&lt;Out&gt;&gt; <span class="kw">for </span>Size&lt;T&gt; {
+    <span class="doccomment">/// Converts any `parent`-relative values for size into an absolute size
+    </span><span class="kw">fn </span>resolve_or_zero(<span class="self">self</span>, context: Size&lt;In&gt;) -&gt; Size&lt;Out&gt; {
+        Size { width: <span class="self">self</span>.width.resolve_or_zero(context.width), height: <span class="self">self</span>.height.resolve_or_zero(context.height) }
+    }
+}
+
+<span class="comment">// Generic ResolveOrZero for resolving Rect against Size
+</span><span class="kw">impl</span>&lt;In: Copy, Out: TaffyZero, T: ResolveOrZero&lt;In, Out&gt;&gt; ResolveOrZero&lt;Size&lt;In&gt;, Rect&lt;Out&gt;&gt; <span class="kw">for </span>Rect&lt;T&gt; {
+    <span class="doccomment">/// Converts any `parent`-relative values for Rect into an absolute Rect
+    </span><span class="kw">fn </span>resolve_or_zero(<span class="self">self</span>, context: Size&lt;In&gt;) -&gt; Rect&lt;Out&gt; {
+        Rect {
+            left: <span class="self">self</span>.left.resolve_or_zero(context.width),
+            right: <span class="self">self</span>.right.resolve_or_zero(context.width),
+            top: <span class="self">self</span>.top.resolve_or_zero(context.height),
+            bottom: <span class="self">self</span>.bottom.resolve_or_zero(context.height),
         }
     }
 }
 
-<span class="kw">impl </span>ResolveOrDefault&lt;Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;, Rect&lt;f32&gt;&gt; <span class="kw">for </span>Rect&lt;Dimension&gt; {
-    <span class="kw">fn </span>resolve_or_default(<span class="self">self</span>, context: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;) -&gt; Rect&lt;f32&gt; {
+<span class="comment">// Generic ResolveOrZero for resolving Rect against Option
+</span><span class="kw">impl</span>&lt;Out: TaffyZero, T: ResolveOrZero&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, Out&gt;&gt; ResolveOrZero&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, Rect&lt;Out&gt;&gt; <span class="kw">for </span>Rect&lt;T&gt; {
+    <span class="doccomment">/// Converts any `parent`-relative values for Rect into an absolute Rect
+    </span><span class="kw">fn </span>resolve_or_zero(<span class="self">self</span>, context: <span class="prelude-ty">Option</span>&lt;f32&gt;) -&gt; Rect&lt;Out&gt; {
         Rect {
-            left: <span class="self">self</span>.left.resolve_or_default(context.width),
-            right: <span class="self">self</span>.right.resolve_or_default(context.width),
-            top: <span class="self">self</span>.top.resolve_or_default(context.height),
-            bottom: <span class="self">self</span>.bottom.resolve_or_default(context.height),
-        }
-    }
-}
-
-<span class="kw">impl </span>ResolveOrDefault&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;, Rect&lt;f32&gt;&gt; <span class="kw">for </span>Rect&lt;Dimension&gt; {
-    <span class="kw">fn </span>resolve_or_default(<span class="self">self</span>, context: <span class="prelude-ty">Option</span>&lt;f32&gt;) -&gt; Rect&lt;f32&gt; {
-        Rect {
-            left: <span class="self">self</span>.left.resolve_or_default(context),
-            right: <span class="self">self</span>.right.resolve_or_default(context),
-            top: <span class="self">self</span>.top.resolve_or_default(context),
-            bottom: <span class="self">self</span>.bottom.resolve_or_default(context),
+            left: <span class="self">self</span>.left.resolve_or_zero(context),
+            right: <span class="self">self</span>.right.resolve_or_zero(context),
+            top: <span class="self">self</span>.top.resolve_or_zero(context),
+            bottom: <span class="self">self</span>.bottom.resolve_or_zero(context),
         }
     }
 }
@@ -490,18 +500,6 @@
         <span class="kw">use </span><span class="kw">crate</span>::resolve::MaybeResolve;
         <span class="kw">use </span><span class="kw">crate</span>::style::Dimension;
         <span class="kw">use </span>rstest::rstest;
-
-        <span class="doccomment">/// `Dimension::Undefined` should always return `None`
-        ///
-        /// The parent / context should not affect the outcome.
-        </span><span class="attr">#[rstest]
-        #[case(Dimension::Undefined, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)]
-        #[case(Dimension::Undefined, <span class="prelude-val">Some</span>(<span class="number">5.0</span>), <span class="prelude-val">None</span>)]
-        #[case(Dimension::Undefined, <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), <span class="prelude-val">None</span>)]
-        #[case(Dimension::Undefined, <span class="prelude-val">Some</span>(<span class="number">0.</span>), <span class="prelude-val">None</span>)]
-        </span><span class="kw">fn </span>resolve_undefined(<span class="attr">#[case] </span>input: Dimension, <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="attr">#[case] </span>expected: <span class="prelude-ty">Option</span>&lt;f32&gt;) {
-            <span class="macro">assert_eq!</span>(input.maybe_resolve(context), expected);
-        }
 
         <span class="doccomment">/// `Dimension::Auto` should always return `None`
         ///
@@ -547,30 +545,14 @@
         <span class="kw">use crate</span>::{prelude::Size, resolve::MaybeResolve, style::Dimension};
         <span class="kw">use </span>rstest::rstest;
 
-        <span class="doccomment">/// Size&lt;Dimension::Undefined&gt; should always return Size&lt;None&gt;
-        ///
-        /// The parent / context should not affect the outcome.
-        </span><span class="attr">#[rstest]
-        #[case(Size::UNDEFINED, Size::NONE, Size::NONE)]
-        #[case(Size::UNDEFINED, Size::new(<span class="number">5.0</span>, <span class="number">5.0</span>), Size::NONE)]
-        #[case(Size::UNDEFINED, Size::new(-<span class="number">5.0</span>, -<span class="number">5.0</span>), Size::NONE)]
-        #[case(Size::UNDEFINED, Size::new(<span class="number">0.0</span>, <span class="number">0.0</span>), Size::NONE)]
-        </span><span class="kw">fn </span>maybe_resolve_undefined(
-            <span class="attr">#[case] </span>input: Size&lt;Dimension&gt;,
-            <span class="attr">#[case] </span>context: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
-            <span class="attr">#[case] </span>expected: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
-        ) {
-            <span class="macro">assert_eq!</span>(input.maybe_resolve(context), expected);
-        }
-
         <span class="doccomment">/// Size&lt;Dimension::Auto&gt; should always return Size&lt;None&gt;
         ///
         /// The parent / context should not affect the outcome.
         </span><span class="attr">#[rstest]
-        #[case(Size::AUTO, Size::NONE, Size::NONE)]
-        #[case(Size::AUTO, Size::new(<span class="number">5.0</span>, <span class="number">5.0</span>), Size::NONE)]
-        #[case(Size::AUTO, Size::new(-<span class="number">5.0</span>, -<span class="number">5.0</span>), Size::NONE)]
-        #[case(Size::AUTO, Size::new(<span class="number">0.0</span>, <span class="number">0.0</span>), Size::NONE)]
+        #[case(Size::auto(), Size::NONE, Size::NONE)]
+        #[case(Size::auto(), Size::new(<span class="number">5.0</span>, <span class="number">5.0</span>), Size::NONE)]
+        #[case(Size::auto(), Size::new(-<span class="number">5.0</span>, -<span class="number">5.0</span>), Size::NONE)]
+        #[case(Size::auto(), Size::new(<span class="number">0.0</span>, <span class="number">0.0</span>), Size::NONE)]
         </span><span class="kw">fn </span>maybe_resolve_auto(
             <span class="attr">#[case] </span>input: Size&lt;Dimension&gt;,
             <span class="attr">#[case] </span>context: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
@@ -615,75 +597,54 @@
         }
     }
 
-    <span class="kw">mod </span>resolve_or_default_dimension_to_option_f32 {
-        <span class="kw">use </span><span class="kw">crate</span>::resolve::ResolveOrDefault;
+    <span class="kw">mod </span>resolve_or_zero_dimension_to_option_f32 {
+        <span class="kw">use </span><span class="kw">crate</span>::resolve::ResolveOrZero;
         <span class="kw">use </span><span class="kw">crate</span>::style::Dimension;
         <span class="kw">use </span>rstest::rstest;
 
-        <span class="attr">#[rstest]
-        #[case(Dimension::Undefined, <span class="prelude-val">None</span>, <span class="number">0.0</span>)]
-        #[case(Dimension::Undefined, <span class="prelude-val">Some</span>(<span class="number">5.0</span>), <span class="number">0.0</span>)]
-        #[case(Dimension::Undefined, <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), <span class="number">0.0</span>)]
-        #[case(Dimension::Undefined, <span class="prelude-val">Some</span>(<span class="number">0.0</span>), <span class="number">0.0</span>)]
-        </span><span class="kw">fn </span>resolve_or_default_undefined(<span class="attr">#[case] </span>input: Dimension, <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="attr">#[case] </span>expected: f32) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
-        }
         <span class="attr">#[rstest]
         #[case(Dimension::Auto, <span class="prelude-val">None</span>, <span class="number">0.0</span>)]
         #[case(Dimension::Auto, <span class="prelude-val">Some</span>(<span class="number">5.0</span>), <span class="number">0.0</span>)]
         #[case(Dimension::Auto, <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), <span class="number">0.0</span>)]
         #[case(Dimension::Auto, <span class="prelude-val">Some</span>(<span class="number">0.0</span>), <span class="number">0.0</span>)]
-        </span><span class="kw">fn </span>resolve_or_default_auto(<span class="attr">#[case] </span>input: Dimension, <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="attr">#[case] </span>expected: f32) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
+        </span><span class="kw">fn </span>resolve_or_zero_auto(<span class="attr">#[case] </span>input: Dimension, <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="attr">#[case] </span>expected: f32) {
+            <span class="macro">assert_eq!</span>(input.resolve_or_zero(context), expected);
         }
         <span class="attr">#[rstest]
         #[case(Dimension::Points(<span class="number">5.0</span>), <span class="prelude-val">None</span>, <span class="number">5.0</span>)]
         #[case(Dimension::Points(<span class="number">5.0</span>), <span class="prelude-val">Some</span>(<span class="number">5.0</span>), <span class="number">5.0</span>)]
         #[case(Dimension::Points(<span class="number">5.0</span>), <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), <span class="number">5.0</span>)]
         #[case(Dimension::Points(<span class="number">5.0</span>), <span class="prelude-val">Some</span>(<span class="number">0.0</span>), <span class="number">5.0</span>)]
-        </span><span class="kw">fn </span>resolve_or_default_points(<span class="attr">#[case] </span>input: Dimension, <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="attr">#[case] </span>expected: f32) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
+        </span><span class="kw">fn </span>resolve_or_zero_points(<span class="attr">#[case] </span>input: Dimension, <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="attr">#[case] </span>expected: f32) {
+            <span class="macro">assert_eq!</span>(input.resolve_or_zero(context), expected);
         }
         <span class="attr">#[rstest]
         #[case(Dimension::Percent(<span class="number">5.0</span>), <span class="prelude-val">None</span>, <span class="number">0.0</span>)]
         #[case(Dimension::Percent(<span class="number">5.0</span>), <span class="prelude-val">Some</span>(<span class="number">5.0</span>), <span class="number">25.0</span>)]
         #[case(Dimension::Percent(<span class="number">5.0</span>), <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), -<span class="number">25.0</span>)]
         #[case(Dimension::Percent(<span class="number">5.0</span>), <span class="prelude-val">Some</span>(<span class="number">0.0</span>), <span class="number">0.0</span>)]
-        </span><span class="kw">fn </span>resolve_or_default_percent(<span class="attr">#[case] </span>input: Dimension, <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="attr">#[case] </span>expected: f32) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
+        </span><span class="kw">fn </span>resolve_or_zero_percent(<span class="attr">#[case] </span>input: Dimension, <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;, <span class="attr">#[case] </span>expected: f32) {
+            <span class="macro">assert_eq!</span>(input.resolve_or_zero(context), expected);
         }
     }
 
-    <span class="kw">mod </span>resolve_or_default_rect_dimension_to_rect {
+    <span class="kw">mod </span>resolve_or_zero_rect_dimension_to_rect {
         <span class="kw">use </span><span class="kw">crate</span>::geometry::{Rect, Size};
-        <span class="kw">use </span><span class="kw">crate</span>::resolve::ResolveOrDefault;
+        <span class="kw">use </span><span class="kw">crate</span>::resolve::ResolveOrZero;
         <span class="kw">use </span><span class="kw">crate</span>::style::Dimension;
         <span class="kw">use </span>rstest::rstest;
 
         <span class="attr">#[rstest]
-        #[case(Rect::UNDEFINED, Size::NONE, Rect::ZERO)]
-        #[case(Rect::UNDEFINED, Size::new(<span class="number">5.0</span>, <span class="number">5.0</span>), Rect::ZERO)]
-        #[case(Rect::UNDEFINED, Size::new(-<span class="number">5.0</span>, -<span class="number">5.0</span>), Rect::ZERO)]
-        #[case(Rect::UNDEFINED, Size::new(<span class="number">0.0</span>, <span class="number">0.0</span>), Rect::ZERO)]
-        </span><span class="kw">fn </span>resolve_or_default_undefined(
+        #[case(Rect::auto(), Size::NONE, Rect::zero())]
+        #[case(Rect::auto(), Size::new(<span class="number">5.0</span>, <span class="number">5.0</span>), Rect::zero())]
+        #[case(Rect::auto(), Size::new(-<span class="number">5.0</span>, -<span class="number">5.0</span>), Rect::zero())]
+        #[case(Rect::auto(), Size::new(<span class="number">0.0</span>, <span class="number">0.0</span>), Rect::zero())]
+        </span><span class="kw">fn </span>resolve_or_zero_auto(
             <span class="attr">#[case] </span>input: Rect&lt;Dimension&gt;,
             <span class="attr">#[case] </span>context: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
             <span class="attr">#[case] </span>expected: Rect&lt;f32&gt;,
         ) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
-        }
-
-        <span class="attr">#[rstest]
-        #[case(Rect::AUTO, Size::NONE, Rect::ZERO)]
-        #[case(Rect::AUTO, Size::new(<span class="number">5.0</span>, <span class="number">5.0</span>), Rect::ZERO)]
-        #[case(Rect::AUTO, Size::new(-<span class="number">5.0</span>, -<span class="number">5.0</span>), Rect::ZERO)]
-        #[case(Rect::AUTO, Size::new(<span class="number">0.0</span>, <span class="number">0.0</span>), Rect::ZERO)]
-        </span><span class="kw">fn </span>resolve_or_default_auto(
-            <span class="attr">#[case] </span>input: Rect&lt;Dimension&gt;,
-            <span class="attr">#[case] </span>context: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
-            <span class="attr">#[case] </span>expected: Rect&lt;f32&gt;,
-        ) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
+            <span class="macro">assert_eq!</span>(input.resolve_or_zero(context), expected);
         }
 
         <span class="attr">#[rstest]
@@ -691,58 +652,45 @@
         #[case(Rect::from_points(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), Size::new(<span class="number">5.0</span>, <span class="number">5.0</span>), Rect::new(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>))]
         #[case(Rect::from_points(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), Size::new(-<span class="number">5.0</span>, -<span class="number">5.0</span>), Rect::new(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>))]
         #[case(Rect::from_points(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), Size::new(<span class="number">0.0</span>, <span class="number">0.0</span>), Rect::new(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>))]
-        </span><span class="kw">fn </span>resolve_or_default_points(
+        </span><span class="kw">fn </span>resolve_or_zero_points(
             <span class="attr">#[case] </span>input: Rect&lt;Dimension&gt;,
             <span class="attr">#[case] </span>context: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
             <span class="attr">#[case] </span>expected: Rect&lt;f32&gt;,
         ) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
+            <span class="macro">assert_eq!</span>(input.resolve_or_zero(context), expected);
         }
 
         <span class="attr">#[rstest]
-        #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), Size::NONE, Rect::ZERO)]
+        #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), Size::NONE, Rect::zero())]
         #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), Size::new(<span class="number">5.0</span>, <span class="number">5.0</span>), Rect::new(<span class="number">25.0</span>, <span class="number">25.0</span>, <span class="number">25.0</span>, <span class="number">25.0</span>))]
         #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), Size::new(-<span class="number">5.0</span>, -<span class="number">5.0</span>), Rect::new(-<span class="number">25.0</span>, -<span class="number">25.0</span>, -<span class="number">25.0</span>, -<span class="number">25.0</span>))]
-        #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), Size::new(<span class="number">0.0</span>, <span class="number">0.0</span>), Rect::ZERO)]
-        </span><span class="kw">fn </span>resolve_or_default_percent(
+        #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), Size::new(<span class="number">0.0</span>, <span class="number">0.0</span>), Rect::zero())]
+        </span><span class="kw">fn </span>resolve_or_zero_percent(
             <span class="attr">#[case] </span>input: Rect&lt;Dimension&gt;,
             <span class="attr">#[case] </span>context: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
             <span class="attr">#[case] </span>expected: Rect&lt;f32&gt;,
         ) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
+            <span class="macro">assert_eq!</span>(input.resolve_or_zero(context), expected);
         }
     }
 
-    <span class="kw">mod </span>resolve_or_default_rect_dimension_to_rect_f32_via_option {
+    <span class="kw">mod </span>resolve_or_zero_rect_dimension_to_rect_f32_via_option {
         <span class="kw">use </span><span class="kw">crate</span>::geometry::Rect;
-        <span class="kw">use </span><span class="kw">crate</span>::resolve::ResolveOrDefault;
+        <span class="kw">use </span><span class="kw">crate</span>::resolve::ResolveOrZero;
         <span class="kw">use </span><span class="kw">crate</span>::style::Dimension;
         <span class="kw">use </span>rstest::rstest;
 
         <span class="attr">#[rstest]
-        #[case(Rect::UNDEFINED, <span class="prelude-val">None</span>, Rect::ZERO)]
-        #[case(Rect::UNDEFINED, <span class="prelude-val">Some</span>(<span class="number">5.0</span>), Rect::ZERO)]
-        #[case(Rect::UNDEFINED, <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), Rect::ZERO)]
-        #[case(Rect::UNDEFINED, <span class="prelude-val">Some</span>(<span class="number">0.0</span>), Rect::ZERO)]
-        </span><span class="kw">fn </span>resolve_or_default_undefined(
+        #[case(Rect::auto(), <span class="prelude-val">None</span>, Rect::zero())]
+        #[case(Rect::auto(), <span class="prelude-val">Some</span>(<span class="number">5.0</span>), Rect::zero())]
+        #[case(Rect::auto(), <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), Rect::zero())]
+        #[case(Rect::auto(), <span class="prelude-val">Some</span>(<span class="number">0.0</span>), Rect::zero())]
+        </span><span class="kw">fn </span>resolve_or_zero_auto(
             <span class="attr">#[case] </span>input: Rect&lt;Dimension&gt;,
             <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;,
             <span class="attr">#[case] </span>expected: Rect&lt;f32&gt;,
         ) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
-        }
-
-        <span class="attr">#[rstest]
-        #[case(Rect::AUTO, <span class="prelude-val">None</span>, Rect::ZERO)]
-        #[case(Rect::AUTO, <span class="prelude-val">Some</span>(<span class="number">5.0</span>), Rect::ZERO)]
-        #[case(Rect::AUTO, <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), Rect::ZERO)]
-        #[case(Rect::AUTO, <span class="prelude-val">Some</span>(<span class="number">0.0</span>), Rect::ZERO)]
-        </span><span class="kw">fn </span>resolve_or_default_auto(
-            <span class="attr">#[case] </span>input: Rect&lt;Dimension&gt;,
-            <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;,
-            <span class="attr">#[case] </span>expected: Rect&lt;f32&gt;,
-        ) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
+            <span class="macro">assert_eq!</span>(input.resolve_or_zero(context), expected);
         }
 
         <span class="attr">#[rstest]
@@ -750,27 +698,26 @@
         #[case(Rect::from_points(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), <span class="prelude-val">Some</span>(<span class="number">5.0</span>), Rect::new(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>))]
         #[case(Rect::from_points(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), Rect::new(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>))]
         #[case(Rect::from_points(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), <span class="prelude-val">Some</span>(<span class="number">0.0</span>), Rect::new(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>))]
-        </span><span class="kw">fn </span>resolve_or_default_points(
+        </span><span class="kw">fn </span>resolve_or_zero_points(
             <span class="attr">#[case] </span>input: Rect&lt;Dimension&gt;,
             <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;,
             <span class="attr">#[case] </span>expected: Rect&lt;f32&gt;,
         ) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
+            <span class="macro">assert_eq!</span>(input.resolve_or_zero(context), expected);
         }
 
         <span class="attr">#[rstest]
-        #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), <span class="prelude-val">None</span>, Rect::ZERO)]
+        #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), <span class="prelude-val">None</span>, Rect::zero())]
         #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), <span class="prelude-val">Some</span>(<span class="number">5.0</span>), Rect::new(<span class="number">25.0</span>, <span class="number">25.0</span>, <span class="number">25.0</span>, <span class="number">25.0</span>))]
         #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), <span class="prelude-val">Some</span>(-<span class="number">5.0</span>), Rect::new(-<span class="number">25.0</span>, -<span class="number">25.0</span>, -<span class="number">25.0</span>, -<span class="number">25.0</span>))]
-        #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), <span class="prelude-val">Some</span>(<span class="number">0.0</span>), Rect::ZERO)]
-        </span><span class="kw">fn </span>resolve_or_default_percent(
+        #[case(Rect::from_percent(<span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>), <span class="prelude-val">Some</span>(<span class="number">0.0</span>), Rect::zero())]
+        </span><span class="kw">fn </span>resolve_or_zero_percent(
             <span class="attr">#[case] </span>input: Rect&lt;Dimension&gt;,
             <span class="attr">#[case] </span>context: <span class="prelude-ty">Option</span>&lt;f32&gt;,
             <span class="attr">#[case] </span>expected: Rect&lt;f32&gt;,
         ) {
-            <span class="macro">assert_eq!</span>(input.resolve_or_default(context), expected);
+            <span class="macro">assert_eq!</span>(input.resolve_or_zero(context), expected);
         }
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taffy" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

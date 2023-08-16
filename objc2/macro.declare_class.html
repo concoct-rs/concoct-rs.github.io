@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Declare a new Objective-C class."><meta name="keywords" content="rust, rustlang, rust-lang, declare_class"><title>declare_class in objc2 - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../objc2/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../objc2/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><div class="sidebar-elems"><h2><a href="index.html">In objc2</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Macro <a href="index.html">objc2</a>::<wbr><a class="macro" href="#">declare_class</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/objc2/macros/declare_class.rs.html#570-695">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><div class="item-decl"><div class="example-wrap"><pre class="rust macro"><code><span class="macro">macro_rules! </span>declare_class {
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Declare a new Objective-C class."><title>declare_class in objc2 - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="objc2" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (eb088b8b9 2023-08-05)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../objc2/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../objc2/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><div class="sidebar-elems"><h2><a href="index.html">In objc2</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Macro <a href="index.html">objc2</a>::<wbr><a class="macro" href="#">declare_class</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../src/objc2/macros/declare_class.rs.html#570-706">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><span class="macro">macro_rules! </span>declare_class {
     {
         $(<span class="attr">#[<span class="macro-nonterminal">$m</span>:meta]</span>)*
         <span class="macro-nonterminal">$v</span>:vis <span class="kw">struct </span><span class="macro-nonterminal">$name</span>:ident {
@@ -14,10 +14,9 @@
 
         $(<span class="macro-nonterminal">$methods</span>:tt)*
     } =&gt; { ... };
-}</code></pre></div>
-</div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Declare a new Objective-C class.</p>
-<p>This is mostly just a convenience macro on top of <a href="macro.extern_class.html"><code>extern_class!</code></a> and
-the functionality in the <a href="declare/index.html"><code>declare</code></a> module, but it can really help
+}</pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Declare a new Objective-C class.</p>
+<p>This is mostly just a convenience macro on top of <a href="macro.extern_class.html" title="macro objc2::extern_class"><code>extern_class!</code></a> and
+the functionality in the <a href="declare/index.html" title="mod objc2::declare"><code>declare</code></a> module, but it can really help
 with cutting down on boilerplate, in particular when defining delegate
 classes!</p>
 <h2 id="specification"><a href="#specification">Specification</a></h2>
@@ -28,9 +27,9 @@ classes!</p>
 <li>A set of protocol definitions.</li>
 </ul>
 <h3 id="class-and-ivar-definition"><a href="#class-and-ivar-definition">Class and ivar definition</a></h3>
-<p>The class definition works a lot like <a href="macro.extern_class.html"><code>extern_class!</code></a>, with the added
+<p>The class definition works a lot like <a href="macro.extern_class.html" title="macro objc2::extern_class"><code>extern_class!</code></a>, with the added
 functionality that you can define custom instance variables on your class,
-which are then wrapped in a <a href="declare/struct.Ivar.html"><code>declare::Ivar</code></a> and made accessible
+which are then wrapped in a <a href="declare/struct.Ivar.html" title="struct objc2::declare::Ivar"><code>declare::Ivar</code></a> and made accessible
 through the class. (E.g. you can use <code>self.my_ivar</code> as if it was a normal
 Rust struct).</p>
 <p>Note that the class name should be unique across the entire application!
@@ -38,10 +37,10 @@ You can declare the class with the desired unique name like
 <code>&quot;MyCrateCustomObject&quot;</code> by specifying it in <code>ClassType::NAME</code>, and then
 give the exposed type a different name like <code>CustomObject</code>.</p>
 <p>The class is guaranteed to have been created and registered with the
-Objective-C runtime after the <a href="trait.ClassType.html#tymethod.class"><code>ClassType::class</code></a> function has been
+Objective-C runtime after the <a href="trait.ClassType.html#tymethod.class" title="associated function objc2::ClassType::class"><code>ClassType::class</code></a> function has been
 called.</p>
 <p>If any of the instance variables require being <code>Drop</code>’ed (e.g. are wrapped
-in <a href="declare/struct.IvarDrop.html"><code>declare::IvarDrop</code></a>), this macro will generate a <code>dealloc</code> method
+in <a href="declare/struct.IvarDrop.html" title="struct objc2::declare::IvarDrop"><code>declare::IvarDrop</code></a>), this macro will generate a <code>dealloc</code> method
 automatically.</p>
 <h3 id="method-definitions"><a href="#method-definitions">Method definitions</a></h3>
 <p>Within the <code>impl</code> block you can define two types of functions;
@@ -50,13 +49,13 @@ Objective-C equivalents “class methods” and “instance methods”. In
 particular, if you use <code>self</code> your method will be registered as an
 instance method, and if you don’t it will be registered as a class method.</p>
 <p>The desired selector can be specified using the <code>#[sel(my:selector:)]</code>
-attribute, similar to the <a href="macro.extern_methods.html"><code>extern_methods!</code></a> macro.</p>
+attribute, similar to the <a href="macro.extern_methods.html" title="macro objc2::extern_methods"><code>extern_methods!</code></a> macro.</p>
 <p>A transformation step is performed on the functions (to make them have the
 correct ABI) and hence they shouldn’t really be called manually. (You
 can’t mark them as <code>pub</code> for the same reason). Instead, use the
-<a href="macro.extern_methods.html"><code>extern_methods!</code></a> macro to create a Rust interface to the methods.</p>
-<p>If the argument or return type is <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html" title="bool"><code>bool</code></a>, a conversion is performed to
-make it behave similarly to the Objective-C <code>BOOL</code>. Use <a href="runtime/struct.Bool.html"><code>runtime::Bool</code></a>
+<a href="macro.extern_methods.html" title="macro objc2::extern_methods"><code>extern_methods!</code></a> macro to create a Rust interface to the methods.</p>
+<p>If the argument or return type is <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html" title="primitive bool"><code>bool</code></a>, a conversion is performed to
+make it behave similarly to the Objective-C <code>BOOL</code>. Use <a href="runtime/struct.Bool.html" title="struct objc2::runtime::Bool"><code>runtime::Bool</code></a>
 if you want to control this manually.</p>
 <h3 id="protocol-definitions"><a href="#protocol-definitions">Protocol definitions</a></h3>
 <p>You can specify protocols that the class should implement, along with any
@@ -67,9 +66,9 @@ definition to make things easier to read.</p>
 <p>Using this macro requires writing a few <code>unsafe</code> markers:</p>
 <p><code>unsafe impl ClassType for T</code> has the following safety requirements:</p>
 <ul>
-<li>Same as <a href="macro.extern_class.html"><code>extern_class!</code></a> (the inheritance chain has to be correct).</li>
+<li>Same as <a href="macro.extern_class.html" title="macro objc2::extern_class"><code>extern_class!</code></a> (the inheritance chain has to be correct).</li>
 <li>Any instance variables you specify under the struct definition must
-either be able to be created using <a href="https://doc.rust-lang.org/nightly/core/mem/maybe_uninit/union.MaybeUninit.html#method.zeroed"><code>MaybeUninit::zeroed</code></a>, or be
+either be able to be created using <a href="https://doc.rust-lang.org/nightly/core/mem/maybe_uninit/union.MaybeUninit.html#method.zeroed" title="associated function core::mem::maybe_uninit::MaybeUninit::zeroed"><code>MaybeUninit::zeroed</code></a>, or be
 properly initialized in an <code>init</code> method.</li>
 </ul>
 <p><code>unsafe impl T { ... }</code> asserts that the types match those that are
@@ -248,4 +247,4 @@ instance variables and methods, and implements the <code>NSCopying</code> protoc
 }
 
 @end
-</code></pre></div></div></details></section></div></main><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="objc2" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></div></details></section></div></main></body></html>

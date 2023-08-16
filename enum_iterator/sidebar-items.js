@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"derive":[["IntoEnumIterator","Derives `IntoEnumIterator`."]],"trait":[["IntoEnumIterator","Trait to iterate over the values of a type."]]};

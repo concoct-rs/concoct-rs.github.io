@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Exception","An Objective-C exception."]]};
+window.SIDEBAR_ITEMS = {"struct":["Exception"]};

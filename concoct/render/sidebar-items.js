@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["UserEvent",""]],"fn":[["run",""],["run_with_event_loop_builder",""]],"struct":[["GlWindow",""]]};

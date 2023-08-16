@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["cgl","The CGL Api."]]};
+window.SIDEBAR_ITEMS = {"mod":["cgl"]};

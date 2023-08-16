@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["remember",""],["stream",""]],"mod":[["container",""],["material",""],["state",""],["text",""]]};

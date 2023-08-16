@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Surface","A wrapper aroud `NSView`."]]};
+window.SIDEBAR_ITEMS = {"struct":["Surface"]};

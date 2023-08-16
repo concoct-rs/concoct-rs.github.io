@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/mio-0.8.5/src/sys/unix/selector/kqueue.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>kqueue.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../../mio/index.html"><img class="rust-logo" src="../../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/index.crates.io-6f17d22bba15001f/mio-0.8.8/src/sys/unix/selector/kqueue.rs`."><title>kqueue.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../../../" data-static-root-path="../../../../../static.files/" data-current-crate="mio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (eb088b8b9 2023-08-05)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../../src-files.js"></script><script defer src="../../../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../../mio/index.html"><img class="rust-logo" src="../../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -674,8 +674,191 @@
 <a href="#674" id="674">674</a>
 <a href="#675" id="675">675</a>
 <a href="#676" id="676">676</a>
-</pre><pre class="rust"><code><span class="kw">use crate</span>::{Interest, Token};
-<span class="kw">use </span>log::error;
+<a href="#677" id="677">677</a>
+<a href="#678" id="678">678</a>
+<a href="#679" id="679">679</a>
+<a href="#680" id="680">680</a>
+<a href="#681" id="681">681</a>
+<a href="#682" id="682">682</a>
+<a href="#683" id="683">683</a>
+<a href="#684" id="684">684</a>
+<a href="#685" id="685">685</a>
+<a href="#686" id="686">686</a>
+<a href="#687" id="687">687</a>
+<a href="#688" id="688">688</a>
+<a href="#689" id="689">689</a>
+<a href="#690" id="690">690</a>
+<a href="#691" id="691">691</a>
+<a href="#692" id="692">692</a>
+<a href="#693" id="693">693</a>
+<a href="#694" id="694">694</a>
+<a href="#695" id="695">695</a>
+<a href="#696" id="696">696</a>
+<a href="#697" id="697">697</a>
+<a href="#698" id="698">698</a>
+<a href="#699" id="699">699</a>
+<a href="#700" id="700">700</a>
+<a href="#701" id="701">701</a>
+<a href="#702" id="702">702</a>
+<a href="#703" id="703">703</a>
+<a href="#704" id="704">704</a>
+<a href="#705" id="705">705</a>
+<a href="#706" id="706">706</a>
+<a href="#707" id="707">707</a>
+<a href="#708" id="708">708</a>
+<a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
+<a href="#712" id="712">712</a>
+<a href="#713" id="713">713</a>
+<a href="#714" id="714">714</a>
+<a href="#715" id="715">715</a>
+<a href="#716" id="716">716</a>
+<a href="#717" id="717">717</a>
+<a href="#718" id="718">718</a>
+<a href="#719" id="719">719</a>
+<a href="#720" id="720">720</a>
+<a href="#721" id="721">721</a>
+<a href="#722" id="722">722</a>
+<a href="#723" id="723">723</a>
+<a href="#724" id="724">724</a>
+<a href="#725" id="725">725</a>
+<a href="#726" id="726">726</a>
+<a href="#727" id="727">727</a>
+<a href="#728" id="728">728</a>
+<a href="#729" id="729">729</a>
+<a href="#730" id="730">730</a>
+<a href="#731" id="731">731</a>
+<a href="#732" id="732">732</a>
+<a href="#733" id="733">733</a>
+<a href="#734" id="734">734</a>
+<a href="#735" id="735">735</a>
+<a href="#736" id="736">736</a>
+<a href="#737" id="737">737</a>
+<a href="#738" id="738">738</a>
+<a href="#739" id="739">739</a>
+<a href="#740" id="740">740</a>
+<a href="#741" id="741">741</a>
+<a href="#742" id="742">742</a>
+<a href="#743" id="743">743</a>
+<a href="#744" id="744">744</a>
+<a href="#745" id="745">745</a>
+<a href="#746" id="746">746</a>
+<a href="#747" id="747">747</a>
+<a href="#748" id="748">748</a>
+<a href="#749" id="749">749</a>
+<a href="#750" id="750">750</a>
+<a href="#751" id="751">751</a>
+<a href="#752" id="752">752</a>
+<a href="#753" id="753">753</a>
+<a href="#754" id="754">754</a>
+<a href="#755" id="755">755</a>
+<a href="#756" id="756">756</a>
+<a href="#757" id="757">757</a>
+<a href="#758" id="758">758</a>
+<a href="#759" id="759">759</a>
+<a href="#760" id="760">760</a>
+<a href="#761" id="761">761</a>
+<a href="#762" id="762">762</a>
+<a href="#763" id="763">763</a>
+<a href="#764" id="764">764</a>
+<a href="#765" id="765">765</a>
+<a href="#766" id="766">766</a>
+<a href="#767" id="767">767</a>
+<a href="#768" id="768">768</a>
+<a href="#769" id="769">769</a>
+<a href="#770" id="770">770</a>
+<a href="#771" id="771">771</a>
+<a href="#772" id="772">772</a>
+<a href="#773" id="773">773</a>
+<a href="#774" id="774">774</a>
+<a href="#775" id="775">775</a>
+<a href="#776" id="776">776</a>
+<a href="#777" id="777">777</a>
+<a href="#778" id="778">778</a>
+<a href="#779" id="779">779</a>
+<a href="#780" id="780">780</a>
+<a href="#781" id="781">781</a>
+<a href="#782" id="782">782</a>
+<a href="#783" id="783">783</a>
+<a href="#784" id="784">784</a>
+<a href="#785" id="785">785</a>
+<a href="#786" id="786">786</a>
+<a href="#787" id="787">787</a>
+<a href="#788" id="788">788</a>
+<a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a>
+<a href="#793" id="793">793</a>
+<a href="#794" id="794">794</a>
+<a href="#795" id="795">795</a>
+<a href="#796" id="796">796</a>
+<a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a>
+<a href="#815" id="815">815</a>
+<a href="#816" id="816">816</a>
+<a href="#817" id="817">817</a>
+<a href="#818" id="818">818</a>
+<a href="#819" id="819">819</a>
+<a href="#820" id="820">820</a>
+<a href="#821" id="821">821</a>
+<a href="#822" id="822">822</a>
+<a href="#823" id="823">823</a>
+<a href="#824" id="824">824</a>
+<a href="#825" id="825">825</a>
+<a href="#826" id="826">826</a>
+<a href="#827" id="827">827</a>
+<a href="#828" id="828">828</a>
+<a href="#829" id="829">829</a>
+<a href="#830" id="830">830</a>
+<a href="#831" id="831">831</a>
+<a href="#832" id="832">832</a>
+<a href="#833" id="833">833</a>
+<a href="#834" id="834">834</a>
+<a href="#835" id="835">835</a>
+<a href="#836" id="836">836</a>
+<a href="#837" id="837">837</a>
+<a href="#838" id="838">838</a>
+<a href="#839" id="839">839</a>
+<a href="#840" id="840">840</a>
+<a href="#841" id="841">841</a>
+<a href="#842" id="842">842</a>
+<a href="#843" id="843">843</a>
+<a href="#844" id="844">844</a>
+<a href="#845" id="845">845</a>
+<a href="#846" id="846">846</a>
+<a href="#847" id="847">847</a>
+<a href="#848" id="848">848</a>
+<a href="#849" id="849">849</a>
+<a href="#850" id="850">850</a>
+<a href="#851" id="851">851</a>
+<a href="#852" id="852">852</a>
+<a href="#853" id="853">853</a>
+<a href="#854" id="854">854</a>
+<a href="#855" id="855">855</a>
+<a href="#856" id="856">856</a>
+<a href="#857" id="857">857</a>
+<a href="#858" id="858">858</a>
+<a href="#859" id="859">859</a>
+<a href="#860" id="860">860</a>
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{Interest, Token};
 <span class="kw">use </span>std::mem::{<span class="self">self</span>, MaybeUninit};
 <span class="kw">use </span>std::ops::{Deref, DerefMut};
 <span class="kw">use </span>std::os::unix::io::{AsRawFd, RawFd};
@@ -697,7 +880,12 @@
 <span class="comment">// Type of the `filter` field in the `kevent` structure.
 </span><span class="attr">#[cfg(any(target_os = <span class="string">&quot;dragonfly&quot;</span>, target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;openbsd&quot;</span>))]
 </span><span class="kw">type </span>Filter = libc::c_short;
-<span class="attr">#[cfg(any(target_os = <span class="string">&quot;macos&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>))]
+<span class="attr">#[cfg(any(
+    target_os = <span class="string">&quot;ios&quot;</span>,
+    target_os = <span class="string">&quot;macos&quot;</span>,
+    target_os = <span class="string">&quot;tvos&quot;</span>,
+    target_os = <span class="string">&quot;watchos&quot;
+</span>))]
 </span><span class="kw">type </span>Filter = i16;
 <span class="attr">#[cfg(target_os = <span class="string">&quot;netbsd&quot;</span>)]
 </span><span class="kw">type </span>Filter = u32;
@@ -705,7 +893,12 @@
 <span class="comment">// Type of the `flags` field in the `kevent` structure.
 </span><span class="attr">#[cfg(any(target_os = <span class="string">&quot;dragonfly&quot;</span>, target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;openbsd&quot;</span>))]
 </span><span class="kw">type </span>Flags = libc::c_ushort;
-<span class="attr">#[cfg(any(target_os = <span class="string">&quot;macos&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>))]
+<span class="attr">#[cfg(any(
+    target_os = <span class="string">&quot;ios&quot;</span>,
+    target_os = <span class="string">&quot;macos&quot;</span>,
+    target_os = <span class="string">&quot;tvos&quot;</span>,
+    target_os = <span class="string">&quot;watchos&quot;
+</span>))]
 </span><span class="kw">type </span>Flags = u16;
 <span class="attr">#[cfg(target_os = <span class="string">&quot;netbsd&quot;</span>)]
 </span><span class="kw">type </span>Flags = u32;
@@ -739,15 +932,17 @@
 
 <span class="kw">impl </span>Selector {
     <span class="kw">pub fn </span>new() -&gt; io::Result&lt;Selector&gt; {
-        <span class="macro">syscall!</span>(kqueue())
-            .and_then(|kq| <span class="macro">syscall!</span>(fcntl(kq, libc::F_SETFD, libc::FD_CLOEXEC)).map(|<span class="kw">_</span>| kq))
-            .map(|kq| Selector {
-                <span class="attr">#[cfg(debug_assertions)]
-                </span>id: NEXT_ID.fetch_add(<span class="number">1</span>, Ordering::Relaxed),
-                kq,
-                <span class="attr">#[cfg(debug_assertions)]
-                </span>has_waker: AtomicBool::new(<span class="bool-val">false</span>),
-            })
+        <span class="kw">let </span>kq = <span class="macro">syscall!</span>(kqueue())<span class="question-mark">?</span>;
+        <span class="kw">let </span>selector = Selector {
+            <span class="attr">#[cfg(debug_assertions)]
+            </span>id: NEXT_ID.fetch_add(<span class="number">1</span>, Ordering::Relaxed),
+            kq,
+            <span class="attr">#[cfg(debug_assertions)]
+            </span>has_waker: AtomicBool::new(<span class="bool-val">false</span>),
+        };
+
+        <span class="macro">syscall!</span>(fcntl(kq, libc::F_SETFD, libc::FD_CLOEXEC))<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(selector)
     }
 
     <span class="kw">pub fn </span>try_clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; io::Result&lt;Selector&gt; {
@@ -884,7 +1079,13 @@
     }
 
     <span class="comment">// Used by `Waker`.
-    </span><span class="attr">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+    </span><span class="attr">#[cfg(any(
+        target_os = <span class="string">&quot;freebsd&quot;</span>,
+        target_os = <span class="string">&quot;ios&quot;</span>,
+        target_os = <span class="string">&quot;macos&quot;</span>,
+        target_os = <span class="string">&quot;tvos&quot;</span>,
+        target_os = <span class="string">&quot;watchos&quot;
+    </span>))]
     </span><span class="kw">pub fn </span>setup_waker(<span class="kw-2">&amp;</span><span class="self">self</span>, token: Token) -&gt; io::Result&lt;()&gt; {
         <span class="comment">// First attempt to accept user space notifications.
         </span><span class="kw">let </span><span class="kw-2">mut </span>kevent = <span class="macro">kevent!</span>(
@@ -904,7 +1105,13 @@
     }
 
     <span class="comment">// Used by `Waker`.
-    </span><span class="attr">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+    </span><span class="attr">#[cfg(any(
+        target_os = <span class="string">&quot;freebsd&quot;</span>,
+        target_os = <span class="string">&quot;ios&quot;</span>,
+        target_os = <span class="string">&quot;macos&quot;</span>,
+        target_os = <span class="string">&quot;tvos&quot;</span>,
+        target_os = <span class="string">&quot;watchos&quot;
+    </span>))]
     </span><span class="kw">pub fn </span>wake(<span class="kw-2">&amp;</span><span class="self">self</span>, token: Token) -&gt; io::Result&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>kevent = <span class="macro">kevent!</span>(
             <span class="number">0</span>,
@@ -1035,14 +1242,26 @@
 
     <span class="kw">pub fn </span>is_readable(event: <span class="kw-2">&amp;</span>Event) -&gt; bool {
         event.filter == libc::EVFILT_READ || {
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;freebsd&quot;</span>,
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span><span class="comment">// Used by the `Awakener`. On platforms that use `eventfd` or a unix
             // pipe it will emit a readable event so we&#39;ll fake that here as
             // well.
             </span>{
                 event.filter == libc::EVFILT_USER
             }
-            <span class="attr">#[cfg(not(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>)))]
+            <span class="attr">#[cfg(not(any(
+                target_os = <span class="string">&quot;freebsd&quot;</span>,
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>)))]
             </span>{
                 <span class="bool-val">false
             </span>}
@@ -1079,8 +1298,10 @@
             target_os = <span class="string">&quot;dragonfly&quot;</span>,
             target_os = <span class="string">&quot;freebsd&quot;</span>,
             target_os = <span class="string">&quot;ios&quot;</span>,
-            target_os = <span class="string">&quot;macos&quot;
-        </span>))]
+            target_os = <span class="string">&quot;macos&quot;</span>,
+            target_os = <span class="string">&quot;tvos&quot;</span>,
+            target_os = <span class="string">&quot;watchos&quot;</span>,
+        ))]
         </span>{
             event.filter == libc::EVFILT_AIO
         }
@@ -1088,8 +1309,10 @@
             target_os = <span class="string">&quot;dragonfly&quot;</span>,
             target_os = <span class="string">&quot;freebsd&quot;</span>,
             target_os = <span class="string">&quot;ios&quot;</span>,
-            target_os = <span class="string">&quot;macos&quot;
-        </span>)))]
+            target_os = <span class="string">&quot;macos&quot;</span>,
+            target_os = <span class="string">&quot;tvos&quot;</span>,
+            target_os = <span class="string">&quot;watchos&quot;</span>,
+        )))]
         </span>{
             <span class="bool-val">false
         </span>}
@@ -1124,8 +1347,10 @@
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;ios&quot;</span>,
-                target_os = <span class="string">&quot;macos&quot;
-            </span>))]
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;</span>,
+            ))]
             </span>libc::EVFILT_FS,
             <span class="attr">#[cfg(target_os = <span class="string">&quot;freebsd&quot;</span>)]
             </span>libc::EVFILT_LIO,
@@ -1133,8 +1358,10 @@
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;ios&quot;</span>,
-                target_os = <span class="string">&quot;macos&quot;
-            </span>))]
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;</span>,
+            ))]
             </span>libc::EVFILT_USER,
             <span class="attr">#[cfg(target_os = <span class="string">&quot;freebsd&quot;</span>)]
             </span>libc::EVFILT_SENDFILE,
@@ -1142,9 +1369,19 @@
             </span>libc::EVFILT_EMPTY,
             <span class="attr">#[cfg(target_os = <span class="string">&quot;dragonfly&quot;</span>)]
             </span>libc::EVFILT_EXCEPT,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::EVFILT_MACHPORT,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::EVFILT_VM,
         );
 
@@ -1169,11 +1406,26 @@
             libc::EV_ERROR,
             libc::EV_EOF,
             libc::EV_SYSFLAGS,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::EV_FLAG0,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::EV_POLL,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::EV_OOBAND,
             <span class="attr">#[cfg(target_os = <span class="string">&quot;dragonfly&quot;</span>)]
             </span>libc::EV_NODATA,
@@ -1190,50 +1442,64 @@
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;ios&quot;</span>,
-                target_os = <span class="string">&quot;macos&quot;
-            </span>))]
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;</span>,
+            ))]
             </span>libc::NOTE_TRIGGER,
             <span class="attr">#[cfg(any(
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;ios&quot;</span>,
-                target_os = <span class="string">&quot;macos&quot;
-            </span>))]
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;</span>,
+            ))]
             </span>libc::NOTE_FFNOP,
             <span class="attr">#[cfg(any(
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;ios&quot;</span>,
-                target_os = <span class="string">&quot;macos&quot;
-            </span>))]
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;</span>,
+            ))]
             </span>libc::NOTE_FFAND,
             <span class="attr">#[cfg(any(
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;ios&quot;</span>,
-                target_os = <span class="string">&quot;macos&quot;
-            </span>))]
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;</span>,
+            ))]
             </span>libc::NOTE_FFOR,
             <span class="attr">#[cfg(any(
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;ios&quot;</span>,
-                target_os = <span class="string">&quot;macos&quot;
-            </span>))]
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;</span>,
+            ))]
             </span>libc::NOTE_FFCOPY,
             <span class="attr">#[cfg(any(
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;ios&quot;</span>,
-                target_os = <span class="string">&quot;macos&quot;
-            </span>))]
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;</span>,
+            ))]
             </span>libc::NOTE_FFCTRLMASK,
             <span class="attr">#[cfg(any(
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;ios&quot;</span>,
-                target_os = <span class="string">&quot;macos&quot;
-            </span>))]
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;</span>,
+            ))]
             </span>libc::NOTE_FFLAGSMASK,
             libc::NOTE_LOWAT,
             libc::NOTE_DELETE,
@@ -1242,24 +1508,49 @@
             </span>libc::NOTE_OOB,
             <span class="attr">#[cfg(target_os = <span class="string">&quot;openbsd&quot;</span>)]
             </span>libc::NOTE_EOF,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_EXTEND,
             libc::NOTE_ATTRIB,
             libc::NOTE_LINK,
             libc::NOTE_RENAME,
             libc::NOTE_REVOKE,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_NONE,
             <span class="attr">#[cfg(any(target_os = <span class="string">&quot;openbsd&quot;</span>))]
             </span>libc::NOTE_TRUNCATE,
             libc::NOTE_EXIT,
             libc::NOTE_FORK,
             libc::NOTE_EXEC,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_SIGNAL,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_EXITSTATUS,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_EXIT_DETAIL,
             libc::NOTE_PDATAMASK,
             libc::NOTE_PCTRLMASK,
@@ -1267,55 +1558,132 @@
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;netbsd&quot;</span>,
-                target_os = <span class="string">&quot;openbsd&quot;
-            </span>))]
+                target_os = <span class="string">&quot;openbsd&quot;</span>,
+            ))]
             </span>libc::NOTE_TRACK,
             <span class="attr">#[cfg(any(
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;netbsd&quot;</span>,
-                target_os = <span class="string">&quot;openbsd&quot;
-            </span>))]
+                target_os = <span class="string">&quot;openbsd&quot;</span>,
+            ))]
             </span>libc::NOTE_TRACKERR,
             <span class="attr">#[cfg(any(
                 target_os = <span class="string">&quot;dragonfly&quot;</span>,
                 target_os = <span class="string">&quot;freebsd&quot;</span>,
                 target_os = <span class="string">&quot;netbsd&quot;</span>,
-                target_os = <span class="string">&quot;openbsd&quot;
-            </span>))]
+                target_os = <span class="string">&quot;openbsd&quot;</span>,
+            ))]
             </span>libc::NOTE_CHILD,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_EXIT_DETAIL_MASK,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_EXIT_DECRYPTFAIL,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_EXIT_MEMORY,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_EXIT_CSERROR,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_VM_PRESSURE,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_VM_PRESSURE_TERMINATE,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_VM_PRESSURE_SUDDEN_TERMINATE,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_VM_ERROR,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;freebsd&quot;</span>,
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_SECONDS,
             <span class="attr">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>))]
             </span>libc::NOTE_MSECONDS,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;freebsd&quot;</span>,
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_USECONDS,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;freebsd&quot;</span>,
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_NSECONDS,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
-            #[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_ABSOLUTE,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_LEEWAY,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_CRITICAL,
-            <span class="attr">#[cfg(any(target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;macos&quot;</span>))]
+            <span class="attr">#[cfg(any(
+                target_os = <span class="string">&quot;ios&quot;</span>,
+                target_os = <span class="string">&quot;macos&quot;</span>,
+                target_os = <span class="string">&quot;tvos&quot;</span>,
+                target_os = <span class="string">&quot;watchos&quot;
+            </span>))]
             </span>libc::NOTE_BACKGROUND,
         );
 
@@ -1350,5 +1718,4 @@
         .register(<span class="kw-2">&amp;mut </span>kqf, Token(<span class="number">1234</span>), Interest::READABLE)
         .unwrap();
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../../../" data-static-root-path="../../../../../static.files/" data-current-crate="mio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

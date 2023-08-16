@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["clickable","remember"],"mod":["layout_context"],"struct":["Adapt","AdaptThunk","BuildContext","Canvas","EventHandler","Id","Remember"],"trait":["View"]};

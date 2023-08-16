@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/skia-safe-0.58.0/src/core/canvas.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>canvas.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../skia_safe/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/index.crates.io-6f17d22bba15001f/skia-safe-0.64.0/src/core/canvas.rs`."><title>canvas.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="skia_safe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (eb088b8b9 2023-08-05)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../skia_safe/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2470,17 +2470,35 @@
 <a href="#2470" id="2470">2470</a>
 <a href="#2471" id="2471">2471</a>
 <a href="#2472" id="2472">2472</a>
-</pre><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;gpu&quot;</span>)]
+<a href="#2473" id="2473">2473</a>
+<a href="#2474" id="2474">2474</a>
+<a href="#2475" id="2475">2475</a>
+<a href="#2476" id="2476">2476</a>
+<a href="#2477" id="2477">2477</a>
+<a href="#2478" id="2478">2478</a>
+<a href="#2479" id="2479">2479</a>
+<a href="#2480" id="2480">2480</a>
+<a href="#2481" id="2481">2481</a>
+<a href="#2482" id="2482">2482</a>
+<a href="#2483" id="2483">2483</a>
+<a href="#2484" id="2484">2484</a>
+<a href="#2485" id="2485">2485</a>
+<a href="#2486" id="2486">2486</a>
+<a href="#2487" id="2487">2487</a>
+<a href="#2488" id="2488">2488</a>
+<a href="#2489" id="2489">2489</a>
+<a href="#2490" id="2490">2490</a>
+</pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;gpu&quot;</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::gpu;
 <span class="kw">use crate</span>::{
-    prelude::<span class="kw-2">*</span>, scalar, u8cpu, Bitmap, BlendMode, ClipOp, Color, Color4f, Data, Drawable,
-    FilterMode, Font, GlyphId, IPoint, IRect, ISize, Image, ImageFilter, ImageInfo, Matrix, Paint,
-    Path, Picture, Pixmap, Point, QuickReject, RRect, RSXform, Rect, Region, SamplingOptions,
-    Shader, Surface, SurfaceProps, TextBlob, TextEncoding, Vector, Vertices, M44,
+    prelude::<span class="kw-2">*</span>, scalar, Bitmap, BlendMode, ClipOp, Color, Color4f, Data, Drawable, FilterMode,
+    Font, GlyphId, IPoint, IRect, ISize, Image, ImageFilter, ImageInfo, Matrix, Paint, Path,
+    Picture, Pixmap, Point, QuickReject, RRect, RSXform, Rect, Region, SamplingOptions, Shader,
+    Surface, SurfaceProps, TextBlob, TextEncoding, Vector, Vertices, M44,
 };
 <span class="kw">use </span>skia_bindings::{
     <span class="self">self </span><span class="kw">as </span>sb, SkAutoCanvasRestore, SkCanvas, SkCanvas_SaveLayerRec, SkImageFilter, SkPaint,
-    SkRect,
+    SkRect, U8CPU,
 };
 <span class="kw">use </span>std::{
     convert::TryInto,
@@ -2498,6 +2516,7 @@
     <span class="doccomment">/// [`SaveLayerFlags`] provides options that may be used in any combination in [`SaveLayerRec`],
     /// defining how layer allocated by [`Canvas::save_layer()`] operates. It may be set to zero,
     /// [`PRESERVE_LCD_TEXT`], [`INIT_WITH_PREVIOUS`], or both flags.
+    </span><span class="attr">#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
     </span><span class="kw">pub struct </span>SaveLayerFlags: u32 {
         <span class="kw">const </span>PRESERVE_LCD_TEXT = sb::SkCanvas_SaveLayerFlagsSet_kPreserveLCDText_SaveLayerFlag <span class="kw">as _</span>;
         <span class="doccomment">/// initializes with previous contents
@@ -2617,7 +2636,7 @@
 
 <span class="doccomment">/// Selects if an array of points are drawn as discrete points, as lines, or as an open polygon.
 </span><span class="kw">pub use </span>sb::SkCanvas_PointMode <span class="kw">as </span>PointMode;
-<span class="macro">variant_name!</span>(PointMode::Polygon, point_mode_naming);
+<span class="macro">variant_name!</span>(PointMode::Polygon);
 
 <span class="doccomment">/// [`SrcRectConstraint`] controls the behavior at the edge of source [`Rect`], provided to
 /// [`Canvas::draw_image_rect()`] when there is any filtering. If kStrict is set, then extra code is
@@ -2625,7 +2644,7 @@
 ///
 /// [`SrcRectConstraint::Strict`] disables the use of mipmaps and anisotropic filtering.
 </span><span class="kw">pub use </span>sb::SkCanvas_SrcRectConstraint <span class="kw">as </span>SrcRectConstraint;
-<span class="macro">variant_name!</span>(SrcRectConstraint::Fast, src_rect_constraint_naming);
+<span class="macro">variant_name!</span>(SrcRectConstraint::Fast);
 
 <span class="doccomment">/// Provides access to Canvas&#39;s pixels.
 ///
@@ -2684,7 +2703,9 @@
 </span><span class="attr">#[repr(transparent)]
 </span><span class="kw">pub struct </span>Canvas(SkCanvas);
 
-<span class="kw">impl </span>NativeAccess&lt;SkCanvas&gt; <span class="kw">for </span>Canvas {
+<span class="kw">impl </span>NativeAccess <span class="kw">for </span>Canvas {
+    <span class="kw">type </span>Native = SkCanvas;
+
     <span class="kw">fn </span>native(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SkCanvas {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
     </span>}
@@ -3011,6 +3032,14 @@
         })
     }
 
+    <span class="doccomment">/// Returns the [`gpu::DirectContext`].
+    /// This is a rust-skia helper for that makes it simpler to call [`Image::encode`].
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;gpu&quot;</span>)]
+    </span><span class="kw">pub fn </span>direct_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;gpu::DirectContext&gt; {
+        <span class="self">self</span>.recording_context()
+            .and_then(|<span class="kw-2">mut </span>c| c.as_direct_context())
+    }
+
     <span class="doccomment">/// Sometimes a canvas is owned by a surface. If it is, [`Self::surface()`] will return a bare
     /// pointer to that surface, else this will return `None`.
     ///
@@ -3076,10 +3105,9 @@
     /// Returns [`Pixmap`] if [`Canvas`] has direct access to pixels
     ///
     /// example: &lt;https://fiddle.skia.org/c/@Canvas_peekPixels&gt;
-    </span><span class="kw">pub fn </span>peek_pixels(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Borrows&lt;Pixmap&gt;&gt; {
+    </span><span class="kw">pub fn </span>peek_pixels(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Pixmap&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>pixmap = Pixmap::default();
-        <span class="kw">unsafe </span>{ <span class="self">self</span>.native_mut().peekPixels(pixmap.native_mut()) }
-            .if_true_then_some(<span class="kw">move </span>|| pixmap.borrows(<span class="self">self</span>))
+        <span class="kw">unsafe </span>{ <span class="self">self</span>.native_mut().peekPixels(pixmap.native_mut()) }.if_true_some(pixmap)
     }
 
     <span class="doccomment">/// Copies [`Rect`] of pixels from [`Canvas`] into `dst_pixels`. [`Matrix`] and clip are
@@ -3358,7 +3386,7 @@
     /// [`Rect`] bounds suggests but does not define layer size. To clip drawing to a specific
     /// rectangle, use [`Self::clip_rect()`].
     ///
-    /// alpha of zero is fully transparent, 255 is fully opaque.
+    /// alpha of zero is fully transparent, 1.0 is fully opaque.
     ///
     /// Call [`Self::restore_to_count()`] with result to restore this and subsequent saves.
     ///
@@ -3367,13 +3395,18 @@
     /// Returns depth of saved stack
     ///
     /// example: &lt;https://fiddle.skia.org/c/@Canvas_saveLayerAlpha&gt;
-    </span><span class="kw">pub fn </span>save_layer_alpha(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bounds: <span class="kw">impl </span>Into&lt;<span class="prelude-ty">Option</span>&lt;Rect&gt;&gt;, alpha: u8cpu) -&gt; usize {
+    </span><span class="kw">pub fn </span>save_layer_alpha_f(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bounds: <span class="kw">impl </span>Into&lt;<span class="prelude-ty">Option</span>&lt;Rect&gt;&gt;, alpha: f32) -&gt; usize {
         <span class="kw">unsafe </span>{
             <span class="self">self</span>.native_mut()
-                .saveLayerAlpha(bounds.into().native().as_ptr_or_null(), alpha)
+                .saveLayerAlphaf(bounds.into().native().as_ptr_or_null(), alpha)
         }
         .try_into()
         .unwrap()
+    }
+
+    <span class="doccomment">/// Helper that accepts an int between 0 and 255, and divides it by 255.0
+    </span><span class="kw">pub fn </span>save_layer_alpha(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bounds: <span class="kw">impl </span>Into&lt;<span class="prelude-ty">Option</span>&lt;Rect&gt;&gt;, alpha: U8CPU) -&gt; usize {
+        <span class="self">self</span>.save_layer_alpha_f(bounds, alpha <span class="kw">as </span>f32 * (<span class="number">1.0 </span>/ <span class="number">255.0</span>))
     }
 
     <span class="doccomment">/// Saves [`Matrix`] and clip, and allocates [`Surface`] for subsequent drawing.
@@ -4789,7 +4822,7 @@
     <span class="doccomment">/// Optional setting per rectangular grid entry to make it transparent,
     /// or to fill the grid entry with a color.
     </span><span class="kw">pub use </span>sb::SkCanvas_Lattice_RectType <span class="kw">as </span>RectType;
-    <span class="macro">variant_name!</span>(RectType::FixedColor, rect_type_naming);
+    <span class="macro">variant_name!</span>(RectType::FixedColor);
 }
 
 <span class="attr">#[derive(Debug)]
@@ -4814,7 +4847,9 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NativeAccess&lt;SkAutoCanvasRestore&gt; <span class="kw">for </span>AutoRestoredCanvas&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NativeAccess <span class="kw">for </span>AutoRestoredCanvas&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">type </span>Native = SkAutoCanvasRestore;
+
     <span class="kw">fn </span>native(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SkAutoCanvasRestore {
         <span class="kw-2">&amp;</span><span class="self">self</span>.restore
     }
@@ -4860,8 +4895,8 @@
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
     <span class="kw">use crate</span>::{
-        canvas::SaveLayerFlags, canvas::SaveLayerRec, AlphaType, Canvas, ClipOp, Color, ColorType,
-        ImageInfo, OwnedCanvas, Rect,
+        canvas::SaveLayerFlags, canvas::SaveLayerRec, surfaces, AlphaType, Canvas, ClipOp, Color,
+        ColorType, ImageInfo, OwnedCanvas, Rect,
     };
 
     <span class="attr">#[test]
@@ -4936,11 +4971,11 @@
     <span class="doccomment">/// Regression test for: &lt;https://github.com/rust-skia/rust-skia/issues/427&gt;
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>test_local_and_device_clip_bounds() {
-        <span class="kw">let </span><span class="kw-2">mut </span>surface = <span class="kw">crate</span>::Surface::new_raster_n32_premul((<span class="number">100</span>, <span class="number">100</span>)).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>surface =
+            surfaces::raster(<span class="kw-2">&amp;</span>ImageInfo::new_n32_premul((<span class="number">100</span>, <span class="number">100</span>), <span class="prelude-val">None</span>), <span class="number">0</span>, <span class="prelude-val">None</span>).unwrap();
         <span class="kw">let _ </span>= surface.canvas().device_clip_bounds();
         <span class="kw">let _ </span>= surface.canvas().local_clip_bounds();
         <span class="kw">let _ </span>= surface.canvas().local_to_device();
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="skia_safe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

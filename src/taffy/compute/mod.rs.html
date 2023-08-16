@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/taffy-0.2.2/src/compute/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taffy/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/index.crates.io-6f17d22bba15001f/taffy-0.3.12/src/compute/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taffy" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (eb088b8b9 2023-08-05)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../taffy/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -201,39 +201,371 @@
 <a href="#201" id="201">201</a>
 <a href="#202" id="202">202</a>
 <a href="#203" id="203">203</a>
-</pre><pre class="rust"><code><span class="doccomment">//! The layout algorithms themselves
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
+<a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
+<a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+</pre></div><pre class="rust"><code><span class="doccomment">//! The layout algorithms themselves
 
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>flexbox;
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>common;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>flexbox;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>leaf;
 
+<span class="attr">#[cfg(feature = <span class="string">&quot;grid&quot;</span>)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>grid;
+
+<span class="kw">use </span><span class="kw">crate</span>::data::CACHE_SIZE;
 <span class="kw">use </span><span class="kw">crate</span>::error::TaffyError;
 <span class="kw">use </span><span class="kw">crate</span>::geometry::{Point, Size};
-<span class="kw">use </span><span class="kw">crate</span>::layout::{AvailableSpace, Cache, Layout, RunMode, SizingMode};
-<span class="kw">use </span><span class="kw">crate</span>::node::Node;
-<span class="kw">use </span><span class="kw">crate</span>::style::Display;
+<span class="kw">use </span><span class="kw">crate</span>::layout::{Cache, Layout, RunMode, SizeAndBaselines, SizingMode};
+<span class="kw">use </span><span class="kw">crate</span>::node::{Node, Taffy};
+<span class="kw">use </span><span class="kw">crate</span>::style::{AvailableSpace, Display};
 <span class="kw">use </span><span class="kw">crate</span>::sys::round;
 <span class="kw">use </span><span class="kw">crate</span>::tree::LayoutTree;
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
+<span class="kw">use </span><span class="self">self</span>::flexbox::FlexboxAlgorithm;
+<span class="attr">#[cfg(feature = <span class="string">&quot;grid&quot;</span>)]
+</span><span class="kw">use </span><span class="self">self</span>::grid::CssGridAlgorithm;
+<span class="kw">use </span><span class="self">self</span>::leaf::LeafAlgorithm;
+
+<span class="attr">#[cfg(any(feature = <span class="string">&quot;debug&quot;</span>, feature = <span class="string">&quot;profile&quot;</span>))]
 </span><span class="kw">use </span><span class="kw">crate</span>::debug::NODE_LOGGER;
 
 <span class="doccomment">/// Updates the stored layout of the provided `node` and its children
-</span><span class="kw">pub fn </span>compute_layout(
-    tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree,
-    root: Node,
-    available_space: Size&lt;AvailableSpace&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;(), TaffyError&gt; {
+</span><span class="kw">pub fn </span>compute_layout(taffy: <span class="kw-2">&amp;mut </span>Taffy, root: Node, available_space: Size&lt;AvailableSpace&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), TaffyError&gt; {
     <span class="comment">// Recursively compute node layout
-    </span><span class="kw">let </span>size =
-        compute_node_layout(tree, root, Size::NONE, available_space, RunMode::PeformLayout, SizingMode::InherentSize);
+    </span><span class="kw">let </span>size_and_baselines = GenericAlgorithm::perform_layout(
+        taffy,
+        root,
+        Size::NONE,
+        available_space.into_options(),
+        available_space,
+        SizingMode::InherentSize,
+    );
 
-    <span class="kw">let </span>layout = Layout { order: <span class="number">0</span>, size, location: Point::ZERO };
-    <span class="kw-2">*</span>tree.layout_mut(root) = layout;
+    <span class="kw">let </span>layout = Layout { order: <span class="number">0</span>, size: size_and_baselines.size, location: Point::ZERO };
+    <span class="kw-2">*</span>taffy.layout_mut(root) = layout;
 
-    <span class="comment">// Recursively round the layout&#39;s of this node and all children
-    </span>round_layout(tree, root, <span class="number">0.0</span>, <span class="number">0.0</span>);
+    <span class="comment">// If rounding is enabled, recursively round the layout&#39;s of this node and all children
+    </span><span class="kw">if </span>taffy.config.use_rounding {
+        round_layout(taffy, root, <span class="number">0.0</span>, <span class="number">0.0</span>);
+    }
 
     <span class="prelude-val">Ok</span>(())
+}
+
+<span class="doccomment">/// A common interface that all Taffy layout algorithms conform to
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>LayoutAlgorithm {
+    <span class="doccomment">/// The name of the algorithm (mainly used for debug purposes)
+    </span><span class="kw">const </span>NAME: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+
+    <span class="doccomment">/// Compute the size of the node given the specified constraints
+    </span><span class="kw">fn </span>measure_size(
+        tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree,
+        node: Node,
+        known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        parent_size: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        available_space: Size&lt;AvailableSpace&gt;,
+        sizing_mode: SizingMode,
+    ) -&gt; Size&lt;f32&gt;;
+
+    <span class="doccomment">/// Perform a full layout on the node given the specified constraints
+    </span><span class="kw">fn </span>perform_layout(
+        tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree,
+        node: Node,
+        known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        parent_size: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        available_space: Size&lt;AvailableSpace&gt;,
+        sizing_mode: SizingMode,
+    ) -&gt; SizeAndBaselines;
+}
+
+<span class="doccomment">/// The public interface to a generic algorithm that abstracts over all of Taffy&#39;s algorithms
+/// and applies the correct one based on the `Display` style
+</span><span class="kw">pub struct </span>GenericAlgorithm;
+<span class="kw">impl </span>LayoutAlgorithm <span class="kw">for </span>GenericAlgorithm {
+    <span class="kw">const </span>NAME: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;GENERIC&quot;</span>;
+
+    <span class="kw">fn </span>perform_layout(
+        tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree,
+        node: Node,
+        known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        parent_size: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        available_space: Size&lt;AvailableSpace&gt;,
+        sizing_mode: SizingMode,
+    ) -&gt; SizeAndBaselines {
+        compute_node_layout(
+            tree,
+            node,
+            known_dimensions,
+            parent_size,
+            available_space,
+            RunMode::PeformLayout,
+            sizing_mode,
+        )
+    }
+
+    <span class="kw">fn </span>measure_size(
+        tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree,
+        node: Node,
+        known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        parent_size: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        available_space: Size&lt;AvailableSpace&gt;,
+        sizing_mode: SizingMode,
+    ) -&gt; Size&lt;f32&gt; {
+        compute_node_layout(
+            tree,
+            node,
+            known_dimensions,
+            parent_size,
+            available_space,
+            RunMode::ComputeSize,
+            sizing_mode,
+        )
+        .size
+    }
 }
 
 <span class="doccomment">/// Updates the stored layout of the provided `node` and its children
@@ -241,102 +573,180 @@
     tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree,
     node: Node,
     known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+    parent_size: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
     available_space: Size&lt;AvailableSpace&gt;,
     run_mode: RunMode,
     sizing_mode: SizingMode,
-) -&gt; Size&lt;f32&gt; {
-    <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
+) -&gt; SizeAndBaselines {
+    <span class="attr">#[cfg(any(feature = <span class="string">&quot;debug&quot;</span>, feature = <span class="string">&quot;profile&quot;</span>))]
     </span>NODE_LOGGER.push_node(node);
     <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
     </span><span class="macro">println!</span>();
 
     <span class="comment">// First we check if we have a cached result for the given input
-    </span><span class="kw">let </span>cache_run_mode = <span class="kw">if </span>tree.children(node).is_empty() { RunMode::PeformLayout } <span class="kw">else </span>{ run_mode };
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(cached_size) =
-        compute_from_cache(tree, node, known_dimensions, available_space, cache_run_mode, sizing_mode)
+    </span><span class="kw">let </span>cache_run_mode = <span class="kw">if </span>tree.is_childless(node) { RunMode::PeformLayout } <span class="kw">else </span>{ run_mode };
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(cached_size_and_baselines) =
+        compute_from_cache(tree, node, known_dimensions, available_space, cache_run_mode)
     {
         <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-        </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;CACHE&quot;</span>, cached_size);
+        </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;CACHE&quot;</span>, cached_size_and_baselines.size);
         <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-        </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;run_mode&quot;</span>, run_mode);
-        <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-        </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;sizing_mode&quot;</span>, sizing_mode);
-        <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-        </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;known_dimensions&quot;</span>, known_dimensions);
-        <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-        </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;available_space&quot;</span>, available_space);
-        <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
+        </span>debug_log_node(known_dimensions, parent_size, available_space, run_mode, sizing_mode);
+        <span class="attr">#[cfg(any(feature = <span class="string">&quot;debug&quot;</span>, feature = <span class="string">&quot;profile&quot;</span>))]
         </span>NODE_LOGGER.pop_node();
-        <span class="kw">return </span>cached_size;
+        <span class="kw">return </span>cached_size_and_baselines;
     }
 
     <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-    </span>NODE_LOGGER.log(<span class="string">&quot;COMPUTE&quot;</span>);
-    <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-    </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;run_mode&quot;</span>, run_mode);
-    <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-    </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;sizing_mode&quot;</span>, sizing_mode);
-    <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-    </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;known_dimensions&quot;</span>, known_dimensions);
-    <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-    </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;available_space&quot;</span>, available_space);
+    </span>debug_log_node(known_dimensions, parent_size, available_space, run_mode, sizing_mode);
 
-    <span class="comment">// Attempt to shortcut size computation based on
-    //  - KnownSize sizing constraints
-    //  - The node&#39;s preferred sizes (width/heights) styles and AvailableSpace sizing constraints
-    // (percentages resolve to pixel values if there is a definite AvailableSpace sizing constraint)
-    // let style = tree.style(node);
-    // // let known_node_size = available_space.
-    // //     .zip_map(style.size, |constraint, style_size| style_size.maybe_resolve(constraint.as_option()));
-    // let known_node_size = style
-    //     .size
-    //     .maybe_resolve(available_space.as_options())
-    //     .zip_map(known_dimensions, |style_size, known_dimensions| known_dimensions.or(style_size));
-    // if run_mode == RunMode::ComputeSize &amp;&amp; known_node_size.width.is_some() &amp;&amp; known_node_size.height.is_some() {
-    //     let node_min_size = style.min_size.maybe_resolve(available_space.as_options());
-    //     let node_max_size = style.max_size.maybe_resolve(available_space.as_options());
-    //     return Size {
-    //         width: known_node_size.width.maybe_max(node_min_size.width).maybe_min(node_max_size.width).unwrap_or(0.0),
-    //         height: known_node_size
-    //             .height
-    //             .maybe_max(node_min_size.height)
-    //             .maybe_min(node_max_size.height)
-    //             .unwrap_or(0.0),
-    //     };
-    // }
-
-    // If this is a leaf node we can skip a lot of this function in some cases
-    </span><span class="kw">let </span>computed_size = <span class="kw">if </span>tree.children(node).is_empty() {
+    <span class="doccomment">/// Inlined function generic over the LayoutAlgorithm to reduce code duplication
+    </span><span class="attr">#[inline(always)]
+    </span><span class="kw">fn </span>perform_computations&lt;Algorithm: LayoutAlgorithm&gt;(
+        tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree,
+        node: Node,
+        known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        parent_size: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        available_space: Size&lt;AvailableSpace&gt;,
+        run_mode: RunMode,
+        sizing_mode: SizingMode,
+    ) -&gt; SizeAndBaselines {
         <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-        </span>NODE_LOGGER.log(<span class="string">&quot;Algo: leaf&quot;</span>);
-        <span class="self">self</span>::leaf::compute(tree, node, known_dimensions, available_space, run_mode, sizing_mode)
-    } <span class="kw">else </span>{
-        <span class="comment">// println!(&quot;match {:?}&quot;, tree.style(node).display);
-        </span><span class="kw">match </span>tree.style(node).display {
-            Display::Flex =&gt; {
-                <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-                </span>NODE_LOGGER.log(<span class="string">&quot;Algo: flexbox&quot;</span>);
-                <span class="self">self</span>::flexbox::compute(tree, node, known_dimensions, available_space, run_mode)
+        </span>NODE_LOGGER.log(Algorithm::NAME);
+
+        <span class="kw">match </span>run_mode {
+            RunMode::PeformLayout =&gt; {
+                Algorithm::perform_layout(tree, node, known_dimensions, parent_size, available_space, sizing_mode)
             }
-            Display::None =&gt; {
-                <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-                </span>NODE_LOGGER.log(<span class="string">&quot;Algo: none&quot;</span>);
-                Size { width: <span class="number">0.0</span>, height: <span class="number">0.0 </span>}
+            RunMode::ComputeSize =&gt; {
+                <span class="kw">let </span>size =
+                    Algorithm::measure_size(tree, node, known_dimensions, parent_size, available_space, sizing_mode);
+                SizeAndBaselines { size, first_baselines: Point::NONE }
             }
         }
+    }
+
+    <span class="kw">let </span>display_mode = tree.style(node).display;
+    <span class="kw">let </span>has_children = !tree.is_childless(node);
+    <span class="kw">let </span>computed_size_and_baselines = <span class="kw">match </span>(display_mode, has_children) {
+        (Display::None, <span class="kw">_</span>) =&gt; perform_computations::&lt;HiddenAlgorithm&gt;(
+            tree,
+            node,
+            known_dimensions,
+            parent_size,
+            available_space,
+            run_mode,
+            sizing_mode,
+        ),
+        (Display::Flex, <span class="bool-val">true</span>) =&gt; perform_computations::&lt;FlexboxAlgorithm&gt;(
+            tree,
+            node,
+            known_dimensions,
+            parent_size,
+            available_space,
+            run_mode,
+            sizing_mode,
+        ),
+        <span class="attr">#[cfg(feature = <span class="string">&quot;grid&quot;</span>)]
+        </span>(Display::Grid, <span class="bool-val">true</span>) =&gt; perform_computations::&lt;CssGridAlgorithm&gt;(
+            tree,
+            node,
+            known_dimensions,
+            parent_size,
+            available_space,
+            run_mode,
+            sizing_mode,
+        ),
+        (<span class="kw">_</span>, <span class="bool-val">false</span>) =&gt; perform_computations::&lt;LeafAlgorithm&gt;(
+            tree,
+            node,
+            known_dimensions,
+            parent_size,
+            available_space,
+            run_mode,
+            sizing_mode,
+        ),
     };
 
     <span class="comment">// Cache result
-    </span><span class="kw">let </span>cache_slot = (known_dimensions.width.is_some() <span class="kw">as </span>usize) + (known_dimensions.height.is_some() <span class="kw">as </span>usize * <span class="number">2</span>);
-    <span class="kw-2">*</span>tree.cache_mut(node, cache_slot) =
-        <span class="prelude-val">Some</span>(Cache { known_dimensions, available_space, run_mode: cache_run_mode, cached_size: computed_size });
+    </span><span class="kw">let </span>cache_slot = compute_cache_slot(known_dimensions, available_space);
+    <span class="kw-2">*</span>tree.cache_mut(node, cache_slot) = <span class="prelude-val">Some</span>(Cache {
+        known_dimensions,
+        available_space,
+        run_mode: cache_run_mode,
+        cached_size_and_baselines: computed_size_and_baselines,
+    });
 
     <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-    </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;RESULT&quot;</span>, computed_size);
-    <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
+    </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;RESULT&quot;</span>, computed_size_and_baselines.size);
+    <span class="attr">#[cfg(any(feature = <span class="string">&quot;debug&quot;</span>, feature = <span class="string">&quot;profile&quot;</span>))]
     </span>NODE_LOGGER.pop_node();
 
-    computed_size
+    computed_size_and_baselines
+}
+
+<span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
+</span><span class="kw">fn </span>debug_log_node(
+    known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+    parent_size: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+    available_space: Size&lt;AvailableSpace&gt;,
+    run_mode: RunMode,
+    sizing_mode: SizingMode,
+) {
+    NODE_LOGGER.debug_log(run_mode);
+    NODE_LOGGER.labelled_debug_log(<span class="string">&quot;sizing_mode&quot;</span>, sizing_mode);
+    NODE_LOGGER.labelled_debug_log(<span class="string">&quot;known_dimensions&quot;</span>, known_dimensions);
+    NODE_LOGGER.labelled_debug_log(<span class="string">&quot;parent_size&quot;</span>, parent_size);
+    NODE_LOGGER.labelled_debug_log(<span class="string">&quot;available_space&quot;</span>, available_space);
+}
+
+<span class="doccomment">/// Return the cache slot to cache the current computed result in
+///
+/// ## Caching Strategy
+///
+/// We need multiple cache slots, because a node&#39;s size is often queried by it&#39;s parent multiple times in the course of the layout
+/// process, and we don&#39;t want later results to clobber earlier ones.
+///
+/// The two variables that we care about when determining cache slot are:
+///
+///   - How many &quot;known_dimensions&quot; are set. In the worst case, a node may be called first with neither dimensions known known_dimensions,
+///     then with one dimension known (either width of height - which doesn&#39;t matter for our purposes here), and then with both dimensions
+///     known.
+///   - Whether unknown dimensions are being sized under a min-content or a max-content available space constraint (definite available space
+///     shares a cache slot with max-content because a node will generally be sized under one or the other but not both).
+///
+/// ## Cache slots:
+///
+/// - Slot 0: Both known_dimensions were set
+/// - Slot 1: 1 of 2 known_dimensions were set and the other dimension was either a MaxContent or Definite available space constraint
+/// - Slot 2: 1 of 2 known_dimensions were set and the other dimension was a MinContent constraint
+/// - Slot 3: Neither known_dimensions were set and we are sizing under a MaxContent or Definite available space constraint
+/// - Slot 4: Neither known_dimensions were set and we are sizing under a MinContent constraint
+</span><span class="attr">#[inline]
+</span><span class="kw">fn </span>compute_cache_slot(known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;, available_space: Size&lt;AvailableSpace&gt;) -&gt; usize {
+    <span class="kw">let </span>has_known_width = known_dimensions.width.is_some();
+    <span class="kw">let </span>has_known_height = known_dimensions.height.is_some();
+
+    <span class="comment">// Slot 0: Both known_dimensions were set
+    </span><span class="kw">if </span>has_known_width &amp;&amp; has_known_height {
+        <span class="kw">return </span><span class="number">0</span>;
+    }
+
+    <span class="comment">// Slot 1: width but not height known_dimension was set and the other dimension was either a MaxContent or Definite available space constraint
+    // Slot 2: width but not height known_dimension was set and the other dimension was a MinContent constraint
+    </span><span class="kw">if </span>has_known_width &amp;&amp; !has_known_height {
+        <span class="kw">return </span><span class="number">1 </span>+ (available_space.height == AvailableSpace::MinContent) <span class="kw">as </span>usize;
+    }
+
+    <span class="comment">// Slot 3: height but not width known_dimension was set and the other dimension was either a MaxContent or Definite available space constraint
+    // Slot 4: height but not width known_dimension was set and the other dimension was a MinContent constraint
+    </span><span class="kw">if </span>!has_known_width &amp;&amp; has_known_height {
+        <span class="kw">return </span><span class="number">3 </span>+ (available_space.width == AvailableSpace::MinContent) <span class="kw">as </span>usize;
+    }
+
+    <span class="comment">// Slot 5: Neither known_dimensions were set and we are sizing under a MaxContent or Definite available space constraint
+    // Slot 6: Neither known_dimensions were set and we are sizing under a MinContent constraint
+    </span><span class="number">5 </span>+ (available_space.width == AvailableSpace::MinContent) <span class="kw">as </span>usize
 }
 
 <span class="doccomment">/// Try to get the computation result from the cache.
@@ -347,38 +757,27 @@
     known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
     available_space: Size&lt;AvailableSpace&gt;,
     run_mode: RunMode,
-    sizing_mode: SizingMode,
-) -&gt; <span class="prelude-ty">Option</span>&lt;Size&lt;f32&gt;&gt; {
-    <span class="kw">for </span>idx <span class="kw">in </span><span class="number">0</span>..<span class="number">4 </span>{
+) -&gt; <span class="prelude-ty">Option</span>&lt;SizeAndBaselines&gt; {
+    <span class="kw">for </span>idx <span class="kw">in </span><span class="number">0</span>..CACHE_SIZE {
         <span class="kw">let </span>entry = tree.cache_mut(node, idx);
-        <span class="attr">#[cfg(feature = <span class="string">&quot;debug&quot;</span>)]
-        </span>NODE_LOGGER.labelled_debug_log(<span class="string">&quot;cache_entry&quot;</span>, <span class="kw-2">&amp;</span>entry);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(entry) = entry {
             <span class="comment">// Cached ComputeSize results are not valid if we are running in PerformLayout mode
             </span><span class="kw">if </span>entry.run_mode == RunMode::ComputeSize &amp;&amp; run_mode == RunMode::PeformLayout {
                 <span class="kw">return </span><span class="prelude-val">None</span>;
             }
 
-            <span class="comment">// if known_dimensions.width == entry.known_dimensions.width
-            // &amp;&amp; known_dimensions.height == entry.known_dimensions.height
-            </span><span class="kw">if </span>(known_dimensions.width == entry.known_dimensions.width || known_dimensions.width == <span class="prelude-val">Some</span>(entry.cached_size.width))
-                &amp;&amp; (known_dimensions.height == entry.known_dimensions.height || known_dimensions.height == <span class="prelude-val">Some</span>(entry.cached_size.height))
-                <span class="comment">// &amp;&amp; entry.available_space.width.is_roughly_equal(available_space.width)
-                // &amp;&amp; entry.available_space.height.is_roughly_equal(available_space.height)
-                </span>&amp;&amp; (
-                  known_dimensions.width.is_some()
-                  || entry.available_space.width.is_roughly_equal(available_space.width)
-                  || (sizing_mode == SizingMode::ContentSize &amp;&amp; available_space.width.is_definite() &amp;&amp; available_space.width.unwrap() &gt;= entry.cached_size.width)
-                )
-                &amp;&amp; (
-                  known_dimensions.height.is_some()
-                  || entry.available_space.height.is_roughly_equal(available_space.height)
-                  || (sizing_mode == SizingMode::ContentSize &amp;&amp; available_space.height.is_definite() &amp;&amp; available_space.height.unwrap() &gt;= entry.cached_size.height)
-                )
-            <span class="comment">// &amp;&amp; (entry.available_space.width.is_roughly_equal(available_space.width) || (available_space.width.is_definite() &amp;&amp; available_space.width.unwrap() &gt;= entry.cached_size.width))
-            // &amp;&amp; (entry.available_space.height.is_roughly_equal(available_space.height) || (available_space.height.is_definite() &amp;&amp; available_space.height.unwrap() &gt;= entry.cached_size.height))
-            </span>{
-                <span class="kw">return </span><span class="prelude-val">Some</span>(entry.cached_size);
+            <span class="kw">let </span>cached_size = entry.cached_size_and_baselines.size;
+
+            <span class="kw">if </span>(known_dimensions.width == entry.known_dimensions.width
+                || known_dimensions.width == <span class="prelude-val">Some</span>(cached_size.width))
+                &amp;&amp; (known_dimensions.height == entry.known_dimensions.height
+                    || known_dimensions.height == <span class="prelude-val">Some</span>(cached_size.height))
+                &amp;&amp; (known_dimensions.width.is_some()
+                    || entry.available_space.width.is_roughly_equal(available_space.width))
+                &amp;&amp; (known_dimensions.height.is_some()
+                    || entry.available_space.height.is_roughly_equal(available_space.height))
+            {
+                <span class="kw">return </span><span class="prelude-val">Some</span>(entry.cached_size_and_baselines);
             }
         }
     }
@@ -386,23 +785,115 @@
     <span class="prelude-val">None
 </span>}
 
-<span class="doccomment">/// Rounds the calculated [`NodeData`] according to the spec
-</span><span class="kw">fn </span>round_layout(tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree, root: Node, abs_x: f32, abs_y: f32) {
-    <span class="kw">let </span>layout = tree.layout_mut(root);
+<span class="doccomment">/// The public interface to Taffy&#39;s hidden node algorithm implementation
+</span><span class="kw">struct </span>HiddenAlgorithm;
+<span class="kw">impl </span>LayoutAlgorithm <span class="kw">for </span>HiddenAlgorithm {
+    <span class="kw">const </span>NAME: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;NONE&quot;</span>;
+
+    <span class="kw">fn </span>perform_layout(
+        tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree,
+        node: Node,
+        _known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        _parent_size: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        _available_space: Size&lt;AvailableSpace&gt;,
+        _sizing_mode: SizingMode,
+    ) -&gt; SizeAndBaselines {
+        perform_hidden_layout(tree, node);
+        SizeAndBaselines { size: Size::ZERO, first_baselines: Point::NONE }
+    }
+
+    <span class="kw">fn </span>measure_size(
+        _tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree,
+        _node: Node,
+        _known_dimensions: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        _parent_size: Size&lt;<span class="prelude-ty">Option</span>&lt;f32&gt;&gt;,
+        _available_space: Size&lt;AvailableSpace&gt;,
+        _sizing_mode: SizingMode,
+    ) -&gt; Size&lt;f32&gt; {
+        Size::ZERO
+    }
+}
+
+<span class="doccomment">/// Creates a layout for this node and its children, recursively.
+/// Each hidden node has zero size and is placed at the origin
+</span><span class="kw">fn </span>perform_hidden_layout(tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree, node: Node) {
+    <span class="doccomment">/// Recursive function to apply hidden layout to all descendents
+    </span><span class="kw">fn </span>perform_hidden_layout_inner(tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree, node: Node, order: u32) {
+        <span class="kw-2">*</span>tree.layout_mut(node) = Layout::with_order(order);
+        <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">7 </span>{
+            <span class="kw-2">*</span>tree.cache_mut(node, i) = <span class="prelude-val">None</span>;
+        }
+        <span class="kw">for </span>order <span class="kw">in </span><span class="number">0</span>..tree.child_count(node) {
+            perform_hidden_layout_inner(tree, tree.child(node, order), order <span class="kw">as _</span>);
+        }
+    }
+
+    <span class="kw">for </span>order <span class="kw">in </span><span class="number">0</span>..tree.child_count(node) {
+        perform_hidden_layout_inner(tree, tree.child(node, order), order <span class="kw">as _</span>);
+    }
+}
+
+<span class="doccomment">/// Rounds the calculated [`Layout`] to exact pixel values
+/// In order to ensure that no gaps in the layout are introduced we:
+///   - Always round based on the absolute coordinates rather than parent-relative coordinates
+///   - Compute width/height by first rounding the top/bottom/left/right and then computing the difference
+///     rather than rounding the width/height directly
+///
+/// See &lt;https://github.com/facebook/yoga/commit/aa5b296ac78f7a22e1aeaf4891243c6bb76488e2&gt; for more context
+</span><span class="kw">fn </span>round_layout(tree: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>LayoutTree, node: Node, abs_x: f32, abs_y: f32) {
+    <span class="kw">let </span>layout = tree.layout_mut(node);
     <span class="kw">let </span>abs_x = abs_x + layout.location.x;
     <span class="kw">let </span>abs_y = abs_y + layout.location.y;
 
     layout.location.x = round(layout.location.x);
     layout.location.y = round(layout.location.y);
+    layout.size.width = round(abs_x + layout.size.width) - round(abs_x);
+    layout.size.height = round(abs_y + layout.size.height) - round(abs_y);
 
-    layout.size.width = round(layout.size.width);
-    layout.size.height = round(layout.size.height);
-
-    <span class="comment">// Satisfy the borrow checker here by re-indexing to shorten the lifetime to the loop scope
-    </span><span class="kw">for </span>x <span class="kw">in </span><span class="number">0</span>..tree.children(root).len() {
-        <span class="kw">let </span>child = tree.child(root, x);
+    <span class="kw">let </span>child_count = tree.child_count(node);
+    <span class="kw">for </span>index <span class="kw">in </span><span class="number">0</span>..child_count {
+        <span class="kw">let </span>child = tree.child(node, index);
         round_layout(tree, child, abs_x, abs_y);
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="taffy" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">super</span>::perform_hidden_layout;
+    <span class="kw">use </span><span class="kw">crate</span>::geometry::{Point, Size};
+    <span class="kw">use </span><span class="kw">crate</span>::style::{Display, Style};
+    <span class="kw">use </span><span class="kw">crate</span>::Taffy;
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>hidden_layout_should_hide_recursively() {
+        <span class="kw">let </span><span class="kw-2">mut </span>taffy = Taffy::new();
+
+        <span class="kw">let </span>style: Style = Style { display: Display::Flex, size: Size::from_points(<span class="number">50.0</span>, <span class="number">50.0</span>), ..Default::default() };
+
+        <span class="kw">let </span>grandchild_00 = taffy.new_leaf(style.clone()).unwrap();
+        <span class="kw">let </span>grandchild_01 = taffy.new_leaf(style.clone()).unwrap();
+        <span class="kw">let </span>child_00 = taffy.new_with_children(style.clone(), <span class="kw-2">&amp;</span>[grandchild_00, grandchild_01]).unwrap();
+
+        <span class="kw">let </span>grandchild_02 = taffy.new_leaf(style.clone()).unwrap();
+        <span class="kw">let </span>child_01 = taffy.new_with_children(style.clone(), <span class="kw-2">&amp;</span>[grandchild_02]).unwrap();
+
+        <span class="kw">let </span>root = taffy
+            .new_with_children(
+                Style { display: Display::None, size: Size::from_points(<span class="number">50.0</span>, <span class="number">50.0</span>), ..Default::default() },
+                <span class="kw-2">&amp;</span>[child_00, child_01],
+            )
+            .unwrap();
+
+        perform_hidden_layout(<span class="kw-2">&amp;mut </span>taffy, root);
+
+        <span class="comment">// Whatever size and display-mode the nodes had previously,
+        // all layouts should resolve to ZERO due to the root&#39;s DISPLAY::NONE
+        </span><span class="kw">for </span>(node, <span class="kw">_</span>) <span class="kw">in </span>taffy.nodes.iter().filter(|(node, <span class="kw">_</span>)| <span class="kw-2">*</span>node != root) {
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(layout) = taffy.layout(node) {
+                <span class="macro">assert_eq!</span>(layout.size, Size::zero());
+                <span class="macro">assert_eq!</span>(layout.location, Point::zero());
+            }
+        }
+    }
+}
+</code></pre></div></section></main></body></html>

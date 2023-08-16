@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/github.com-1ecc6299db9ec823/taffy-0.2.2/src/node.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>node.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../taffy/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/matt/.cargo/registry/src/index.crates.io-6f17d22bba15001f/taffy-0.3.12/src/node.rs`."><title>node.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taffy" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (eb088b8b9 2023-08-05)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../taffy/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -699,19 +699,52 @@
 <a href="#699" id="699">699</a>
 <a href="#700" id="700">700</a>
 <a href="#701" id="701">701</a>
-</pre><pre class="rust"><code><span class="doccomment">//! UI [`Node`] types and related data structures.
+<a href="#702" id="702">702</a>
+<a href="#703" id="703">703</a>
+<a href="#704" id="704">704</a>
+<a href="#705" id="705">705</a>
+<a href="#706" id="706">706</a>
+<a href="#707" id="707">707</a>
+<a href="#708" id="708">708</a>
+<a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
+<a href="#712" id="712">712</a>
+<a href="#713" id="713">713</a>
+<a href="#714" id="714">714</a>
+<a href="#715" id="715">715</a>
+<a href="#716" id="716">716</a>
+<a href="#717" id="717">717</a>
+<a href="#718" id="718">718</a>
+<a href="#719" id="719">719</a>
+<a href="#720" id="720">720</a>
+<a href="#721" id="721">721</a>
+<a href="#722" id="722">722</a>
+<a href="#723" id="723">723</a>
+<a href="#724" id="724">724</a>
+<a href="#725" id="725">725</a>
+<a href="#726" id="726">726</a>
+<a href="#727" id="727">727</a>
+<a href="#728" id="728">728</a>
+<a href="#729" id="729">729</a>
+<a href="#730" id="730">730</a>
+<a href="#731" id="731">731</a>
+<a href="#732" id="732">732</a>
+<a href="#733" id="733">733</a>
+<a href="#734" id="734">734</a>
+</pre></div><pre class="rust"><code><span class="doccomment">//! UI [`Node`] types and related data structures.
 //!
 //! Layouts are composed of multiple nodes, which live in a tree-like data structure.
-</span><span class="kw">use </span>slotmap::{SlotMap, SparseSecondaryMap};
+</span><span class="kw">use </span>slotmap::{DefaultKey, SlotMap, SparseSecondaryMap};
 
 <span class="doccomment">/// A node in a layout.
 </span><span class="kw">pub type </span>Node = slotmap::DefaultKey;
 
 <span class="kw">use </span><span class="kw">crate</span>::error::{TaffyError, TaffyResult};
 <span class="kw">use </span><span class="kw">crate</span>::geometry::Size;
-<span class="kw">use </span><span class="kw">crate</span>::layout::{AvailableSpace, Cache, Layout};
+<span class="kw">use </span><span class="kw">crate</span>::layout::{Cache, Layout};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::LayoutTree;
-<span class="kw">use </span><span class="kw">crate</span>::style::Style;
+<span class="kw">use </span><span class="kw">crate</span>::style::{AvailableSpace, Style};
 <span class="attr">#[cfg(any(feature = <span class="string">&quot;std&quot;</span>, feature = <span class="string">&quot;alloc&quot;</span>))]
 </span><span class="kw">use </span><span class="kw">crate</span>::sys::Box;
 <span class="kw">use </span><span class="kw">crate</span>::sys::{new_vec_with_capacity, ChildrenVec, Vec};
@@ -733,12 +766,24 @@
     </span>Boxed(Box&lt;<span class="kw">dyn </span>Measurable&gt;),
 }
 
+<span class="doccomment">/// Global configuration values for a Taffy instance
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>TaffyConfig {
+    <span class="doccomment">/// Whether to round layout values
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) use_rounding: bool,
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>TaffyConfig {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ use_rounding: <span class="bool-val">true </span>}
+    }
+}
+
 <span class="doccomment">/// A tree of UI [`Nodes`](`Node`), suitable for UI layout
 </span><span class="kw">pub struct </span>Taffy {
     <span class="doccomment">/// The [`NodeData`] for each node stored in this tree
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) nodes: SlotMap&lt;Node, NodeData&gt;,
 
-    <span class="doccomment">/// The mapping from the Size&lt;AvailableSpace&gt; (in real units) to Size&lt;f32&gt; (in points) for this node
+    <span class="doccomment">/// Functions/closures that compute the intrinsic size of leaf nodes
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) measure_funcs: SparseSecondaryMap&lt;Node, MeasureFunc&gt;,
 
     <span class="doccomment">/// The children of each node
@@ -750,6 +795,9 @@
     ///
     /// The indexes in the outer vector correspond to the position of the child [`NodeData`]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) parents: SlotMap&lt;Node, <span class="prelude-ty">Option</span>&lt;Node&gt;&gt;,
+
+    <span class="doccomment">/// Layout mode configuration
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) config: TaffyConfig,
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>Taffy {
@@ -759,8 +807,18 @@
 }
 
 <span class="kw">impl </span>LayoutTree <span class="kw">for </span>Taffy {
-    <span class="kw">fn </span>children(<span class="kw-2">&amp;</span><span class="self">self</span>, node: Node) -&gt; <span class="kw-2">&amp;</span>[Node] {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.children[node]
+    <span class="kw">type </span>ChildIter&lt;<span class="lifetime">&#39;a</span>&gt; = core::slice::Iter&lt;<span class="lifetime">&#39;a</span>, DefaultKey&gt;;
+
+    <span class="kw">fn </span>children(<span class="kw-2">&amp;</span><span class="self">self</span>, node: Node) -&gt; <span class="self">Self</span>::ChildIter&lt;<span class="lifetime">&#39;_</span>&gt; {
+        <span class="self">self</span>.children[node].iter()
+    }
+
+    <span class="kw">fn </span>child_count(<span class="kw-2">&amp;</span><span class="self">self</span>, node: Node) -&gt; usize {
+        <span class="self">self</span>.children[node].len()
+    }
+
+    <span class="kw">fn </span>is_childless(<span class="kw-2">&amp;</span><span class="self">self</span>, node: Node) -&gt; bool {
+        <span class="self">self</span>.children[node].is_empty()
     }
 
     <span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>, node: Node) -&gt; <span class="prelude-ty">Option</span>&lt;Node&gt; {
@@ -831,10 +889,21 @@
             children: SlotMap::with_capacity(capacity),
             parents: SlotMap::with_capacity(capacity),
             measure_funcs: SparseSecondaryMap::with_capacity(capacity),
+            config: TaffyConfig::default(),
         }
     }
 
-    <span class="doccomment">/// Creates and adds a new unattached leaf node to the tree, and returns the [`NodeId`] of the new node
+    <span class="doccomment">/// Enable rounding of layout values. Rounding is enabled by default.
+    </span><span class="kw">pub fn </span>enable_rounding(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.config.use_rounding = <span class="bool-val">true</span>;
+    }
+
+    <span class="doccomment">/// Disable rounding of layout values. Rounding is enabled by default.
+    </span><span class="kw">pub fn </span>disable_rounding(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.config.use_rounding = <span class="bool-val">false</span>;
+    }
+
+    <span class="doccomment">/// Creates and adds a new unattached leaf node to the tree, and returns the [`Node`] of the new node
     </span><span class="kw">pub fn </span>new_leaf(<span class="kw-2">&amp;mut </span><span class="self">self</span>, layout: Style) -&gt; TaffyResult&lt;Node&gt; {
         <span class="kw">let </span>id = <span class="self">self</span>.nodes.insert(NodeData::new(layout));
         <span class="kw">let _ </span>= <span class="self">self</span>.children.insert(new_vec_with_capacity(<span class="number">0</span>));
@@ -843,7 +912,7 @@
         <span class="prelude-val">Ok</span>(id)
     }
 
-    <span class="doccomment">/// Creates and adds a new unattached leaf node to the tree, and returns the [`NodeId`] of the new node
+    <span class="doccomment">/// Creates and adds a new unattached leaf node to the tree, and returns the [`Node`] of the new node
     ///
     /// Creates and adds a new leaf node with a supplied [`MeasureFunc`]
     </span><span class="kw">pub fn </span>new_leaf_with_measure(<span class="kw-2">&amp;mut </span><span class="self">self</span>, layout: Style, measure: MeasureFunc) -&gt; TaffyResult&lt;Node&gt; {
@@ -873,18 +942,16 @@
         <span class="prelude-val">Ok</span>(id)
     }
 
-    <span class="doccomment">/// Removes all nodes
-    ///
-    /// All associated [`Id`] will be rendered invalid.
+    <span class="doccomment">/// Drops all nodes in the tree
     </span><span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.nodes.clear();
         <span class="self">self</span>.children.clear();
         <span class="self">self</span>.parents.clear();
     }
 
-    <span class="doccomment">/// Remove a specific [`Node`] from the tree
+    <span class="doccomment">/// Remove a specific [`Node`] from the tree and drops it
     ///
-    /// Its [`Id`] is marked as invalid. Returns the id of the node removed.
+    /// Returns the id of the node removed.
     </span><span class="kw">pub fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node: Node) -&gt; TaffyResult&lt;Node&gt; {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(parent) = <span class="self">self</span>.parents[node] {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(children) = <span class="self">self</span>.children.get_mut(parent) {
@@ -1000,7 +1067,7 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.children[parent].len())
     }
 
-    <span class="doccomment">/// Returns a list of children that belong to the [`Parent`]
+    <span class="doccomment">/// Returns a list of children that belong to the parent [`Node`]
     </span><span class="kw">pub fn </span>children(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: Node) -&gt; TaffyResult&lt;Vec&lt;Node&gt;&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.children[parent].iter().copied().collect::&lt;<span class="kw">_</span>&gt;())
     }
@@ -1062,10 +1129,9 @@
     <span class="attr">#![allow(clippy::bool_assert_comparison)]
 
     </span><span class="kw">use super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use crate</span>::{
-        style::{Dimension, Display, FlexDirection},
-        sys,
-    };
+    <span class="kw">use </span><span class="kw">crate</span>::style::{Dimension, Display, FlexDirection};
+    <span class="kw">use </span><span class="kw">crate</span>::style_helpers::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">crate</span>::sys;
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>new_should_allocate_default_capacity() {
@@ -1337,7 +1403,7 @@
 
         <span class="kw">let </span>style = Style { display: Display::None, flex_direction: FlexDirection::RowReverse, ..Default::default() };
 
-        <span class="kw">let </span>node = taffy.new_leaf(style).unwrap();
+        <span class="kw">let </span>node = taffy.new_leaf(style.clone()).unwrap();
 
         <span class="kw">let </span>res = taffy.style(node);
         <span class="macro">assert!</span>(res.is_ok());
@@ -1400,5 +1466,4 @@
         is_send_and_sync::&lt;MeasureFunc&gt;();
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="taffy" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (3984bc583 2023-01-17)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":[["NO",""],["Nil",""],["YES",""],["nil",""]],"fn":[["selector","A convenience method to convert the name of a selector to the selector object."]],"type":[["BOOL",""],["Class",""],["SEL",""],["id",""]]};

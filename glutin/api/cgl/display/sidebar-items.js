@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Display","The CGL display."]]};
+window.SIDEBAR_ITEMS = {"struct":["Display"]};

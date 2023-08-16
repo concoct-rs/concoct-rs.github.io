@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["text",""]],"struct":[["TextModifier",""],["TextWidget",""]]};

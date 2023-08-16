@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"attr":[["compose",""]]};
+window.SIDEBAR_ITEMS = {"attr":["composable"]};

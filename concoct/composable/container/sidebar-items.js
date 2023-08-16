@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["column",""],["container",""],["row",""]],"struct":[["ContainerWidget",""]]};

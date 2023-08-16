@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["button","Filled button"],["text_field","Composable"]]};

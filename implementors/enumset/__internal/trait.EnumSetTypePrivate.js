@@ -1,3 +1,0 @@
-(function() {var implementors = {
-"accesskit":[["impl EnumSetTypePrivate for <a class=\"enum\" href=\"accesskit/enum.Action.html\" title=\"enum accesskit::Action\">Action</a>"],["impl EnumSetTypePrivate for <a class=\"enum\" href=\"accesskit/enum.DropEffect.html\" title=\"enum accesskit::DropEffect\">DropEffect</a>"]]
-};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
