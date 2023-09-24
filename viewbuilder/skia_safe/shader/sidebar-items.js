@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["shaders"],"struct":["GradientInfo"],"type":["Shader"]};

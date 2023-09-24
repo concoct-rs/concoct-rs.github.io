@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["EncodedImageFormat","EncodedOrigin","Result","ScanlineOrder","SelectionPolicy","ZeroInitialized"],"fn":["result_to_string"],"mod":["codec_animation","pixmap_utils"],"struct":["BmpDecoder","Codec","FrameInfo","GifDecoder","IcoDecoder","JpegDecoder","Options","PngDecoder","WbmpDecoder"],"trait":["Decoder"]};

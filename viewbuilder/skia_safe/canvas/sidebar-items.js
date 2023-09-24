@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["AutoCanvasRestore","GlyphPositions","PointMode","SrcRectConstraint"],"mod":["lattice"],"struct":["AutoRestoredCanvas","Canvas","Lattice","OwnedCanvas","SaveLayerFlags","SaveLayerRec","TopLayerPixels"],"trait":["SetMatrix"]};

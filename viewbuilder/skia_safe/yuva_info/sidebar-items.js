@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["PlaneConfig","Siting","Subsampling"],"fn":["has_alpha","num_channels_in_plane","num_planes","plane_dimensions","plane_subsampling_factors","subsampling_factors"],"type":["YUVAInfo"]};
