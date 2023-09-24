@@ -338,6 +338,16 @@
 <a href="#338" id="338">338</a>
 <a href="#339" id="339">339</a>
 <a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>gl::types::<span class="kw-2">*</span>;
 <span class="kw">use </span>glutin::{
     config::{ConfigTemplateBuilder, GlConfig},
@@ -389,7 +399,7 @@
 <span class="kw">impl </span>Renderer {
     <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>el = EventLoop::new();
-        <span class="kw">let </span>winit_window_builder = WindowBuilder::new().with_title(<span class="string">&quot;rust-skia-gl-window&quot;</span>);
+        <span class="kw">let </span>winit_window_builder = WindowBuilder::new().with_title(<span class="string">&quot;Viewbuilder&quot;</span>);
 
         <span class="kw">let </span>template = ConfigTemplateBuilder::new()
             .with_alpha_size(<span class="number">8</span>)
@@ -614,11 +624,21 @@
                             }
                         }
                         ElementState::Released =&gt; {
-                            <span class="kw">if let </span><span class="prelude-val">Some</span>(clicked) = clicked.take() {
-                                tree.send(
-                                    clicked,
-                                    <span class="kw">crate</span>::Event::Click(event::Click { target: clicked }),
-                                )
+                            <span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = cursor_pos {
+                                <span class="kw">if let </span><span class="prelude-val">Some</span>(clicked) = clicked.take() {
+                                    <span class="kw">if let </span><span class="prelude-val">Some</span>(target) =
+                                        tree.target(root, Point::new(pos.x, pos.y))
+                                    {
+                                        <span class="kw">if </span>target == clicked {
+                                            tree.send(
+                                                clicked,
+                                                <span class="kw">crate</span>::Event::Click(event::Click {
+                                                    target: clicked,
+                                                }),
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
                     },

@@ -80,75 +80,137 @@
 <a href="#80" id="80">80</a>
 <a href="#81" id="81">81</a>
 <a href="#82" id="82">82</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::borrow::Cow;
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::element::ElementData;
+<span class="kw">use </span>accesskit::NodeBuilder;
+<span class="kw">use </span>skia_safe::{Canvas, Color4f, Font, FontStyle, Paint, Rect, TextBlob, Typeface};
 <span class="kw">use </span>slotmap::DefaultKey;
-<span class="kw">use </span>taffy::{prelude::Size, style::Dimension};
-<span class="kw">use crate</span>::{Click, Tree};
+<span class="kw">use </span>std::borrow::Cow;
+<span class="kw">use </span>taffy::{
+    prelude::{Layout, Size},
+    style::Style,
+    Taffy,
+};
 
-
-<span class="attr">#[derive(Debug, PartialEq, Eq)]
+<span class="doccomment">/// Kind of data type of a node.
+</span><span class="attr">#[derive(Debug, PartialEq, Eq)]
 </span><span class="kw">pub enum </span>NodeKind {
-    Container,
-    Text,
+    <span class="doccomment">/// Element node kind.
+    </span>Element,
+
+    <span class="doccomment">/// Text node kind.
+    </span>Text,
 }
 
-<span class="kw">pub enum </span>NodeData {
-    Element { size: <span class="prelude-ty">Option</span>&lt;Size&lt;Dimension&gt;&gt; },
-    Text(Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;),
-}
+<span class="doccomment">/// Data type of a node.
+</span><span class="kw">pub enum </span>NodeData {
+    <span class="doccomment">/// Element node.
+    </span>Element(ElementData),
 
-<span class="attr">#[derive(Default)]
-</span><span class="kw">pub struct </span>ElementBuilder {
-    size: <span class="prelude-ty">Option</span>&lt;Size&lt;Dimension&gt;&gt;,
-    on_click: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(Click)&gt;&gt;,
-    <span class="kw">pub </span>children: <span class="prelude-ty">Option</span>&lt;Vec&lt;DefaultKey&gt;&gt;,
-}
-
-<span class="kw">impl </span>ElementBuilder {
-    <span class="kw">pub fn </span>child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: DefaultKey) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>children) = <span class="self">self</span>.children {
-            children.push(key);
-        } <span class="kw">else </span>{
-            <span class="self">self</span>.children = <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[key])
-        }
-        <span class="self">self
-    </span>}
-
-    <span class="kw">pub fn </span>on_click(<span class="kw-2">&amp;mut </span><span class="self">self</span>, handler: Box&lt;<span class="kw">dyn </span>FnMut(Click)&gt;) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.on_click = <span class="prelude-val">Some</span>(handler);
-        <span class="self">self
-    </span>}
-
-    <span class="kw">pub fn </span>size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size: Size&lt;Dimension&gt;) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.size = <span class="prelude-val">Some</span>(size);
-        <span class="self">self
-    </span>}
-
-    <span class="kw">pub fn </span>build(<span class="kw-2">&amp;mut </span><span class="self">self</span>, tree: <span class="kw-2">&amp;mut </span>Tree) -&gt; DefaultKey {
-        <span class="kw">let </span><span class="kw-2">mut </span>elem = Node::new(NodeData::Element {
-            size: <span class="self">self</span>.size.take(),
-        });
-        elem.children = <span class="self">self</span>.children.take();
-
-        tree.insert(elem)
-    }
+    <span class="doccomment">/// Text node.
+    </span>Text(Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;),
 }
 
 <span class="kw">pub struct </span>Node {
-    <span class="kw">pub </span>data: NodeData,
-    <span class="kw">pub </span>children: <span class="prelude-ty">Option</span>&lt;Vec&lt;DefaultKey&gt;&gt;,
+    <span class="doccomment">/// Data type of the node.
+    </span><span class="kw">pub </span>data: NodeData,
+
+    <span class="doccomment">/// Parent node id.
+    </span><span class="kw">pub </span>parent: <span class="prelude-ty">Option</span>&lt;DefaultKey&gt;,
+
+    <span class="doccomment">/// Child node ids.
+    </span><span class="kw">pub </span>children: <span class="prelude-ty">Option</span>&lt;Vec&lt;DefaultKey&gt;&gt;,
+
+    <span class="doccomment">/// Layout key for the taffy node.
+    </span><span class="kw">pub </span>layout_key: <span class="prelude-ty">Option</span>&lt;DefaultKey&gt;,
+
+    <span class="doccomment">/// Absolute layout of the node, relative to the window.
+    </span><span class="kw">pub </span>layout: <span class="prelude-ty">Option</span>&lt;Layout&gt;,
 }
 
 <span class="kw">impl </span>Node {
     <span class="kw">pub fn </span>new(data: NodeData) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             data,
+            parent: <span class="prelude-val">None</span>,
             children: <span class="prelude-val">None</span>,
+            layout_key: <span class="prelude-val">None</span>,
+            layout: <span class="prelude-val">None</span>,
         }
-    }
-
-    <span class="kw">pub fn </span>builder() -&gt; ElementBuilder {
-        ElementBuilder::default()
     }
 
     <span class="kw">pub fn </span>text(content: <span class="kw">impl </span>Into&lt;Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;&gt;) -&gt; <span class="self">Self </span>{
@@ -157,9 +219,97 @@
 
     <span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeKind {
         <span class="kw">match </span><span class="self">self</span>.data {
-            NodeData::Element { .. } =&gt; NodeKind::Container,
+            NodeData::Element { .. } =&gt; NodeKind::Element,
             NodeData::Text(<span class="kw">_</span>) =&gt; NodeKind::Text,
         }
+    }
+
+    <span class="kw">pub fn </span>semantics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeBuilder {
+        NodeBuilder::default()
+    }
+
+    <span class="kw">pub fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, taffy: <span class="kw-2">&amp;mut </span>Taffy) {
+        <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
+        <span class="kw">match </span><span class="self">self</span>.data {
+            NodeData::Element(<span class="kw-2">ref mut </span>elem) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = elem.size {
+                    style.size = size;
+                }
+
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(flex_direction) = elem.flex_direction {
+                    style.flex_direction = flex_direction;
+                }
+
+                style.align_items = elem.align_items;
+                style.justify_content = elem.justify_content;
+            }
+            <span class="kw">_ </span>=&gt; {}
+        }
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(layout_key) = <span class="self">self</span>.layout_key {
+            taffy.set_style(layout_key, style).unwrap();
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>layout_key = taffy.new_leaf(style).unwrap();
+            <span class="self">self</span>.layout_key = <span class="prelude-val">Some</span>(layout_key);
+        }
+
+        <span class="kw">if let </span>NodeData::Text(<span class="kw-2">ref </span>content) = <span class="self">self</span>.data {
+            <span class="kw">let </span>typeface = Typeface::new(<span class="string">&quot;Arial&quot;</span>, FontStyle::default()).unwrap();
+            <span class="kw">let </span>font = Font::new(typeface, <span class="number">100.</span>);
+            <span class="kw">let </span>text_blob = TextBlob::new(content, <span class="kw-2">&amp;</span>font).unwrap();
+            <span class="kw">let </span>bounds = text_blob.bounds().clone();
+
+            <span class="comment">// TODO this is a measure func for paragraphs
+            </span>taffy
+                .set_measure(
+                    <span class="self">self</span>.layout_key.unwrap(),
+                    <span class="prelude-val">Some</span>(taffy::node::MeasureFunc::Boxed(Box::new(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
+                        Size {
+                            width: bounds.width() / <span class="number">2.</span>,
+                            height: bounds.height() / <span class="number">2.</span>,
+                        }
+                    }))),
+                )
+                .unwrap();
+        }
+    }
+
+    <span class="kw">pub fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+        <span class="kw">let </span>layout = <span class="self">self</span>.layout.as_ref().unwrap();
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.data {
+            NodeData::Element(elem) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(background_color) = elem.background_color {
+                    <span class="kw">let </span>paint = Paint::new(background_color, <span class="prelude-val">None</span>);
+                    canvas.draw_rect(
+                        Rect::new(
+                            layout.location.x,
+                            layout.location.y,
+                            layout.location.x + layout.size.width,
+                            layout.location.y + layout.size.height,
+                        ),
+                        <span class="kw-2">&amp;</span>paint,
+                    );
+                }
+            }
+            NodeData::Text(content) =&gt; {
+                <span class="kw">let </span>typeface = Typeface::new(<span class="string">&quot;Arial&quot;</span>, FontStyle::default()).unwrap();
+                <span class="kw">let </span>font = Font::new(typeface, <span class="number">100.</span>);
+                <span class="kw">let </span>text_blob = TextBlob::new(content, <span class="kw-2">&amp;</span>font).unwrap();
+                <span class="kw">let </span>paint = Paint::new(Color4f::new(<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">1.</span>), <span class="prelude-val">None</span>);
+                <span class="kw">let </span>height = text_blob.bounds().height();
+                canvas.draw_text_blob(
+                    text_blob,
+                    (layout.location.x, layout.location.y + height / <span class="number">2.</span>),
+                    <span class="kw-2">&amp;</span>paint,
+                );
+            }
+        }
+    }
+}
+
+<span class="kw">impl </span>From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; <span class="kw">for </span>Node {
+    <span class="kw">fn </span>from(value: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::text(value)
     }
 }
 </code></pre></div></section></main></body></html>

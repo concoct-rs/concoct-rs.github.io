@@ -302,39 +302,18 @@
 <a href="#302" id="302">302</a>
 <a href="#303" id="303">303</a>
 <a href="#304" id="304">304</a>
-<a href="#305" id="305">305</a>
-<a href="#306" id="306">306</a>
-<a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a>
-<a href="#319" id="319">319</a>
-<a href="#320" id="320">320</a>
-<a href="#321" id="321">321</a>
-<a href="#322" id="322">322</a>
-<a href="#323" id="323">323</a>
-<a href="#324" id="324">324</a>
-<a href="#325" id="325">325</a>
-<a href="#326" id="326">326</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
+    element::ElementData,
     event,
-    node::{Element, NodeData, NodeKind},
+    node::{NodeData, NodeKind},
     Event, Node,
 };
 <span class="kw">use </span>accesskit::{NodeClassSet, NodeId, TreeUpdate};
 <span class="kw">use </span>kurbo::Point;
-<span class="kw">use </span>skia_safe::{Canvas, Color4f};
+<span class="kw">use </span>skia_safe::Canvas;
 <span class="kw">use </span>slotmap::{DefaultKey, SlotMap};
 <span class="kw">use </span>std::{borrow::Cow, num::NonZeroU128};
-<span class="kw">use </span>taffy::{prelude::Size, style::Dimension, style_helpers::TaffyMaxContent, Taffy};
+<span class="kw">use </span>taffy::{prelude::Size, style_helpers::TaffyMaxContent, Taffy};
 
 <span class="kw">mod </span>iter;
 <span class="kw">use </span><span class="self">self</span>::iter::Item;
@@ -343,7 +322,10 @@
 <span class="kw">mod </span>iter_mut;
 <span class="kw">pub use </span>iter_mut::IterMut;
 
-<span class="kw">struct </span>Inner {
+<span class="kw">mod </span>node_ref;
+<span class="kw">pub use </span><span class="self">self</span>::node_ref::NodeRef;
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Inner {
     <span class="kw">pub</span>(<span class="kw">crate</span>) changes: Vec&lt;DefaultKey&gt;,
     next_id: NonZeroU128,
     unused_ids: Vec&lt;NodeId&gt;,
@@ -376,7 +358,7 @@
 <span class="attr">#[derive(Default)]
 </span><span class="kw">pub struct </span>Tree {
     <span class="kw">pub </span>nodes: Nodes,
-    inner: Inner,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) inner: Inner,
 }
 
 <span class="kw">impl </span>Tree {
@@ -441,7 +423,7 @@
 
                     <span class="kw">match </span><span class="kw-2">&amp;</span>element.data {
                         NodeData::Text(content) =&gt; s.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;\&quot;{}\&quot;,&quot;</span>, content)),
-                        NodeData::Element(Element { size, .. }) =&gt; {
+                        NodeData::Element(ElementData { size, .. }) =&gt; {
                             s.push_str(<span class="string">&quot;{\n&quot;</span>);
                             <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = size {
                                 <span class="kw">for _ in </span><span class="number">0</span>..level + <span class="number">1 </span>{
@@ -478,16 +460,8 @@
         key
     }
 
-    <span class="kw">pub fn </span>element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: DefaultKey) -&gt; ElementRef {
-        <span class="kw">if let </span>NodeData::Element(<span class="kw-2">ref mut </span>element) = <span class="self">self</span>.nodes.nodes[key].data {
-            ElementRef {
-                key,
-                element,
-                inner: <span class="kw-2">&amp;mut </span><span class="self">self</span>.inner,
-            }
-        } <span class="kw">else </span>{
-            <span class="macro">todo!</span>()
-        }
+    <span class="kw">pub fn </span>element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: DefaultKey) -&gt; NodeRef {
+        NodeRef { key, tree: <span class="self">self </span>}
     }
 
     <span class="kw">pub fn </span>set_text(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: DefaultKey, content: <span class="kw">impl </span>Into&lt;Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;&gt;) {
@@ -630,24 +604,6 @@
 
     <span class="kw">pub fn </span>iter_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, root: DefaultKey) -&gt; IterMut {
         IterMut::new(<span class="self">self</span>, root)
-    }
-}
-
-<span class="kw">pub struct </span>ElementRef&lt;<span class="lifetime">&#39;a</span>&gt; {
-    key: DefaultKey,
-    element: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Element,
-    inner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Inner,
-}
-
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; ElementRef&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub fn </span>set_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size: Size&lt;Dimension&gt;) {
-        <span class="self">self</span>.element.size = <span class="prelude-val">Some</span>(size);
-        <span class="self">self</span>.inner.changes.push(<span class="self">self</span>.key);
-    }
-
-    <span class="kw">pub fn </span>set_background_color(<span class="kw-2">&amp;mut </span><span class="self">self</span>, color: Color4f) {
-        <span class="self">self</span>.element.background_color = <span class="prelude-val">Some</span>(color);
-        <span class="self">self</span>.inner.changes.push(<span class="self">self</span>.key);
     }
 }
 </code></pre></div></section></main></body></html>

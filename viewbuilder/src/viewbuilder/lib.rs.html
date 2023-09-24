@@ -16,19 +16,29 @@
 <a href="#16" id="16">16</a>
 <a href="#17" id="17">17</a>
 <a href="#18" id="18">18</a>
-</pre></div><pre class="rust"><code><span class="kw">pub mod </span>node;
+<a href="#19" id="19">19</a>
+<a href="#20" id="20">20</a>
+<a href="#21" id="21">21</a>
+<a href="#22" id="22">22</a>
+<a href="#23" id="23">23</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>slotmap::DefaultKey;
+
+<span class="kw">pub mod </span>node;
 <span class="kw">pub use </span>node::Node;
 
 <span class="kw">pub mod </span>tree;
+<span class="kw">pub use </span>tree::{NodeRef, Tree};
 
-<span class="kw">use </span>slotmap::DefaultKey;
-<span class="kw">pub use </span>tree::Tree;
+<span class="kw">pub mod </span>element;
+<span class="kw">pub use </span>element::Element;
 
 <span class="kw">mod </span>render;
 <span class="kw">pub use </span>render::Renderer;
 
 <span class="kw">pub mod </span>event;
 <span class="kw">pub use </span>event::Event;
+
+<span class="kw">pub type </span>ElementKey = slotmap::DefaultKey;
 
 <span class="kw">pub fn </span>run(tree: Tree, root: DefaultKey) {
     <span class="kw">let </span>renderer = Renderer::new();

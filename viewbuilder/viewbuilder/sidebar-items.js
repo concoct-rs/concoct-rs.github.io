@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["run"],"mod":["event","node","tree"],"struct":["Renderer"]};
+window.SIDEBAR_ITEMS = {"fn":["run"],"mod":["element","event","node","tree"],"struct":["Renderer"],"type":["ElementKey"]};
