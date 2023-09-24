@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["Iter","IterMut","NodeRef","Nodes","Tree"]};
+window.SIDEBAR_ITEMS = {"enum":["Item","ItemMut"],"struct":["Iter","IterMut","NodeRef","Tree"]};

@@ -159,9 +159,7 @@
 <a href="#159" id="159">159</a>
 <a href="#160" id="160">160</a>
 <a href="#161" id="161">161</a>
-<a href="#162" id="162">162</a>
-<a href="#163" id="163">163</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::element::ElementData;
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{element::ElementData, NodeKey};
 <span class="kw">use </span>accesskit::NodeBuilder;
 <span class="kw">use </span>skia_safe::{Canvas, Color4f, Font, FontStyle, Paint, Rect, TextBlob, Typeface};
 <span class="kw">use </span>slotmap::DefaultKey;
@@ -191,21 +189,22 @@
     </span>Text(Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;),
 }
 
-<span class="kw">pub struct </span>Node {
+<span class="doccomment">/// Node of a tree.
+</span><span class="kw">pub struct </span>Node {
     <span class="doccomment">/// Data type of the node.
-    </span><span class="kw">pub </span>data: NodeData,
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) data: NodeData,
 
     <span class="doccomment">/// Parent node id.
-    </span><span class="kw">pub </span>parent: <span class="prelude-ty">Option</span>&lt;DefaultKey&gt;,
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) parent: <span class="prelude-ty">Option</span>&lt;NodeKey&gt;,
 
     <span class="doccomment">/// Child node ids.
-    </span><span class="kw">pub </span>children: <span class="prelude-ty">Option</span>&lt;Vec&lt;DefaultKey&gt;&gt;,
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) children: <span class="prelude-ty">Option</span>&lt;Vec&lt;NodeKey&gt;&gt;,
 
     <span class="doccomment">/// Layout key for the taffy node.
-    </span><span class="kw">pub </span>layout_key: <span class="prelude-ty">Option</span>&lt;DefaultKey&gt;,
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) layout_key: <span class="prelude-ty">Option</span>&lt;DefaultKey&gt;,
 
     <span class="doccomment">/// Absolute layout of the node, relative to the window.
-    </span><span class="kw">pub </span>layout: <span class="prelude-ty">Option</span>&lt;Layout&gt;,
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) layout: <span class="prelude-ty">Option</span>&lt;Layout&gt;,
 }
 
 <span class="kw">impl </span>Node {
@@ -241,20 +240,17 @@
     <span class="doccomment">/// Setup the layout node.
     </span><span class="kw">pub fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, taffy: <span class="kw-2">&amp;mut </span>Taffy) {
         <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
-        <span class="kw">match </span><span class="self">self</span>.data {
-            NodeData::Element(<span class="kw-2">ref mut </span>elem) =&gt; {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = elem.size {
-                    style.size = size;
-                }
-
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(flex_direction) = elem.flex_direction {
-                    style.flex_direction = flex_direction;
-                }
-
-                style.align_items = elem.align_items;
-                style.justify_content = elem.justify_content;
+        <span class="kw">if let </span>NodeData::Element(<span class="kw-2">ref mut </span>elem) = <span class="self">self</span>.data {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = elem.size {
+                style.size = size;
             }
-            <span class="kw">_ </span>=&gt; {}
+
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(flex_direction) = elem.flex_direction {
+                style.flex_direction = flex_direction;
+            }
+
+            style.align_items = elem.align_items;
+            style.justify_content = elem.justify_content;
         }
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(layout_key) = <span class="self">self</span>.layout_key {

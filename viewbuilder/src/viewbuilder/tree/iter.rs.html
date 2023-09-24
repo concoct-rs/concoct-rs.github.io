@@ -66,19 +66,17 @@
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
 <a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::Nodes;
-<span class="kw">use crate</span>::{node::NodeKind, Node};
-<span class="kw">use </span>slotmap::DefaultKey;
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::Tree;
+<span class="kw">use crate</span>::{node::NodeKind, Node, NodeKey};
 
 <span class="kw">enum </span>Operation {
-    Key(DefaultKey),
+    Key(NodeKey),
     Pop(NodeKind),
 }
 
 <span class="kw">pub enum </span>Item&lt;<span class="lifetime">&#39;a</span>&gt; {
     Node {
-        key: DefaultKey,
+        key: NodeKey,
         node: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Node,
         level: usize,
     },
@@ -89,13 +87,13 @@
 }
 
 <span class="kw">pub struct </span>Iter&lt;<span class="lifetime">&#39;a</span>&gt; {
-    tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Nodes,
+    tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Tree,
     stack: Vec&lt;Operation&gt;,
     count: usize,
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iter&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Nodes, root: DefaultKey) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Tree, root: NodeKey) -&gt; <span class="self">Self </span>{
         Iter {
             tree,
             stack: <span class="macro">vec!</span>[Operation::Key(root)],

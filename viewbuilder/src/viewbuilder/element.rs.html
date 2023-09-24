@@ -120,28 +120,26 @@
 <a href="#120" id="120">120</a>
 <a href="#121" id="121">121</a>
 <a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
-</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{event, node::NodeData, Node, Tree};
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{event, node::NodeData, Context, Node, NodeKey};
 <span class="kw">use </span>skia_safe::Color4f;
-<span class="kw">use </span>slotmap::DefaultKey;
 <span class="kw">use </span>taffy::{
     prelude::Size,
     style::{AlignItems, Dimension, FlexDirection, JustifyContent},
 };
 
 <span class="doccomment">/// Element of a user interface.
-</span><span class="attr">#[derive(Default)]
 </span><span class="kw">pub struct </span>Element {
-    size: <span class="prelude-ty">Option</span>&lt;Size&lt;Dimension&gt;&gt;,
-    flex_direction: <span class="prelude-ty">Option</span>&lt;FlexDirection&gt;,
-    align_items: <span class="prelude-ty">Option</span>&lt;AlignItems&gt;,
-    justify_content: <span class="prelude-ty">Option</span>&lt;JustifyContent&gt;,
-    on_click: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Tree, event::Click)&gt;&gt;,
-    on_mouse_in: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Tree, event::MouseIn)&gt;&gt;,
-    on_mouse_out: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Tree, event::MouseOut)&gt;&gt;,
-    background_color: <span class="prelude-ty">Option</span>&lt;Color4f&gt;,
-    children: <span class="prelude-ty">Option</span>&lt;Vec&lt;DefaultKey&gt;&gt;,
+    data: <span class="prelude-ty">Option</span>&lt;ElementData&gt;,
+    children: <span class="prelude-ty">Option</span>&lt;Vec&lt;NodeKey&gt;&gt;,
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>Element {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            data: <span class="prelude-val">Some</span>(ElementData::default()),
+            children: Default::default(),
+        }
+    }
 }
 
 <span class="kw">impl </span>Element {
@@ -151,7 +149,7 @@
     }
 
     <span class="doccomment">/// Add a child to the element.
-    </span><span class="kw">pub fn </span>child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: DefaultKey) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>child(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: NodeKey) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>children) = <span class="self">self</span>.children {
             children.push(key);
         } <span class="kw">else </span>{
@@ -161,73 +159,71 @@
     </span>}
 
     <span class="doccomment">/// Set the click handler for this element.
-    </span><span class="kw">pub fn </span>on_click(<span class="kw-2">&amp;mut </span><span class="self">self</span>, handler: Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Tree, event::Click)&gt;) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.on_click = <span class="prelude-val">Some</span>(handler);
+    </span><span class="kw">pub fn </span>on_click(<span class="kw-2">&amp;mut </span><span class="self">self</span>, handler: Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::Click)&gt;) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="self">self</span>.data_mut().on_click = <span class="prelude-val">Some</span>(handler);
         <span class="self">self
     </span>}
 
     <span class="doccomment">/// Set the mouse-in handler for this element.
-    </span><span class="kw">pub fn </span>on_mouse_in(<span class="kw-2">&amp;mut </span><span class="self">self</span>, handler: Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Tree, event::MouseIn)&gt;) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.on_mouse_in = <span class="prelude-val">Some</span>(handler);
+    </span><span class="kw">pub fn </span>on_mouse_in(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        handler: Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::MouseIn)&gt;,
+    ) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="self">self</span>.data_mut().on_mouse_in = <span class="prelude-val">Some</span>(handler);
         <span class="self">self
     </span>}
 
     <span class="doccomment">/// Set the mouse-out handler for this element.
     </span><span class="kw">pub fn </span>on_mouse_out(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        handler: Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Tree, event::MouseOut)&gt;,
+        handler: Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::MouseOut)&gt;,
     ) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.on_mouse_out = <span class="prelude-val">Some</span>(handler);
+        <span class="self">self</span>.data_mut().on_mouse_out = <span class="prelude-val">Some</span>(handler);
         <span class="self">self
     </span>}
 
     <span class="doccomment">/// Set the size of this element.
     </span><span class="kw">pub fn </span>size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size: Size&lt;Dimension&gt;) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.size = <span class="prelude-val">Some</span>(size);
+        <span class="self">self</span>.data_mut().size = <span class="prelude-val">Some</span>(size);
         <span class="self">self
     </span>}
 
     <span class="doccomment">/// Set the flex direction of this element.
     </span><span class="kw">pub fn </span>flex_direction(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flex_direction: FlexDirection) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.flex_direction = <span class="prelude-val">Some</span>(flex_direction);
+        <span class="self">self</span>.data_mut().flex_direction = <span class="prelude-val">Some</span>(flex_direction);
         <span class="self">self
     </span>}
 
     <span class="doccomment">/// Set the item alignment of this element.
     </span><span class="kw">pub fn </span>align_items(<span class="kw-2">&amp;mut </span><span class="self">self</span>, align_items: AlignItems) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.align_items = <span class="prelude-val">Some</span>(align_items);
+        <span class="self">self</span>.data_mut().align_items = <span class="prelude-val">Some</span>(align_items);
         <span class="self">self
     </span>}
 
     <span class="doccomment">/// Set the content justification of this element.
     </span><span class="kw">pub fn </span>justify_content(<span class="kw-2">&amp;mut </span><span class="self">self</span>, justify_content: JustifyContent) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.justify_content = <span class="prelude-val">Some</span>(justify_content);
+        <span class="self">self</span>.data_mut().justify_content = <span class="prelude-val">Some</span>(justify_content);
         <span class="self">self
     </span>}
 
     <span class="doccomment">/// Set the background color of this element.
     </span><span class="kw">pub fn </span>background_color(<span class="kw-2">&amp;mut </span><span class="self">self</span>, color: Color4f) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="self">self</span>.background_color = <span class="prelude-val">Some</span>(color);
+        <span class="self">self</span>.data_mut().background_color = <span class="prelude-val">Some</span>(color);
         <span class="self">self
     </span>}
 
+    <span class="kw">pub fn </span>data_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>ElementData {
+        <span class="self">self</span>.data.as_mut().unwrap()
+    }
+
     <span class="doccomment">/// Build the element and insert it into the tree.
-    </span><span class="kw">pub fn </span>build(<span class="kw-2">&amp;mut </span><span class="self">self</span>, tree: <span class="kw-2">&amp;mut </span>Tree) -&gt; DefaultKey {
-        <span class="kw">let </span><span class="kw-2">mut </span>elem = Node::new(NodeData::Element(ElementData {
-            size: <span class="self">self</span>.size.take(),
-            flex_direction: <span class="self">self</span>.flex_direction.take(),
-            on_click: <span class="self">self</span>.on_click.take(),
-            on_mouse_in: <span class="self">self</span>.on_mouse_in.take(),
-            on_mouse_out: <span class="self">self</span>.on_mouse_out.take(),
-            background_color: <span class="self">self</span>.background_color.take(),
-            align_items: <span class="self">self</span>.align_items.take(),
-            justify_content: <span class="self">self</span>.justify_content.take(),
-        }));
+    </span><span class="kw">pub fn </span>build(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context) -&gt; NodeKey {
+        <span class="kw">let </span><span class="kw-2">mut </span>elem = Node::new(NodeData::Element(<span class="self">self</span>.data.take().unwrap()));
         elem.children = <span class="self">self</span>.children.take();
 
-        <span class="kw">let </span>key = tree.insert(elem);
+        <span class="kw">let </span>key = cx.insert(elem);
         <span class="kw">for </span>child <span class="kw">in </span><span class="self">self</span>.children.iter().flatten() {
-            <span class="kw">let </span>node = <span class="kw-2">&amp;mut </span>tree.nodes.nodes[<span class="kw-2">*</span>child];
+            <span class="kw">let </span>node = <span class="kw-2">&amp;mut </span>cx.tree[<span class="kw-2">*</span>child];
             node.parent = <span class="prelude-val">Some</span>(key);
         }
         key
@@ -238,9 +234,9 @@
 </span><span class="attr">#[derive(Default)]
 </span><span class="kw">pub struct </span>ElementData {
     <span class="kw">pub</span>(<span class="kw">crate</span>) size: <span class="prelude-ty">Option</span>&lt;Size&lt;Dimension&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_click: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Tree, event::Click)&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_in: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Tree, event::MouseIn)&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_out: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Tree, event::MouseOut)&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_click: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::Click)&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_in: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::MouseIn)&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) on_mouse_out: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::MouseOut)&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) background_color: <span class="prelude-ty">Option</span>&lt;Color4f&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) flex_direction: <span class="prelude-ty">Option</span>&lt;FlexDirection&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) align_items: <span class="prelude-ty">Option</span>&lt;AlignItems&gt;,

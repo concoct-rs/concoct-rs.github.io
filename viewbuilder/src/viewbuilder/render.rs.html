@@ -348,7 +348,67 @@
 <a href="#348" id="348">348</a>
 <a href="#349" id="349">349</a>
 <a href="#350" id="350">350</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>gl::types::<span class="kw-2">*</span>;
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{event, Context, NodeKey};
+<span class="kw">use </span>gl::types::<span class="kw-2">*</span>;
 <span class="kw">use </span>glutin::{
     config::{ConfigTemplateBuilder, GlConfig},
     context::{
@@ -366,19 +426,21 @@
     gpu::{<span class="self">self</span>, gl::FramebufferInfo, BackendRenderTarget, SurfaceOrigin},
     Color, ColorType, Surface,
 };
-<span class="kw">use </span>slotmap::DefaultKey;
 <span class="kw">use </span>std::{
     ffi::CString,
+    future::Future,
     num::NonZeroU32,
+    sync::{mpsc, Arc},
     time::{Duration, Instant},
 };
+<span class="kw">use </span>tokio::sync::Notify;
 <span class="kw">use </span>winit::{
     event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent},
-    event_loop::{ControlFlow, EventLoop},
+    event_loop::{ControlFlow, EventLoop, EventLoopBuilder},
     window::{Window, WindowBuilder},
 };
 
-<span class="kw">use crate</span>::{event, Tree};
+<span class="kw">pub struct </span>UserEvent(<span class="kw">pub </span>Box&lt;<span class="kw">dyn </span>FnOnce(<span class="kw-2">&amp;mut </span>Context) + Send&gt;);
 
 <span class="comment">// Guarantee the drop order inside the FnMut closure. `Window` _must_ be dropped after
 // `DirectContext`.
@@ -390,15 +452,18 @@
     gr_context: skia_safe::gpu::DirectContext,
     gl_context: PossiblyCurrentContext,
     window: Window,
-    event_loop: EventLoop&lt;()&gt;,
+    event_loop: EventLoop&lt;UserEvent&gt;,
     num_samples: usize,
     stencil_size: usize,
     fb_info: FramebufferInfo,
+    <span class="kw">pub </span>tx: mpsc::Sender&lt;UserEvent&gt;,
+    rx: mpsc::Receiver&lt;UserEvent&gt;,
+    <span class="kw">pub </span>notify: Arc&lt;Notify&gt;,
 }
 
 <span class="kw">impl </span>Renderer {
     <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>el = EventLoop::new();
+        <span class="kw">let </span>el = EventLoopBuilder::with_user_event().build();
         <span class="kw">let </span>winit_window_builder = WindowBuilder::new().with_title(<span class="string">&quot;Viewbuilder&quot;</span>);
 
         <span class="kw">let </span>template = ConfigTemplateBuilder::new()
@@ -504,6 +569,8 @@
 
         <span class="kw">let </span>surface = create_surface(<span class="kw-2">&amp;</span>window, fb_info, <span class="kw-2">&amp;mut </span>gr_context, num_samples, stencil_size);
 
+        <span class="kw">let </span>(tx, rx) = mpsc::channel();
+
         <span class="self">Self </span>{
             surface,
             gl_surface,
@@ -514,19 +581,65 @@
             num_samples,
             stencil_size,
             fb_info,
+            tx,
+            rx,
+            notify: Arc::new(Notify::default()),
         }
     }
 
-    <span class="kw">pub fn </span>run(<span class="kw-2">mut </span><span class="self">self</span>, <span class="kw-2">mut </span>tree: Tree, root: DefaultKey) {
+    <span class="kw">pub fn </span>animation(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        _key: NodeKey,
+        min: f32,
+        max: f32,
+        f: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>Context, f32) + Send + Sync + <span class="lifetime">&#39;static</span>,
+    ) -&gt; <span class="kw">impl </span>Future&lt;Output = ()&gt; {
+        <span class="kw">let </span>tx = <span class="self">self</span>.tx.clone();
+        <span class="kw">let </span>notify = <span class="self">self</span>.notify.clone();
+
+        <span class="kw">let </span><span class="kw-2">mut </span>is_forward = <span class="bool-val">true</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>start = Instant::now();
+
+        <span class="kw">async move </span>{
+            <span class="kw">let </span>f = Arc::new(f);
+            <span class="kw">loop </span>{
+                <span class="kw">let </span>elapsed = Instant::now() - start;
+                <span class="kw">let </span>millis = elapsed.as_millis() <span class="kw">as </span>f32;
+
+                <span class="kw">let </span>(begin, end) = <span class="kw">if </span>is_forward { (min, max) } <span class="kw">else </span>{ (max, min) };
+                <span class="kw">let </span>interpolated: f32 = interpolation::lerp(<span class="kw-2">&amp;</span>begin, <span class="kw-2">&amp;</span>end, <span class="kw-2">&amp;</span>(millis / max));
+                <span class="kw">let </span>size = interpolated.min(max).max(min);
+
+                <span class="kw">if </span>elapsed &gt;= Duration::from_secs(<span class="number">1</span>) {
+                    start = Instant::now();
+                    is_forward = !is_forward;
+                }
+
+                <span class="kw">let </span>f2 = f.clone();
+                tx.send(UserEvent(Box::new(<span class="kw">move </span>|cx| f2(cx, size))))
+                    .unwrap();
+
+                notify.notified().<span class="kw">await</span>;
+            }
+        }
+    }
+
+    <span class="kw">pub fn </span>run(<span class="kw-2">mut </span><span class="self">self</span>, <span class="kw-2">mut </span>tree: Context, root: NodeKey) {
         <span class="kw">let </span><span class="kw-2">mut </span>previous_frame_start = Instant::now();
 
         <span class="kw">let </span><span class="kw-2">mut </span>hover_target = <span class="prelude-val">None</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>cursor_pos = <span class="prelude-val">None</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>clicked = <span class="prelude-val">None</span>;
 
+        <span class="kw">let </span>proxy = <span class="self">self</span>.event_loop.create_proxy();
+
         <span class="self">self</span>.event_loop.run(<span class="kw">move </span>|event, <span class="kw">_</span>, control_flow| {
             <span class="kw">let </span>frame_start = Instant::now();
             <span class="kw">let </span><span class="kw-2">mut </span>draw_frame = <span class="bool-val">false</span>;
+
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(event) = <span class="self">self</span>.rx.try_recv() {
+                proxy.send_event(event).ok().unwrap();
+            }
 
             <span class="attr">#[allow(deprecated)]
             </span><span class="kw">match </span>event {
@@ -577,7 +690,8 @@
                     } =&gt; {
                         cursor_pos = <span class="prelude-val">Some</span>(position);
 
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(target) = tree.target(root, Point::new(position.x, position.y))
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(target) =
+                            tree.tree.target(root, Point::new(position.x, position.y))
                         {
                             <span class="kw">if let </span><span class="prelude-val">Some</span>(last_target) = hover_target {
                                 <span class="kw">if </span>target != last_target {
@@ -618,7 +732,9 @@
                     } =&gt; <span class="kw">match </span>state {
                         ElementState::Pressed =&gt; {
                             <span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = cursor_pos {
-                                <span class="kw">if let </span><span class="prelude-val">Some</span>(target) = tree.target(root, Point::new(pos.x, pos.y)) {
+                                <span class="kw">if let </span><span class="prelude-val">Some</span>(target) =
+                                    tree.tree.target(root, Point::new(pos.x, pos.y))
+                                {
                                     clicked = <span class="prelude-val">Some</span>(target);
                                 }
                             }
@@ -627,7 +743,7 @@
                             <span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = cursor_pos {
                                 <span class="kw">if let </span><span class="prelude-val">Some</span>(clicked) = clicked.take() {
                                     <span class="kw">if let </span><span class="prelude-val">Some</span>(target) =
-                                        tree.target(root, Point::new(pos.x, pos.y))
+                                        tree.tree.target(root, Point::new(pos.x, pos.y))
                                     {
                                         <span class="kw">if </span>target == clicked {
                                             tree.send(
@@ -647,16 +763,18 @@
                 Event::RedrawRequested(<span class="kw">_</span>) =&gt; {
                     draw_frame = <span class="bool-val">true</span>;
                 }
+                Event::UserEvent(UserEvent(update)) =&gt; update(<span class="kw-2">&amp;mut </span>tree),
                 <span class="kw">_ </span>=&gt; (),
             }
-            <span class="kw">let </span>expected_frame_length_seconds = <span class="number">1.0 </span>/ <span class="number">20.0</span>;
-            <span class="kw">let </span>frame_duration = Duration::from_secs_f32(expected_frame_length_seconds);
 
+            <span class="kw">let </span>frame_duration = Duration::from_millis(<span class="number">10</span>);
             <span class="kw">if </span>frame_start - previous_frame_start &gt; frame_duration {
                 draw_frame = <span class="bool-val">true</span>;
                 previous_frame_start = frame_start;
             }
             <span class="kw">if </span>draw_frame {
+                <span class="self">self</span>.notify.notify_waiters();
+
                 <span class="kw">let </span>canvas = <span class="self">self</span>.surface.canvas();
                 canvas.clear(Color::WHITE);
 

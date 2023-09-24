@@ -32,6 +32,13 @@
 <a href="#32" id="32">32</a>
 <a href="#33" id="33">33</a>
 <a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
+<a href="#36" id="36">36</a>
+<a href="#37" id="37">37</a>
+<a href="#38" id="38">38</a>
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
+<a href="#41" id="41">41</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! # Viewbuilder
 //!
 //! Cross-platform user interface framework for Rust.
@@ -39,31 +46,38 @@
 //! This crate provides an HTML-like render API for the backend of a UI.
 //! It supports layout, drawing, and accessability.
 
-</span><span class="kw">use </span>slotmap::DefaultKey;
-
-<span class="kw">pub mod </span>node;
+</span><span class="kw">pub mod </span>node;
 <span class="kw">pub use </span>node::Node;
 
 <span class="kw">pub mod </span>tree;
-<span class="kw">pub use </span>tree::{NodeRef, Tree};
+
+<span class="kw">mod </span>context;
+<span class="kw">pub use </span>context::Context;
 
 <span class="kw">pub mod </span>element;
 <span class="kw">pub use </span>element::Element;
 
-<span class="kw">mod </span>render;
+<span class="kw">pub mod </span>render;
 <span class="kw">pub use </span>render::Renderer;
 
 <span class="kw">pub mod </span>event;
 <span class="kw">pub use </span>event::Event;
 
-<span class="kw">pub type </span>ElementKey = slotmap::DefaultKey;
+<span class="macro">slotmap::new_key_type! </span>{
+    <span class="doccomment">/// Key to access a node in a tree.
+    </span><span class="kw">pub struct </span>NodeKey;
+}
 
 <span class="doccomment">/// Run the user interface tree.
 ///
 /// This will create a new window and render the tree,
 /// propagating events and re-rendering as they occuring.
-</span><span class="kw">pub fn </span>run(tree: Tree, root: DefaultKey) {
+</span><span class="kw">pub fn </span>run(f: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;mut </span>Context) -&gt; NodeKey) {
     <span class="kw">let </span>renderer = Renderer::new();
-    renderer.run(tree, root)
+
+    <span class="kw">let </span><span class="kw-2">mut </span>cx = Context::default();
+    <span class="kw">let </span>root = f(<span class="kw-2">&amp;mut </span>cx);
+
+    renderer.run(cx, root)
 }
 </code></pre></div></section></main></body></html>

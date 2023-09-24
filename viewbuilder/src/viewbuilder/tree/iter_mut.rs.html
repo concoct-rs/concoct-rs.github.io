@@ -62,31 +62,29 @@
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
 <a href="#64" id="64">64</a>
-<a href="#65" id="65">65</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::Nodes;
-<span class="kw">use crate</span>::{node::NodeKind, Node};
-<span class="kw">use </span>slotmap::DefaultKey;
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::Tree;
+<span class="kw">use crate</span>::{node::NodeKind, Node, NodeKey};
 <span class="kw">use </span>std::marker::PhantomData;
 
 <span class="kw">enum </span>Operation {
-    Key(DefaultKey),
+    Key(NodeKey),
     Pop(NodeKind),
 }
 
-<span class="kw">pub enum </span>Item&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">pub enum </span>ItemMut&lt;<span class="lifetime">&#39;a</span>&gt; {
     Node { node: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Node, level: usize },
     Pop { kind: NodeKind, level: usize },
 }
 
 <span class="kw">pub struct </span>IterMut&lt;<span class="lifetime">&#39;a</span>&gt; {
-    tree: <span class="kw-2">*mut </span>Nodes,
+    tree: <span class="kw-2">*mut </span>Tree,
     stack: Vec&lt;Operation&gt;,
     count: usize,
-    _marker: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Nodes&gt;,
+    _marker: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Tree&gt;,
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; IterMut&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Nodes, root: DefaultKey) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(tree: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Tree, root: NodeKey) -&gt; <span class="self">Self </span>{
         IterMut {
             tree,
             stack: <span class="macro">vec!</span>[Operation::Key(root)],
@@ -97,7 +95,7 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>IterMut&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type </span>Item = Item&lt;<span class="lifetime">&#39;a</span>&gt;;
+    <span class="kw">type </span>Item = ItemMut&lt;<span class="lifetime">&#39;a</span>&gt;;
 
     <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
         <span class="self">self</span>.stack.pop().map(|item| <span class="kw">match </span>item {
@@ -113,14 +111,14 @@
                 <span class="kw">let </span>count = <span class="self">self</span>.count;
                 <span class="self">self</span>.count += <span class="number">1</span>;
 
-                Item::Node {
+                ItemMut::Node {
                     node: elem,
                     level: count,
                 }
             }
             Operation::Pop(kind) =&gt; {
                 <span class="self">self</span>.count -= <span class="number">1</span>;
-                Item::Pop {
+                ItemMut::Pop {
                     kind,
                     level: <span class="self">self</span>.count,
                 }
