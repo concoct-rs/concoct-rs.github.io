@@ -155,6 +155,12 @@
 <a href="#155" id="155">155</a>
 <a href="#156" id="156">156</a>
 <a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::element::ElementData;
 <span class="kw">use </span>accesskit::NodeBuilder;
 <span class="kw">use </span>skia_safe::{Canvas, Color4f, Font, FontStyle, Paint, Rect, TextBlob, Typeface};
@@ -203,7 +209,8 @@
 }
 
 <span class="kw">impl </span>Node {
-    <span class="kw">pub fn </span>new(data: NodeData) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Create a new node from its data.
+    </span><span class="kw">pub fn </span>new(data: NodeData) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             data,
             parent: <span class="prelude-val">None</span>,
@@ -213,22 +220,26 @@
         }
     }
 
-    <span class="kw">pub fn </span>text(content: <span class="kw">impl </span>Into&lt;Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;&gt;) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Create a new text node.
+    </span><span class="kw">pub fn </span>text(content: <span class="kw">impl </span>Into&lt;Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::new(NodeData::Text(content.into()))
     }
 
-    <span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeKind {
+    <span class="doccomment">/// Get the node kind.
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeKind {
         <span class="kw">match </span><span class="self">self</span>.data {
             NodeData::Element { .. } =&gt; NodeKind::Element,
             NodeData::Text(<span class="kw">_</span>) =&gt; NodeKind::Text,
         }
     }
 
-    <span class="kw">pub fn </span>semantics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeBuilder {
+    <span class="doccomment">/// Build a semantics node.
+    </span><span class="kw">pub fn </span>semantics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeBuilder {
         NodeBuilder::default()
     }
 
-    <span class="kw">pub fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, taffy: <span class="kw-2">&amp;mut </span>Taffy) {
+    <span class="doccomment">/// Setup the layout node.
+    </span><span class="kw">pub fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, taffy: <span class="kw-2">&amp;mut </span>Taffy) {
         <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
         <span class="kw">match </span><span class="self">self</span>.data {
             NodeData::Element(<span class="kw-2">ref mut </span>elem) =&gt; {
@@ -274,7 +285,8 @@
         }
     }
 
-    <span class="kw">pub fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+    <span class="doccomment">/// Paint the node to a skia canvas.
+    </span><span class="kw">pub fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
         <span class="kw">let </span>layout = <span class="self">self</span>.layout.as_ref().unwrap();
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.data {
             NodeData::Element(elem) =&gt; {
