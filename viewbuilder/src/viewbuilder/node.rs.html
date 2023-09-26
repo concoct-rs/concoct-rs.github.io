@@ -159,11 +159,61 @@
 <a href="#159" id="159">159</a>
 <a href="#160" id="160">160</a>
 <a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{element::ElementData, NodeKey};
 <span class="kw">use </span>accesskit::NodeBuilder;
 <span class="kw">use </span>skia_safe::{Canvas, Color4f, Font, FontStyle, Paint, Rect, TextBlob, Typeface};
 <span class="kw">use </span>slotmap::DefaultKey;
-<span class="kw">use </span>std::borrow::Cow;
+<span class="kw">use </span>std::{borrow::Cow, cell::RefCell, rc::Rc};
 <span class="kw">use </span>taffy::{
     prelude::{Layout, Size},
     style::Style,
@@ -180,13 +230,27 @@
     </span>Text,
 }
 
+<span class="kw">pub struct </span>TextData {
+    text_blob: TextBlob,
+    font: Font,
+}
+
 <span class="doccomment">/// Data type of a node.
 </span><span class="kw">pub enum </span>NodeData {
     <span class="doccomment">/// Element node.
     </span>Element(ElementData),
 
     <span class="doccomment">/// Text node.
-    </span>Text(Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;),
+    </span>Text {
+        content: Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;,
+        data: <span class="prelude-ty">Option</span>&lt;TextData&gt;,
+    },
+}
+
+<span class="attr">#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>Overflow {
+    Hidden,
+    Scroll,
 }
 
 <span class="doccomment">/// Node of a tree.
@@ -205,6 +269,11 @@
 
     <span class="doccomment">/// Absolute layout of the node, relative to the window.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) layout: <span class="prelude-ty">Option</span>&lt;Layout&gt;,
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) translation: kurbo::Size,
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) overflow_x: Overflow,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) overflow_y: Overflow,
 }
 
 <span class="kw">impl </span>Node {
@@ -216,41 +285,52 @@
             children: <span class="prelude-val">None</span>,
             layout_key: <span class="prelude-val">None</span>,
             layout: <span class="prelude-val">None</span>,
+            translation: kurbo::Size::ZERO,
+            overflow_x: Overflow::Hidden,
+            overflow_y: Overflow::Hidden,
         }
     }
 
     <span class="doccomment">/// Create a new text node.
     </span><span class="kw">pub fn </span>text(content: <span class="kw">impl </span>Into&lt;Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::new(NodeData::Text(content.into()))
+        <span class="self">Self</span>::new(NodeData::Text {
+            content: content.into(),
+            data: <span class="prelude-val">None</span>,
+        })
     }
 
     <span class="doccomment">/// Get the node kind.
     </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeKind {
         <span class="kw">match </span><span class="self">self</span>.data {
             NodeData::Element { .. } =&gt; NodeKind::Element,
-            NodeData::Text(<span class="kw">_</span>) =&gt; NodeKind::Text,
+            NodeData::Text { .. } =&gt; NodeKind::Text,
         }
     }
 
+    <span class="doccomment">/// Get the absolute layout of the node, relative to the window.
+    </span><span class="kw">pub fn </span>layout(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Layout&gt; {
+        <span class="self">self</span>.layout
+    }
+
     <span class="doccomment">/// Build a semantics node.
-    </span><span class="kw">pub fn </span>semantics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeBuilder {
+    </span><span class="kw">pub fn </span>build_semantics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeBuilder {
         NodeBuilder::default()
     }
 
     <span class="doccomment">/// Setup the layout node.
-    </span><span class="kw">pub fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, taffy: <span class="kw-2">&amp;mut </span>Taffy) {
+    </span><span class="kw">pub fn </span>build_layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, taffy: <span class="kw-2">&amp;mut </span>Taffy) {
         <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
         <span class="kw">if let </span>NodeData::Element(<span class="kw-2">ref mut </span>elem) = <span class="self">self</span>.data {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = elem.size {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(size) = elem.size() {
                 style.size = size;
             }
 
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(flex_direction) = elem.flex_direction {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(flex_direction) = elem.flex_direction() {
                 style.flex_direction = flex_direction;
             }
 
-            style.align_items = elem.align_items;
-            style.justify_content = elem.justify_content;
+            style.align_items = elem.align_items();
+            style.justify_content = elem.justify_content();
         }
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(layout_key) = <span class="self">self</span>.layout_key {
@@ -260,10 +340,20 @@
             <span class="self">self</span>.layout_key = <span class="prelude-val">Some</span>(layout_key);
         }
 
-        <span class="kw">if let </span>NodeData::Text(<span class="kw-2">ref </span>content) = <span class="self">self</span>.data {
-            <span class="kw">let </span>typeface = Typeface::new(<span class="string">&quot;Arial&quot;</span>, FontStyle::default()).unwrap();
-            <span class="kw">let </span>font = Font::new(typeface, <span class="number">100.</span>);
-            <span class="kw">let </span>text_blob = TextBlob::new(content, <span class="kw-2">&amp;</span>font).unwrap();
+        <span class="kw">if let </span>NodeData::Text {
+            <span class="kw-2">ref </span>content,
+            <span class="kw-2">ref mut </span>data,
+        } = <span class="self">self</span>.data
+        {
+            <span class="kw">let </span>text_blob = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>data) = data {
+                <span class="kw-2">&amp;</span>data.text_blob
+            } <span class="kw">else </span>{
+                <span class="kw">let </span>typeface = Typeface::new(<span class="string">&quot;Arial&quot;</span>, FontStyle::default()).unwrap();
+                <span class="kw">let </span>font = Font::new(typeface, <span class="number">100.</span>);
+                <span class="kw">let </span>text_blob = TextBlob::new(content, <span class="kw-2">&amp;</span>font).unwrap();
+                <span class="kw-2">*</span>data = <span class="prelude-val">Some</span>(TextData { text_blob, font });
+                <span class="kw-2">&amp;</span>data.as_ref().unwrap().text_blob
+            };
             <span class="kw">let </span>bounds = text_blob.bounds().clone();
 
             <span class="comment">// TODO this is a measure func for paragraphs
@@ -283,10 +373,16 @@
 
     <span class="doccomment">/// Paint the node to a skia canvas.
     </span><span class="kw">pub fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
+        canvas.save();
+        canvas.translate(skia_safe::Point::new(
+            <span class="self">self</span>.translation.width <span class="kw">as _</span>,
+            <span class="self">self</span>.translation.height <span class="kw">as _</span>,
+        ));
+
         <span class="kw">let </span>layout = <span class="self">self</span>.layout.as_ref().unwrap();
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.data {
             NodeData::Element(elem) =&gt; {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(background_color) = elem.background_color {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(background_color) = elem.background_color() {
                     <span class="kw">let </span>paint = Paint::new(background_color, <span class="prelude-val">None</span>);
                     canvas.draw_rect(
                         Rect::new(
@@ -299,10 +395,8 @@
                     );
                 }
             }
-            NodeData::Text(content) =&gt; {
-                <span class="kw">let </span>typeface = Typeface::new(<span class="string">&quot;Arial&quot;</span>, FontStyle::default()).unwrap();
-                <span class="kw">let </span>font = Font::new(typeface, <span class="number">100.</span>);
-                <span class="kw">let </span>text_blob = TextBlob::new(content, <span class="kw-2">&amp;</span>font).unwrap();
+            NodeData::Text { <span class="kw-2">ref </span>data, .. } =&gt; {
+                <span class="kw">let </span>text_blob = <span class="kw-2">&amp;</span>data.as_ref().unwrap().text_blob;
                 <span class="kw">let </span>paint = Paint::new(Color4f::new(<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">1.</span>), <span class="prelude-val">None</span>);
                 <span class="kw">let </span>height = text_blob.bounds().height();
                 canvas.draw_text_blob(
@@ -317,6 +411,12 @@
 
 <span class="kw">impl </span>From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; <span class="kw">for </span>Node {
     <span class="kw">fn </span>from(value: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::text(value)
+    }
+}
+
+<span class="kw">impl </span>From&lt;String&gt; <span class="kw">for </span>Node {
+    <span class="kw">fn </span>from(value: String) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::text(value)
     }
 }

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["Renderer","UserEvent"]};
+window.SIDEBAR_ITEMS = {"struct":["Renderer","Scope","Updater"]};

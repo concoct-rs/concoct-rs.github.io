@@ -181,64 +181,25 @@
 <a href="#181" id="181">181</a>
 <a href="#182" id="182">182</a>
 <a href="#183" id="183">183</a>
-<a href="#184" id="184">184</a>
-<a href="#185" id="185">185</a>
-<a href="#186" id="186">186</a>
-<a href="#187" id="187">187</a>
-<a href="#188" id="188">188</a>
-<a href="#189" id="189">189</a>
-<a href="#190" id="190">190</a>
-<a href="#191" id="191">191</a>
-<a href="#192" id="192">192</a>
-<a href="#193" id="193">193</a>
-<a href="#194" id="194">194</a>
-<a href="#195" id="195">195</a>
-<a href="#196" id="196">196</a>
-<a href="#197" id="197">197</a>
-<a href="#198" id="198">198</a>
-<a href="#199" id="199">199</a>
-<a href="#200" id="200">200</a>
-<a href="#201" id="201">201</a>
-<a href="#202" id="202">202</a>
-<a href="#203" id="203">203</a>
-<a href="#204" id="204">204</a>
-<a href="#205" id="205">205</a>
-<a href="#206" id="206">206</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    element::ElementData,
-    event,
-    node::{NodeData, NodeKind},
-    tree::{Item, ItemMut, NodeRef, Tree},
+    event::EventKind,
+    node::NodeData,
+    tree::{ItemMut, NodeRef, Tree},
     Event, Node, NodeKey,
 };
 <span class="kw">use </span>accesskit::{NodeClassSet, NodeId, TreeUpdate};
 <span class="kw">use </span>skia_safe::Canvas;
 <span class="kw">use </span>std::num::NonZeroU128;
-<span class="kw">use </span>taffy::{prelude::Size, style_helpers::TaffyMaxContent, Taffy};
-
-<span class="kw">enum </span>Handler {
-    Click(Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::Click)&gt;, event::Click),
-    MouseIn(Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::MouseIn)&gt;, event::MouseIn),
-    MouseOut(
-        Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::MouseOut)&gt;,
-        event::MouseOut,
-    ),
-}
-
-<span class="kw">enum </span>HandlerFn {
-    Click(Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::Click)&gt;),
-    MouseIn(Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::MouseIn)&gt;),
-    MouseOut(Box&lt;<span class="kw">dyn </span>FnMut(<span class="kw-2">&amp;mut </span>Context, event::MouseOut)&gt;),
-}
+<span class="kw">use </span>taffy::{prelude::Size, style::Style, style_helpers::TaffyMaxContent, Taffy};
 
 <span class="doccomment">/// Render context for a UI tree.
-/// 
+///
 /// This struct acts a state machine where changes to the tree are stored between paint cycles.
-/// 
+///
 /// 1. [`Context::layout`] computes the layout of the tree, based on changes made.
-/// 
+///
 /// 2. [`Context::semantics`] computes the semantics tree update, also based on changes made.
-/// 
+///
 /// 2. [`Context::paint`] will paint the tree top-down and clear any changes.
 </span><span class="kw">pub struct </span>Context {
     <span class="doccomment">/// Node tree.
@@ -273,44 +234,27 @@
     <span class="doccomment">/// Send an event to an element in the tree.
     </span><span class="kw">pub fn </span>send(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: NodeKey, event: Event) {
         <span class="kw">let </span>node = <span class="kw-2">&amp;mut </span><span class="self">self</span>.tree[key];
-        <span class="kw">let </span>handler = <span class="kw">if let </span>NodeData::Element(<span class="kw-2">ref mut </span>elem) = node.data {
-            <span class="kw">match </span>event {
-                Event::Click(click) =&gt; elem.on_click.take().map(|f| Handler::Click(f, click)),
-                Event::MouseIn(mouse_in) =&gt; elem
-                    .on_mouse_in
-                    .take()
-                    .map(|f| Handler::MouseIn(f, mouse_in)),
-                Event::MouseOut(mouse_out) =&gt; elem
-                    .on_mouse_out
-                    .take()
-                    .map(|f| Handler::MouseOut(f, mouse_out)),
-            }
+        <span class="kw">let </span>kind = event.kind();
+        <span class="kw">let </span>cell = <span class="kw">if let </span>NodeData::Element(<span class="kw-2">ref mut </span>elem) = node.data {
+            <span class="kw">let </span>(handler_cell, mouse_event) = <span class="kw">match </span>event {
+                Event::Click(click) =&gt; (elem.on_click().take(), click),
+                Event::MouseIn(mouse_in) =&gt; (elem.on_mouse_in().take(), mouse_in),
+                Event::MouseOut(mouse_out) =&gt; (elem.on_mouse_out().take(), mouse_out),
+            };
+            handler_cell.map(|handler| (handler, mouse_event))
         } <span class="kw">else </span>{
             <span class="prelude-val">None
         </span>};
 
-        <span class="kw">let </span>handler_fn = handler.map(|handler| <span class="kw">match </span>handler {
-            Handler::Click(<span class="kw-2">mut </span>f, click) =&gt; {
-                f(<span class="self">self</span>, click);
-                HandlerFn::Click(f)
-            }
-            Handler::MouseIn(<span class="kw-2">mut </span>f, hover) =&gt; {
-                f(<span class="self">self</span>, hover);
-                HandlerFn::MouseIn(f)
-            }
-            Handler::MouseOut(<span class="kw-2">mut </span>f, mouse_out) =&gt; {
-                f(<span class="self">self</span>, mouse_out);
-                HandlerFn::MouseOut(f)
-            }
-        });
+        <span class="kw">if let </span><span class="prelude-val">Some</span>((<span class="kw-2">mut </span>handler, mouse_event)) = cell {
+            handler(<span class="self">self</span>, mouse_event);
 
-        <span class="kw">let </span>node = <span class="kw-2">&amp;mut </span><span class="self">self</span>.tree[key];
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(handler_fn) = handler_fn {
+            <span class="kw">let </span>node = <span class="kw-2">&amp;mut </span><span class="self">self</span>.tree[key];
             <span class="kw">if let </span>NodeData::Element(<span class="kw-2">ref mut </span>elem) = node.data {
-                <span class="kw">match </span>handler_fn {
-                    HandlerFn::Click(f) =&gt; elem.on_click = <span class="prelude-val">Some</span>(f),
-                    HandlerFn::MouseIn(f) =&gt; elem.on_mouse_in = <span class="prelude-val">Some</span>(f),
-                    HandlerFn::MouseOut(f) =&gt; elem.on_mouse_out = <span class="prelude-val">Some</span>(f),
+                <span class="kw">match </span>kind {
+                    EventKind::Click =&gt; elem.set_on_click(handler),
+                    EventKind::MouseIn =&gt; elem.set_on_mouse_in(handler),
+                    EventKind::MouseOut =&gt; elem.set_on_mouse_out(handler),
                 }
             }
         }
@@ -329,7 +273,7 @@
     }
 
     <span class="doccomment">/// Compute the layout of the tree, starting at a root node key.
-    </span><span class="kw">pub fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, root: NodeKey) {
+    </span><span class="kw">pub fn </span>layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>, root: NodeKey, size: kurbo::Size) {
         <span class="kw">if </span><span class="self">self</span>.changes.is_empty() {
             <span class="kw">return</span>;
         }
@@ -343,7 +287,7 @@
                 .collect();
 
             <span class="kw">let </span>node = <span class="kw-2">&amp;mut </span><span class="self">self</span>.tree[<span class="kw-2">*</span>key];
-            node.layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>.taffy);
+            node.build_layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>.taffy);
 
             <span class="kw">let </span>layout_key = node.layout_key.unwrap();
             <span class="kw">let </span>layout_children = <span class="self">self</span>.taffy.children(layout_key).unwrap();
@@ -354,9 +298,14 @@
             }
         }
 
-        <span class="comment">// Compute the layout of the taffy tree.
+        <span class="comment">// Create the window layout
         </span><span class="kw">let </span>root_layout = <span class="self">self</span>.tree[root].layout_key.unwrap();
-        taffy::compute_layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>.taffy, root_layout, Size::MAX_CONTENT).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>style = Style::default();
+        style.size = Size::from_points(size.width <span class="kw">as _</span>, size.height <span class="kw">as _</span>);
+        <span class="kw">let </span>window = <span class="self">self</span>.taffy.new_with_children(style, <span class="kw-2">&amp;</span>[root_layout]).unwrap();
+
+        <span class="comment">// Compute the layout of the taffy tree.
+        </span>taffy::compute_layout(<span class="kw-2">&amp;mut </span><span class="self">self</span>.taffy, window, Size::MAX_CONTENT).unwrap();
 
         <span class="comment">// Compute the absolute layout of each node.
         </span><span class="kw">let </span><span class="kw-2">mut </span>stack: Vec&lt;taffy::prelude::Layout&gt; = Vec::new();
@@ -384,7 +333,7 @@
         <span class="kw">for </span>key <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.changes {
             <span class="kw">let </span>node = <span class="kw-2">&amp;mut </span><span class="self">self</span>.tree[<span class="kw-2">*</span>key];
 
-            <span class="kw">let </span>semantics_builder = node.semantics();
+            <span class="kw">let </span>semantics_builder = node.build_semantics();
             <span class="kw">let </span>semantics = semantics_builder.build(<span class="kw-2">&amp;mut </span>NodeClassSet::lock_global());
 
             <span class="kw">let </span>id = <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = <span class="self">self</span>.unused_ids.pop() {
@@ -403,8 +352,13 @@
     <span class="doccomment">/// Paint the tree onto a skia canvas, clearing any changes that were made.
     </span><span class="kw">pub fn </span>paint(<span class="kw-2">&amp;mut </span><span class="self">self</span>, root: NodeKey, canvas: <span class="kw-2">&amp;mut </span>Canvas) {
         <span class="kw">for </span>item <span class="kw">in </span><span class="self">self</span>.tree.iter_mut(root) {
-            <span class="kw">if let </span>ItemMut::Node { node, level: <span class="kw">_ </span>} = item {
-                node.paint(canvas);
+            <span class="kw">match </span>item {
+                ItemMut::Node { node, level: <span class="kw">_ </span>} =&gt; {
+                    node.paint(canvas);
+                }
+                ItemMut::Pop { kind: <span class="kw">_</span>, level: <span class="kw">_ </span>} =&gt; {
+                    canvas.restore();
+                }
             }
         }
         <span class="self">self</span>.changes.clear();

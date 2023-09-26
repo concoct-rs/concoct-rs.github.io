@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["NodeData","NodeKind"],"struct":["Node"]};
+window.SIDEBAR_ITEMS = {"enum":["NodeData","NodeKind","Overflow"],"struct":["Node","TextData"]};
